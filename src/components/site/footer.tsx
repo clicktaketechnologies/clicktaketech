@@ -2,6 +2,7 @@
 
 import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
 import { OFFICES, TECH_STACK, LEGAL_LINKS, type NavView } from "@/lib/site-data";
+import { Logo } from "@/components/site/logo";
 
 type FooterProps = {
   onNavigate: (v: NavView) => void;
@@ -69,17 +70,12 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div className="max-w-sm">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
-                  <path d="M4 7h16M4 12h10M4 17h7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M17 14l3 3-3 3" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-              <span className="text-base font-bold tracking-tight">ClickTake</span>
+            <div className="flex items-center">
+              <Logo surface="dark" height={42} priority />
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              AI-native software engineering firm shipping production-grade autonomous agents,
+              Connecting in a better way — ClickTake Technologies is an AI-native
+              software engineering firm shipping production-grade autonomous agents,
               multi-tenant SaaS platforms, cloud architecture, digital marketing & creative
               services for enterprises across 4 continents. 120+ production deployments shipped
               since 2019.

@@ -8,7 +8,13 @@ import {
   NEXT_STEPS,
   type NavView,
 } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import {
+  Reveal,
+  Section,
+  SectionHeading,
+  LocalTrustStrip,
+  CtaSection,
+} from "@/components/site/section";
 
 type ConnectViewProps = {
   onNavigate: (v: NavView) => void;
@@ -32,15 +38,17 @@ export function ConnectView({ onNavigate }: ConnectViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Reach out however suits you — email, phone, WhatsApp, or social. We read every
-              message and respond within 4 business hours. For a structured project inquiry, use
-              our{" "}
+              Reach out however suits you — email, phone, WhatsApp, or social. We&apos;re a small
+              enough team that every message lands with someone who can actually answer it, and we
+              respond within 4 business hours. For a structured project inquiry with file uploads
+              and an NDA, use our{" "}
               <button onClick={() => onNavigate("contact")} className="font-medium text-blue-400 underline-offset-4 hover:underline">
                 contact form
               </button>{" "}
               instead.
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -122,7 +130,7 @@ export function ConnectView({ onNavigate }: ConnectViewProps) {
               Four offices, <span className="text-gradient-brand">18-hour workdays.</span>
             </>
           }
-          description="Remote-first with physical hubs for in-person collaboration and client meetings."
+          description="Remote-first with physical hubs in Birmingham, Multan, Austin and Dubai for in-person collaboration and client meetings. Drop in if you&apos;re in town — coffee&apos;s on us."
         />
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {OFFICES.map((o, i) => (
@@ -147,6 +155,7 @@ export function ConnectView({ onNavigate }: ConnectViewProps) {
               From message to <span className="text-gradient-blue">working PoC.</span>
             </>
           }
+          description="Once you reach out, here&apos;s exactly what happens — no mystery steps, no &quot;we&apos;ll be in touch.&quot;"
         />
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {NEXT_STEPS.map((s, i) => (
@@ -162,20 +171,14 @@ export function ConnectView({ onNavigate }: ConnectViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section>
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Ready to start a project?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Use our structured 3-step contact form for a free 30-minute consultation and a draft architecture.
-            </p>
-            <button onClick={() => onNavigate("contact")} className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60">
-              Open the contact form
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Ready to start a project?"
+        description="Use our structured 3-step contact form for a free 30-minute consultation and a draft architecture — no commitment, no sales pitch. Or check our pricing first if you prefer."
+        ctaLabel="Open the contact form"
+        secondaryLabel="View pricing"
+        secondaryView="pricing"
+      />
     </>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowRight, TrendingDown, TrendingUp } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 import { CASE_STUDIES, type NavView } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import { Reveal, Section, LocalTrustStrip, CtaSection } from "@/components/site/section";
 
 type CaseStudiesViewProps = {
   onNavigate: (v: NavView) => void;
@@ -26,11 +26,13 @@ export function CaseStudiesView({ onNavigate }: CaseStudiesViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Four engagements from the past 18 months. Every metric is measured against the
-              client&apos;s pre-engagement baseline and verified by their analytics team. Tech tags
-              reflect the actual production stack — not what we wanted to use, what we shipped.
+              Four engagements from the past 18 months. Every number below is measured against the
+              client&apos;s pre-engagement baseline and verified by their analytics team — not a
+              slide-deck projection. Tech tags reflect the actual production stack we shipped, not
+              the one we wanted to use.
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -86,20 +88,14 @@ export function CaseStudiesView({ onNavigate }: CaseStudiesViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section className="border-t border-border/40">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Your case study is next.</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Every engagement begins with a fixed-scope PoC. Ship a working system in 6 weeks, then decide if we keep going.
-            </p>
-            <button onClick={() => onNavigate("contact")} className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60">
-              Start your project
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Your case study is next."
+        description="Every engagement begins with a fixed-scope PoC — ship a working system in 6 weeks, then decide if we keep going. No multi-month lock-in, no slide-deck projections."
+        ctaLabel="Start your project"
+        secondaryLabel="View pricing"
+        secondaryView="pricing"
+      />
     </>
   );
 }

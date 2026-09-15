@@ -1,4 +1,4 @@
-import { SERVICE_CATEGORIES, OFFICES } from "@/lib/site-data";
+import { SERVICE_CATEGORIES, OFFICES, CITIES, BRAND_TAGLINE } from "@/lib/site-data";
 
 const BASE_URL = "https://clicktaketech.com";
 
@@ -9,11 +9,11 @@ function OrganizationJsonLd() {
     name: "ClickTake Technologies",
     url: BASE_URL,
     description:
-      "AI-native software engineering firm shipping production-grade autonomous agents, multi-tenant SaaS platforms and cloud architecture for enterprises across 4 continents.",
+      "AI-native software engineering firm shipping production-grade autonomous agents, multi-tenant SaaS platforms, cloud architecture, digital marketing and creative services for enterprises across 4 continents.",
     foundingDate: "2019",
     email: "info@clicktaketech.com",
     telephone: "+44-7391-653377",
-    slogan: "Engineering Tomorrow's Intelligence, Today.",
+    slogan: BRAND_TAGLINE,
     address: {
       "@type": "PostalAddress",
       streetAddress: "Flat 312 Kitts Green Road",
@@ -42,6 +42,75 @@ function OrganizationJsonLd() {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
 
+/**
+ * LocalBusiness schema — critical for local SEO ranking.
+ * Includes geo coordinates, opening hours, price range, and the full
+ * list of 13 cities served as areaServed so Google can match "{service}
+ * near me" / "{service} in {city}" queries to ClickTake.
+ */
+function LocalBusinessJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${BASE_URL}#localbusiness`,
+    name: "ClickTake Technologies",
+    alternateName: "ClickTake",
+    description:
+      "AI-native digital agency offering web design services, SEO services, AI automation, custom software development, SaaS platform engineering and creative branding across the UK, USA, UAE and Pakistan.",
+    url: BASE_URL,
+    telephone: "+44-7391-653377",
+    email: "info@clicktaketech.com",
+    image: `${BASE_URL}/logo-white.png`,
+    logo: `${BASE_URL}/logo-dark.png`,
+    priceRange: "£££",
+    slogan: BRAND_TAGLINE,
+    foundingDate: "2019",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Flat 312 Kitts Green Road",
+      addressLocality: "Birmingham",
+      addressRegion: "West Midlands",
+      postalCode: "B33 9SB",
+      addressCountry: "GB",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 52.4678,
+      longitude: -1.7894,
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "09:00",
+        closes: "18:00",
+      },
+    ],
+    areaServed: CITIES.map((c) => ({
+      "@type": "City",
+      name: c.name,
+      addressRegion: c.country,
+    })),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "ClickTake Services",
+      itemListElement: SERVICE_CATEGORIES.map((cat) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: cat.label,
+          category: cat.label,
+        },
+      })),
+    },
+    sameAs: [
+      "https://www.facebook.com/clicktaketechnologies/",
+      "https://www.instagram.com/clicktaketechologiesuk/",
+    ],
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+}
+
 function ServiceJsonLd() {
   const services = SERVICE_CATEGORIES.flatMap((cat) =>
     cat.services.map((s) => ({
@@ -54,7 +123,10 @@ function ServiceJsonLd() {
         name: "ClickTake Technologies",
         url: BASE_URL,
       },
-      areaServed: "Global",
+      areaServed: CITIES.map((c) => ({
+        "@type": "City",
+        name: c.name,
+      })),
     }))
   );
 
@@ -106,6 +178,7 @@ export function SeoStructuredData() {
   return (
     <>
       <OrganizationJsonLd />
+      <LocalBusinessJsonLd />
       <WebSiteJsonLd />
       <ServiceJsonLd />
       <BreadcrumbJsonLd />

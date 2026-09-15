@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, X, Minus } from "lucide-react";
+import { Check, X, Minus } from "lucide-react";
 import {
   ABOUT_STATS,
   HISTORY_TIMELINE,
@@ -9,9 +9,16 @@ import {
   COMPARE_ROWS,
   FAQS,
   OFFICES,
+  BRAND_TAGLINE,
   type NavView,
 } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import {
+  Reveal,
+  Section,
+  SectionHeading,
+  LocalTrustStrip,
+  CtaSection,
+} from "@/components/site/section";
 import {
   Accordion,
   AccordionContent,
@@ -30,24 +37,29 @@ export function AboutView({ onNavigate }: AboutViewProps) {
       <section className="relative overflow-hidden pt-32 pb-12 sm:pt-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3.5 py-1.5 text-xs font-medium text-blue-300">
-              About ClickTake
+            <span className="inline-flex items-center gap-2 rounded-full border border-pink-500/30 bg-pink-500/10 px-3.5 py-1.5 text-xs font-medium text-pink-300">
+              {BRAND_TAGLINE} · About ClickTake
             </span>
           </Reveal>
           <Reveal delay={0.05}>
             <h1 className="mt-6 max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              A multi-region agency engineering{" "}
-              <span className="text-gradient-brand">AI, Web &amp; Growth</span> systems since 2019.
+              A digital agency built like a{" "}
+              <span className="text-gradient-brand">software company</span> — not a marketing firm with a dev team.
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              120+ projects shipped across four offices — Birmingham (UK HQ), Multan (engineering
-              hub), Austin (US business desk) and Dubai (MENA office). We combine UK business-hours
-              coverage with an extended Pakistan delivery window for 18-hour workdays on every
-              engagement.
+              ClickTake has shipped 120+ production systems since 2019. We run four offices —
+              Birmingham (UK HQ), Multan (engineering hub), Austin (US desk) and Dubai (MENA office) —
+              so every engagement gets 18-hour workday coverage from a UK account lead and a Pakistan
+              tech lead who hand off twice a day. If you&apos;re searching for a{" "}
+              <span className="text-foreground">software company in Birmingham</span>, an{" "}
+              <span className="text-foreground">AI agency</span>, or just a{" "}
+              <span className="text-foreground">digital agency in the UK</span> that actually ships,
+              you&apos;re in the right place.
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
           {/* Stats */}
           <Reveal delay={0.15}>
             <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/50 bg-border/40 sm:grid-cols-4">
@@ -91,6 +103,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               <span className="text-gradient-brand">four-continent engineering firm.</span>
             </>
           }
+          description="We started in 2019 as a two-person Birmingham studio. Six years later we&apos;re a 28-person team across four countries — same engineer-led culture, just more of it."
         />
         <div className="mt-12 space-y-6">
           {HISTORY_TIMELINE.map((item, i) => (
@@ -123,7 +136,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               5 phases, 4 offices, <span className="text-gradient-pink">one team.</span>
             </>
           }
-          description="A repeatable engagement model with fixed deliverables, fixed timelines, and a written exit criterion at every phase."
+          description="A repeatable engagement model with fixed deliverables, fixed timelines, and a written exit criterion at every phase — so you always know what you&apos;re paying for and when you&apos;ll see it."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-5">
           {ENGAGEMENT_PHASES.map((phase, i) => (
@@ -148,7 +161,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               <span className="text-gradient-brand">the alternatives.</span>
             </>
           }
-          description="An honest comparison against a UK boutique agency, an offshore firm, and an in-house hire."
+          description="We&apos;ve sat on the other side of the table — here&apos;s an honest comparison against a UK boutique, an offshore firm, and an in-house hire, warts and all."
         />
         <Reveal delay={0.05}>
           <div className="mt-10 overflow-x-auto">
@@ -203,6 +216,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               Four offices. <span className="text-gradient-brand">18-hour workdays.</span>
             </>
           }
+          description="Leadership in Birmingham, engineering in Multan, business desks in Austin and Dubai. You get one Slack channel, one Linear workspace, and a team that&apos;s online before your morning coffee and after your evening standup."
         />
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {OFFICES.map((o, i) => (
@@ -229,6 +243,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               Frequently asked <span className="text-gradient-brand">questions.</span>
             </>
           }
+          description="The things founders actually ask us on the first call — answered straight, no slides."
           align="center"
         />
         <Reveal delay={0.05}>
@@ -254,25 +269,14 @@ export function AboutView({ onNavigate }: AboutViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section>
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/5 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Want to talk to a real engineer, not a salesperson?
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Book a 30-minute intro call. We bring a draft architecture and a ballpark estimate.
-            </p>
-            <button
-              onClick={() => onNavigate("contact")}
-              className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-blue-500 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-400 hover:shadow-[0_0_28px_-4px] hover:shadow-blue-500/60"
-            >
-              Book a 30-min intro call
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Want to talk to a real engineer, not a salesperson?"
+        description="Book a 30-minute intro call. We bring a draft architecture and a ballpark estimate — no slides, no sales pitch. If we&apos;re not the right fit, we&apos;ll tell you who is."
+        ctaLabel="Book a 30-min intro call"
+        secondaryLabel="View open roles"
+        secondaryView="careers"
+      />
     </>
   );
 }

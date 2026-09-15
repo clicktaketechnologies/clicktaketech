@@ -6,9 +6,6 @@ import {
   ArrowUpRight,
   Sparkles,
   Terminal,
-  ShieldCheck,
-  Zap,
-  Globe2,
   Quote,
   Star,
 } from "lucide-react";
@@ -19,9 +16,16 @@ import {
   PROCESS_STEPS,
   TESTIMONIALS,
   TECH_STACK,
+  BRAND_TAGLINE,
   type NavView,
 } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import {
+  Reveal,
+  Section,
+  SectionHeading,
+  LocalTrustStrip,
+  CtaSection,
+} from "@/components/site/section";
 
 type HomeViewProps = {
   onNavigate: (v: NavView) => void;
@@ -39,22 +43,28 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               <Reveal>
                 <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3.5 py-1.5 text-xs font-medium text-blue-300">
                   <Sparkles className="h-3.5 w-3.5" />
-                  AI-Native Software Engineering · 24 Services · 4 Continents
+                  Senior engineers · 24 services · 4 offices worldwide
                 </span>
               </Reveal>
               <Reveal delay={0.05}>
                 <h1 className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
-                  Engineering{" "}
-                  <span className="text-gradient-brand">Tomorrow&apos;s</span>{" "}
-                  Intelligence, <span className="text-gradient-pink">Today.</span>
+                  We ship <span className="text-gradient-brand">software</span> that actually works —
+                  and <span className="text-gradient-pink">AI</span> that earns its keep.
                 </h1>
+              </Reveal>
+              <Reveal delay={0.08}>
+                <span className="mt-4 inline-flex items-center gap-2 rounded-full border border-pink-500/30 bg-pink-500/10 px-3 py-1 text-xs font-medium text-pink-300">
+                  <Sparkles className="h-3 w-3" />
+                  {BRAND_TAGLINE}
+                </span>
               </Reveal>
               <Reveal delay={0.1}>
                 <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                  ClickTake Technologies ships production-grade software, autonomous AI
-                  agents, and cloud architecture for global enterprises — trusted by 150+
-                  teams across 4 continents with 99.9% uptime and 10M+ API requests served
-                  every day.
+                  Hey — we&apos;re ClickTake, a senior engineering team that ships custom software,
+                  AI automation, web design services, SEO services and digital marketing for
+                  founders across Birmingham, London, Manchester, Austin, Dubai and Multan. No
+                  &ldquo;production-grade&rdquo; fluff: software that actually ships, that your team
+                  can maintain, and that your analytics team can verify.
                 </p>
               </Reveal>
               <Reveal delay={0.15}>
@@ -75,22 +85,8 @@ export function HomeView({ onNavigate }: HomeViewProps) {
                   </button>
                 </div>
               </Reveal>
-              <Reveal delay={0.2}>
-                <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
-                  <span className="inline-flex items-center gap-1.5">
-                    <ShieldCheck className="h-3.5 w-3.5 text-blue-400" /> SOC 2 Type II
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Globe2 className="h-3.5 w-3.5 text-blue-400" /> AWS · GCP · Azure
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Zap className="h-3.5 w-3.5 text-blue-400" /> 99.9% SLA
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <ShieldCheck className="h-3.5 w-3.5 text-blue-400" /> GDPR · CCPA
-                  </span>
-                </div>
-              </Reveal>
+              {/* Local SEO trust strip — reinforces local relevance + conversion trust */}
+              <LocalTrustStrip className="mt-6" />
             </div>
 
             {/* Right: terminal card */}
@@ -118,13 +114,13 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       {/* ===== CAPABILITIES ===== */}
       <Section id="capabilities">
         <SectionHeading
-          eyebrow="Core Capabilities"
+          eyebrow="What We Do"
           title={
             <>
-              Six practices. <span className="text-gradient-brand">One delivery engine.</span>
+              Four practices. <span className="text-gradient-brand">One team, one bar.</span>
             </>
           }
-          description="Every ClickTake engagement is structured around six tightly-integrated practices. They share the same design system, the same observability stack, and the same engineering bar — so your roadmap ships as one coherent product, not six vendor handoffs."
+          description="We don&apos;t hand you a 200-page deck and disappear. Whether you need custom software development, AI automation, or a full digital marketing agency, you work with one team that owns design, code, cloud and growth end-to-end — so your roadmap ships as one coherent product, not four vendor handoffs."
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CAPABILITIES.map((cap, i) => (
@@ -170,7 +166,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               From discovery to <span className="text-gradient-brand">deployment.</span>
             </>
           }
-          description="A repeatable 4-step engagement model. No vague discovery phases that drag on for months — each step has a fixed deliverable, a fixed timeline, and a fixed exit criterion."
+          description="No vague discovery phases that drag on for months. Each step has a fixed deliverable, a fixed timeline, and a clear exit criterion — you always know what you&apos;re paying for and when you&apos;ll see it."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {PROCESS_STEPS.map((step, i) => (
@@ -206,7 +202,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               Numbers that <span className="text-gradient-pink">compounded.</span>
             </>
           }
-          description="Real client outcomes measured against the pre-engagement baseline and verified by their analytics team. Every metric below is in production right now."
+          description="Real outcomes from real clients — measured against their pre-engagement baseline and verified by their own analytics team. Every number below is live in production today, not a slide-deck projection."
           align="center"
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -240,10 +236,10 @@ export function HomeView({ onNavigate }: HomeViewProps) {
           eyebrow="Client Outcomes"
           title={
             <>
-              What clients <span className="text-gradient-brand">say.</span>
+              What clients <span className="text-gradient-brand">actually say.</span>
             </>
           }
-          description="Real outcomes from real clients across 4 continents. Each quote is verbatim — no marketing edits."
+          description="Verbatim quotes from clients across 4 continents — no marketing edits, no polite rewriting. If you want to talk to any of them directly before signing, we&apos;ll make the intro."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-2">
           {TESTIMONIALS.map((t, i) => (
@@ -296,39 +292,19 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       </Section>
 
       {/* ===== CTA ===== */}
-      <Section>
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/5 p-8 text-center sm:p-12 lg:p-16">
-            <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" />
-            <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-pink-500/15 blur-3xl" />
-            <div className="relative">
-              <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-                Ready to deploy your{" "}
-                <span className="text-gradient-brand">AI workforce?</span>
-              </h2>
-              <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
-                Book a 30-minute architecture review. We&apos;ll map your roadmap, identify
-                the highest-ROI automation, and ship a working PoC within 6 weeks.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <button
-                  onClick={() => onNavigate("contact")}
-                  className="group inline-flex items-center gap-2 rounded-xl bg-blue-500 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-400 hover:shadow-[0_0_28px_-4px] hover:shadow-blue-500/60"
-                >
-                  Start Your Project
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </button>
-                <a
-                  href="mailto:info@clicktaketech.com"
-                  className="inline-flex items-center gap-2 rounded-xl border border-border/60 bg-card/40 px-6 py-3 text-sm font-semibold text-foreground transition-all hover:border-blue-500/40 hover:bg-card"
-                >
-                  Email us
-                </a>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title={
+          <>
+            Let&apos;s ship something that{" "}
+            <span className="text-gradient-brand">actually works.</span>
+          </>
+        }
+        description="Book a 30-minute call. We&apos;ll listen to your roadmap, point at the highest-ROI automation or rebuild, and tell you honestly whether we&apos;re the right team for it — no slide deck, no hard sell."
+        ctaLabel="Start Your Project"
+        secondaryLabel="View Case Studies"
+        secondaryView="case-studies"
+      />
     </>
   );
 }

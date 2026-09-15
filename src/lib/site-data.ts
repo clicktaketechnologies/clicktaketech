@@ -979,12 +979,323 @@ export const RESOURCE_CATEGORIES = [
 ];
 
 // ===== OFFICES & CONTACT =====
+export const BRAND_TAGLINE = "Connecting in a better way";
+
 export const OFFICES = [
   { city: "Birmingham", country: "United Kingdom", flag: "🇬🇧", role: "UK HQ" },
   { city: "Multan", country: "Pakistan", flag: "🇵🇰", role: "Engineering hub" },
   { city: "Austin, TX", country: "United States", flag: "🇺🇸", role: "US business desk" },
   { city: "Dubai", country: "United Arab Emirates", flag: "🇦🇪", role: "MENA office" },
 ];
+
+// ===== LOCAL SEO (city-wise optimization for local ranking) =====
+// Each city carries local-intent keywords and a human-toned SEO paragraph
+// that helps the page rank for "{service} in {city}" and "{service} near me"
+// queries in that region.
+export type CitySeo = {
+  slug: string;
+  name: string;
+  region: string;
+  keywords: string[];
+  // Human-toned local paragraph — uses city name + service intent naturally.
+  localIntro: string;
+};
+
+export const CITY_SEO: Record<string, CitySeo> = {
+  birmingham: {
+    slug: "birmingham",
+    name: "Birmingham",
+    region: "West Midlands, UK",
+    keywords: [
+      "web design Birmingham",
+      "SEO agency Birmingham",
+      "AI automation Birmingham",
+      "software development Birmingham UK",
+      "digital marketing agency Birmingham",
+    ],
+    localIntro:
+      "Looking for a web design or SEO agency in Birmingham? ClickTake Technologies is headquartered in the West Midlands and has shipped 120+ production websites, SaaS platforms and AI automations for Birmingham businesses — from local service-area companies in Solihull and Sutton Coldfield to fintech startups in the city centre. We combine UK business-hours coverage with an extended Pakistan delivery window, so your Birmingham project moves 18 hours a day.",
+  },
+  london: {
+    slug: "london",
+    name: "London",
+    region: "Greater London, UK",
+    keywords: [
+      "web development London",
+      "SEO services London",
+      "AI agency London",
+      "SaaS development London",
+      "digital agency London",
+    ],
+    localIntro:
+      "Need a digital agency in London that actually ships? ClickTake serves London fintech, ecommerce and SaaS scale-ups with production-grade Next.js builds, multi-agent AI systems and paid-media management — all from a UK-registered Ltd Co that understands the London market, GDPR and the speed your investors expect.",
+  },
+  manchester: {
+    slug: "manchester",
+    name: "Manchester",
+    region: "Greater Manchester, UK",
+    keywords: [
+      "web design Manchester",
+      "SEO Manchester",
+      "SaaS agency Manchester",
+      "digital marketing Manchester",
+    ],
+    localIntro:
+      "Manchester's tech corridor runs on fast, modern web platforms. ClickTake builds SaaS products, runs SEO and paid media, and ships AI automations for Manchester brands — from Spinningfields agencies to Northern Quarter startups. Local intent, senior engineers, UK invoicing.",
+  },
+  leeds: {
+    slug: "leeds",
+    name: "Leeds",
+    region: "West Yorkshire, UK",
+    keywords: [
+      "web design Leeds",
+      "local SEO Leeds",
+      "repair shop software Leeds",
+      "ecommerce Leeds",
+    ],
+    localIntro:
+      "From local SEO that wins the Leeds pack to WooCommerce repair-shop sites with live checkout, ClickTake helps West Yorkshire businesses turn searches into walk-ins and sales. Senior engineers, fast launch, UK Ltd Co invoicing.",
+  },
+  austin: {
+    slug: "austin",
+    name: "Austin",
+    region: "Texas, USA",
+    keywords: [
+      "web development Austin",
+      "SaaS agency Austin TX",
+      "AI automation Austin",
+      "SEO Austin Texas",
+    ],
+    localIntro:
+      "Austin's SaaS and AI scene moves fast. ClickTake's US business desk in Austin ships SaaS growth channels, AI automation and full-stack Next.js builds for Texas startups — with UK + Pakistan delivery coverage that keeps your roadmap moving 18 hours a day.",
+  },
+  "new-york": {
+    slug: "new-york",
+    name: "New York",
+    region: "New York, USA",
+    keywords: [
+      "web development New York",
+      "AI agency NYC",
+      "fintech development New York",
+      "SEO New York",
+    ],
+    localIntro:
+      "New York fintech, media and enterprise clients work with ClickTake for production AI, headless commerce and AI-native product engineering — delivered with SOC 2-aligned practices and the pace the East Coast demands.",
+  },
+  "san-francisco": {
+    slug: "san-francisco",
+    name: "San Francisco",
+    region: "California, USA",
+    keywords: [
+      "SaaS development San Francisco",
+      "AI agency San Francisco",
+      "LLM engineering Bay Area",
+      "SEO San Francisco",
+    ],
+    localIntro:
+      "Series A to Series C SaaS and AI-native startups in the Bay Area ship with ClickTake for multi-agent orchestration, RAG pipelines and production Next.js — the kind of engineering your investors expect, at a fraction of Bay Area rates.",
+  },
+  dubai: {
+    slug: "dubai",
+    name: "Dubai",
+    region: "United Arab Emirates",
+    keywords: [
+      "web design Dubai",
+      "SEO agency Dubai",
+      "AI agency Dubai UAE",
+      "digital marketing Dubai",
+      "software development Dubai",
+    ],
+    localIntro:
+      "Launching in Dubai or the wider GCC? ClickTake's MENA office in Dubai handles market entry, bilingual web design, SEO and AI automation for UAE businesses — with local cultural fluency and an engineering team that ships to 10M+ requests a day.",
+  },
+  "abu-dhabi": {
+    slug: "abu-dhabi",
+    name: "Abu Dhabi",
+    region: "United Arab Emirates",
+    keywords: [
+      "web development Abu Dhabi",
+      "government software Abu Dhabi",
+      "SEO Abu Dhabi",
+      "AI automation Abu Dhabi",
+    ],
+    localIntro:
+      "Abu Dhabi's government, healthcare and enterprise sectors work with ClickTake for secure, compliant web platforms, AI automation and SEO — engineered to GCC regulatory standards from our Dubai MENA office.",
+  },
+  multan: {
+    slug: "multan",
+    name: "Multan",
+    region: "Punjab, Pakistan",
+    keywords: [
+      "software house Multan",
+      "web development Multan",
+      "AI engineering Multan Pakistan",
+      "SEO Multan",
+    ],
+    localIntro:
+      "ClickTake's engineering hub in Multan is where 12 senior full-stack and AI engineers ship production Next.js, Python and LangGraph systems for clients across 4 continents — giving every engagement 18-hour workday coverage.",
+  },
+  lahore: {
+    slug: "lahore",
+    name: "Lahore",
+    region: "Punjab, Pakistan",
+    keywords: [
+      "software house Lahore",
+      "web development Lahore",
+      "SaaS development Lahore",
+      "AI agency Lahore",
+    ],
+    localIntro:
+      "Lahore's full-stack and AI engineering talent powers ClickTake's delivery — from SaaS platforms to multi-agent systems. Senior engineers, English-fluent, working UK business hours.",
+  },
+  karachi: {
+    slug: "karachi",
+    name: "Karachi",
+    region: "Sindh, Pakistan",
+    keywords: [
+      "digital marketing agency Karachi",
+      "SEO Karachi",
+      "creative agency Karachi",
+      "web design Karachi",
+    ],
+    localIntro:
+      "ClickTake's digital marketing, SEO and creative production teams in Karachi run paid media, content strategy and brand systems for clients across the UK, US and UAE — English-native copy, senior strategists, 18-hour coverage.",
+  },
+  islamabad: {
+    slug: "islamabad",
+    name: "Islamabad",
+    region: "Islamabad Capital Territory, Pakistan",
+    keywords: [
+      "software house Islamabad",
+      "SaaS development Islamabad",
+      "cloud DevOps Islamabad",
+      "web development Islamabad",
+    ],
+    localIntro:
+      "Islamabad-based SaaS engineering and cloud DevOps talent powers ClickTake's enterprise engagements — Terraform IaC, Kubernetes autoscaling and p99 120ms SLAs delivered from Pakistan's capital.",
+  },
+};
+
+// Local-intent keyword clusters reused across hero & section copy.
+export const LOCAL_KEYWORDS = [
+  "web design services",
+  "SEO services",
+  "AI automation agency",
+  "custom software development",
+  "digital marketing agency",
+  "WordPress web design services",
+  "ecommerce web design services",
+  "small business web design",
+  "responsive web design services",
+  "AI chatbot development",
+  "SaaS platform engineering",
+  "PPC paid ads management",
+  "social media marketing",
+  "graphic design services",
+  "B2B video production",
+];
+
+// Human-toned trust strip used under hero sections on every page for local SEO.
+export const LOCAL_TRUST = [
+  { label: "UK Ltd Co · GDPR compliant", icon: ShieldCheck },
+  { label: "4 offices · 13 cities served", icon: MapPin },
+  { label: "Senior engineers (8+ yrs avg)", icon: Users },
+  { label: "120+ production deployments", icon: Code2 },
+];
+
+// Per-view SEO meta description + target keywords (used for <meta> + JSON-LD).
+export const VIEW_SEO: Record<string, { title: string; description: string; keywords: string[] }> = {
+  home: {
+    title: "ClickTake Technologies — AI-Native Software Engineering & Digital Agency",
+    description:
+      "ClickTake Technologies is an AI-native digital agency engineering custom software, autonomous AI agents, cloud architecture, SEO and creative for businesses across the UK, USA, UAE & Pakistan. 24 services, 4 offices, 120+ deployments. Connecting in a better way.",
+    keywords: [
+      "AI agency", "software development agency", "web design services", "SEO services",
+      "AI automation", "digital agency UK", "SaaS development", "custom software",
+    ],
+  },
+  services: {
+    title: "Services — 24 Digital, Web, AI & Marketing Services | ClickTake",
+    description:
+      "Explore 24 services across 4 practices: Digital Marketing (PPC, SEO, social), Web & Software (full-stack, SaaS, WordPress, ecommerce), AI & Automation (LLMs, chatbots, agents), and Creative & Brand. Senior engineers ship in 6 weeks.",
+    keywords: [
+      "web design services", "SEO services", "AI automation", "SaaS development",
+      "WordPress web design", "ecommerce web design", "AI chatbot development",
+    ],
+  },
+  solutions: {
+    title: "Solutions by Industry — Startups, E-commerce, Local & UK Businesses",
+    description:
+      "Tailored solutions for startups, local businesses, ecommerce brands, repair shops, UK SMEs and agencies. Fixed-scope, fixed-timeline engagements with measurable outcomes — local SEO, web design and AI built for your business type.",
+    keywords: [
+      "startup web design", "local business SEO", "ecommerce development",
+      "repair shop software", "UK digital agency", "white-label agency",
+    ],
+  },
+  "case-studies": {
+    title: "Case Studies — Real Clients, Real Metrics | ClickTake",
+    description:
+      "Four production case studies with verified metrics: -72% API latency, +38% checkout conversion, -$1.4M cloud cost, -31% empty fleet miles. Real engagements from fintech, ecommerce, healthcare and logistics.",
+    keywords: ["case studies", "AI case study", "SEO results", "web development results"],
+  },
+  portfolio: {
+    title: "Portfolio — 12 Live Client Sites | ClickTake Technologies",
+    description:
+      "Twelve live client deployments built and maintained by ClickTake — SaaS platforms, repair-shop commerce sites and education portals across the UK and globally. Every link is a real production site, not a mockup.",
+    keywords: ["portfolio", "web design portfolio", "SaaS portfolio", "client websites"],
+  },
+  blog: {
+    title: "Blog — SEO, Web Dev, AI & Marketing Field Notes | ClickTake",
+    description:
+      "Practical, no-fluff articles on SEO, web development, AI automation, ecommerce and growth marketing — written by the engineers, marketers and designers who ship this work for clients across the UK, USA, UAE & Pakistan.",
+    keywords: ["SEO blog", "AI automation blog", "web development blog", "digital marketing blog"],
+  },
+  pricing: {
+    title: "Pricing — Starter · Growth · Scale · Custom | ClickTake",
+    description:
+      "Transparent pricing across four engagement tiers from £1,500 one-off to custom enterprise retainers. No fake universal packages — every project is scoped in a free 30-min call. UK Ltd Co, GDPR invoicing.",
+    keywords: ["web design pricing", "SEO pricing", "AI automation cost", "SaaS development pricing"],
+  },
+  about: {
+    title: "About — AI Digital Agency Since 2019 | ClickTake Technologies",
+    description:
+      "ClickTake Technologies is a multi-region AI-native digital agency founded in 2019, operating across Birmingham, Multan, Austin and Dubai. 120+ projects, 80+ clients in 14 countries, 5.0 avg rating.",
+    keywords: ["about digital agency", "AI agency UK", "software company Birmingham", "digital agency Pakistan"],
+  },
+  team: {
+    title: "Our Team — 28 People Across 4 Offices | ClickTake Technologies",
+    description:
+      "28 senior engineers, marketers and designers across Birmingham, Multan, Austin and Dubai — coordinated as one engineering organization with 18-hour workday coverage on every engagement.",
+    keywords: ["agency team", "software engineering team", "AI engineers", "digital marketing team"],
+  },
+  careers: {
+    title: "Careers — Join ClickTake Technologies",
+    description:
+      "Remote-first, senior-first engineering roles across web, AI, SEO and creative. Open positions for senior Next.js engineers, AI/ML engineers, SEO specialists and designers. 4 offices, 18-hour workdays.",
+    keywords: ["digital agency jobs", "software engineer jobs", "AI engineer careers", "SEO jobs"],
+  },
+  cities: {
+    title: "Cities We Serve — 13 Cities, 4 Countries | ClickTake",
+    description:
+      "ClickTake serves 13 cities across the UK, USA, UAE and Pakistan — Birmingham, London, Manchester, Leeds, Austin, New York, San Francisco, Dubai, Abu Dhabi, Multan, Lahore, Karachi and Islamabad. Local presence, global delivery.",
+    keywords: [
+      "web design Birmingham", "web design London", "web design Dubai",
+      "SEO Austin", "software house Multan", "digital agency near me",
+    ],
+  },
+  connect: {
+    title: "Connect — Direct Contact & Social | ClickTake Technologies",
+    description:
+      "Reach ClickTake by email, phone, WhatsApp or social. We respond within 4 business hours. info@clicktaketech.com · +44 7391 653377 · 4 offices worldwide.",
+    keywords: ["contact digital agency", "web design contact", "AI agency contact"],
+  },
+  contact: {
+    title: "Contact — Free 30-min Consult | ClickTake Technologies",
+    description:
+      "Book a free 30-minute consultation. A senior engineer (not a salesperson) reviews your brief within 4 hours and brings a draft architecture. 3-step form, no commitment.",
+    keywords: ["free consultation", "web design quote", "SEO consultation", "AI project quote"],
+  },
+};
 
 export const CONTACT_METHODS = [
   { icon: Mail, label: "Email", value: "info@clicktaketech.com", href: "mailto:info@clicktaketech.com" },

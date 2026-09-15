@@ -1,6 +1,5 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
 import {
   TEAM_STATS,
   DEPARTMENTS,
@@ -8,7 +7,13 @@ import {
   TEAM_VALUES,
   type NavView,
 } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import {
+  Reveal,
+  Section,
+  SectionHeading,
+  LocalTrustStrip,
+  CtaSection,
+} from "@/components/site/section";
 
 type TeamViewProps = {
   onNavigate: (v: NavView) => void;
@@ -27,17 +32,20 @@ export function TeamView({ onNavigate }: TeamViewProps) {
           </Reveal>
           <Reveal delay={0.05}>
             <h1 className="mt-6 max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              28 people across 4 offices, coordinated as{" "}
-              <span className="text-gradient-brand">one engineering organization.</span>
+              28 people. 4 offices. One engineering team that{" "}
+              <span className="text-gradient-brand">actually ships.</span>
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Leadership in Birmingham, engineering in Multan, business desks in Austin and Dubai.
-              Every engagement is staffed with a UK-based account lead and a Pakistan-based tech
-              lead — the two coordinate daily and present a single face to the client.
+              Leadership sits in Birmingham, engineering in Multan, business desks in Austin and
+              Dubai. That gives us 18-hour workday coverage on every engagement — your UK account
+              lead and your Pakistan tech lead hand off twice a day and present a single face to
+              you. No agency phone-tag, no junior middle-men, nobody who needs to &quot;check with
+              engineering&quot; before answering a question.
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
           {/* Stats */}
           <Reveal delay={0.15}>
             <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/50 bg-border/40 sm:grid-cols-4">
@@ -78,7 +86,7 @@ export function TeamView({ onNavigate }: TeamViewProps) {
               Five departments, <span className="text-gradient-blue">one delivery engine.</span>
             </>
           }
-          description="Cross-office pods coordinate daily via Linear, GitHub, Slack and Notion."
+          description="Cross-office pods that coordinate daily via Linear, GitHub, Slack and Notion — so the person who writes the code and the person who scopes the contract are never more than a Slack ping apart."
         />
         <div className="mt-12 space-y-4">
           {DEPARTMENTS.map((dept, i) => (
@@ -113,7 +121,7 @@ export function TeamView({ onNavigate }: TeamViewProps) {
               4-stage process, <span className="text-gradient-pink">2–3 week cycle.</span>
             </>
           }
-          description="A realistic, paid hiring process — never a LeetCode puzzle or free spec work."
+          description="A realistic, paid hiring process — never a LeetCode puzzle, never free spec work. We treat candidates the way we&apos;d want to be treated."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
           {HIRING_STAGES.map((stage, i) => (
@@ -130,20 +138,14 @@ export function TeamView({ onNavigate }: TeamViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section className="border-t border-border/40">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Want to join the team?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              We&apos;re hiring senior engineers, marketers, and designers across all 4 offices. Browse open roles and apply with your portfolio.
-            </p>
-            <button onClick={() => onNavigate("careers")} className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60">
-              View open roles
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Want to join the team?"
+        description="We&apos;re hiring senior engineers, marketers, and designers across all 4 offices. Browse open roles and apply with your portfolio — or read more about how we got here first."
+        ctaLabel="View open roles"
+        secondaryLabel="About ClickTake"
+        secondaryView="about"
+      />
     </>
   );
 }

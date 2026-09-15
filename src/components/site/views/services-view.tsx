@@ -8,10 +8,25 @@ import {
   TECH_STACK,
   type NavView,
 } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import { Reveal, Section, SectionHeading, LocalTrustStrip, CtaSection } from "@/components/site/section";
 
 type ServicesViewProps = {
   onNavigate: (v: NavView) => void;
+};
+
+// Senior-engineer-tone category blurbs that double as SEO copy.
+// Each line weaves in the practice's primary service keywords so the page
+// ranks for high-intent commercial queries (web design services, SEO services,
+// AI automation, custom software development, WordPress & ecommerce web design).
+const CATEGORY_BLURBS: Record<string, string> = {
+  "digital-marketing":
+    "We don't buy vanity metrics. PPC, SEO services, content, CRO and social are run as one revenue engine — tracked from impression to closed-won, audited monthly, and tuned to the CPA target your CFO actually signed off on.",
+  "web-software":
+    "We don't ship prototypes — we ship products with design systems, observability, CI/CD, and E2E test coverage from day one. Full-stack web development, SaaS platform engineering, custom software development, WordPress web design and ecommerce web design all live under one roof.",
+  "ai-automation":
+    "Custom LLMs, autonomous agents and AI automation — built for production workloads, not demos. Every system ships with an eval harness, guardrails, cost controls and a human-in-loop fallback before it ever touches a real customer.",
+  "creative-brand":
+    "Premium craft, delivered on deadline. Brand identity, professional web design services, B2B video production and creative systems that make your product unmistakable across every touchpoint — from the first impression to the hundredth.",
 };
 
 export function ServicesView({ onNavigate }: ServicesViewProps) {
@@ -34,9 +49,11 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              From the first whiteboard sketch to a 24/7 production command center, ClickTake
-              owns the entire delivery lifecycle. We embed senior engineers (8+ yrs avg), ship
-              every two weeks, and hand over an architecture your team can actually maintain.
+              We don't ship prototypes — we ship products with design systems,
+              observability, CI/CD and E2E test coverage from day one. Senior
+              engineers (8+ yrs avg) embed into your roadmap, ship every two weeks,
+              and hand over an architecture your team can actually maintain —
+              serving businesses in Birmingham, London, Dubai, Austin and beyond.
             </p>
           </Reveal>
           {/* Category quick-nav */}
@@ -57,6 +74,8 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               ))}
             </div>
           </Reveal>
+          {/* Local SEO trust strip — reinforces local relevance under the hero */}
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -80,7 +99,9 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
               </div>
               <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">{cat.label}</h2>
               <p className="mt-2 text-sm font-medium text-blue-400">{cat.tagline}</p>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">{cat.blurb}</p>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                {CATEGORY_BLURBS[cat.id] ?? cat.blurb}
+              </p>
             </div>
           </div>
 
@@ -124,6 +145,34 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
           </div>
         </Section>
       ))}
+
+      {/* City relevance hook — local-intent callout */}
+      <Section className="border-y border-border/40 bg-card/20">
+        <Reveal>
+          <div className="flex flex-col gap-6 rounded-2xl border border-blue-500/20 bg-gradient-to-r from-blue-500/5 via-card/40 to-pink-500/5 p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-wider text-blue-400">
+                Local intent, global delivery
+              </p>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+                Looking for web design, SEO or AI automation in your city?
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                We serve 13 cities across the UK, USA, UAE and Pakistan — same senior
+                engineers, same delivery engine, same UK Ltd Co invoicing. From Birmingham
+                to Dubai, your project moves 18 hours a day.
+              </p>
+            </div>
+            <button
+              onClick={() => onNavigate("cities")}
+              className="group inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-blue-500/40 bg-blue-500/10 px-5 py-3 text-sm font-semibold text-blue-300 transition-all hover:border-blue-500/60 hover:bg-blue-500/15"
+            >
+              View cities we serve
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </button>
+          </div>
+        </Reveal>
+      </Section>
 
       {/* Process */}
       <Section className="border-y border-border/40 bg-card/20">
@@ -202,30 +251,14 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section>
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-blue-500/20 blur-3xl" />
-            <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-pink-500/15 blur-3xl" />
-            <div className="relative">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Ready to scope your first sprint?
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-                A senior engineer (not a salesperson) joins the call with a draft architecture
-                for your use case. Average response time: under 4 hours.
-              </p>
-              <button
-                onClick={() => onNavigate("contact")}
-                className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60"
-              >
-                Talk to an engineer
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </button>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Ready to scope your first sprint?"
+        description="A senior engineer (not a salesperson) joins the call with a draft architecture for your use case. Average response time: under 4 hours."
+        ctaLabel="Talk to an engineer"
+        secondaryLabel="View Pricing"
+        secondaryView="pricing"
+      />
     </>
   );
 }

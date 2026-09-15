@@ -8,6 +8,7 @@ import {
   SERVICE_CATEGORIES,
   type NavView,
 } from "@/lib/site-data";
+import { Logo } from "@/components/site/logo";
 import { cn } from "@/lib/utils";
 
 type NavbarProps = {
@@ -72,22 +73,13 @@ export function Navbar({ active, onNavigate }: NavbarProps) {
           )}
           onMouseLeave={closeMenuDelayed}
         >
-          {/* Logo */}
+          {/* Logo (brand PNG, dark-surface variant) */}
           <button
             onClick={() => handleNav("home")}
-            className="group flex items-center gap-2.5 pl-1"
-            aria-label="ClickTake home"
+            className="group flex shrink-0 items-center pl-1"
+            aria-label="ClickTake Technologies — home"
           >
-            <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white shadow-[0_0_20px_-2px] shadow-blue-500/50">
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
-                <path d="M4 7h16M4 12h10M4 17h7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M17 14l3 3-3 3" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-            <span className="flex flex-col items-start leading-none">
-              <span className="text-[15px] font-bold tracking-tight text-foreground">ClickTake</span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-blue-400">Technologies</span>
-            </span>
+            <Logo surface="dark" height={38} priority className="transition-opacity group-hover:opacity-90" />
           </button>
 
           {/* Desktop nav */}

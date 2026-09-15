@@ -1,11 +1,30 @@
 "use client";
 
-import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SOLUTIONS, type NavView } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import { Reveal, Section, LocalTrustStrip, CtaSection } from "@/components/site/section";
 
 type SolutionsViewProps = {
   onNavigate: (v: NavView) => void;
+};
+
+// Empathetic, audience-specific copy that speaks directly to each business
+// type. Each line weaves in the relevant local-intent keywords (local SEO,
+// small business web design, ecommerce development, SaaS development) so the
+// page ranks for "X for {audience}" and "{keyword} near me" queries.
+const SOLUTION_DESC_OVERRIDES: Record<string, string> = {
+  "For Startups":
+    "You've got a vision and a hard launch date. We take you from idea to live product in 90 days — full brand system, production SaaS development on Next.js, and an AI assistant that genuinely moves the needle. No agency fog, just shipped software.",
+  "For Local Businesses":
+    "You don't need a flashy site — you need the local pack, more calls and more walk-ins. We handle local SEO, small business web design, reviews automation and a fast mobile-first site built to convert the people already searching for you nearby.",
+  "For E-commerce Brands":
+    "Headless commerce that loads in 1.5s and converts 25–60% better. Our ecommerce development runs on Shopify Hydrogen, Medusa or custom — sub-second LCP, AI-assisted merchandising, and infinite scale without re-platforming every Black Friday.",
+  "For Repair Shops":
+    "Repair-shop software built the way you actually work — serialized inventory, ticket tracking, customer status lookups, and fewer phone calls. Cut ticket time 40%, slash incoming calls 70%, and stop losing parts to bad paperwork.",
+  "For UK Businesses":
+    "A UK-registered partner that actually understands GDPR, HMRC and what 'local' means in your market. UK Ltd Co invoicing, EMEA coverage, and engineers who work your business hours — not 9 timezones away.",
+  "For Agencies":
+    "White-label engineering, AI and growth — under your brand, plugged into your delivery pipeline. Senior teams, UK business hours, and margins your clients won't question. We disappear into your process so you look like the hero.",
 };
 
 export function SolutionsView({ onNavigate }: SolutionsViewProps) {
@@ -27,12 +46,15 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              ClickTake Technologies ships tailored solutions for six audience types across the
-              UK, Pakistan, USA and Dubai. Each solution combines the right mix of services — web,
-              AI, marketing and creative — into a fixed-scope, fixed-timeline engagement with
-              measurable outcomes.
+              We've shipped enough products to know that a startup, a repair shop and a
+              DTC brand don't want the same website. So we don't sell one. Each solution
+              below is a fixed-scope, fixed-timeline engagement — the right mix of web,
+              AI, marketing and creative for your business type, delivered by the same
+              senior engineers from Birmingham to Dubai.
             </p>
           </Reveal>
+          {/* Local SEO trust strip — local relevance + conversion trust */}
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -50,7 +72,9 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                   {sol.audience}
                 </p>
                 <h2 className="mt-2 text-xl font-bold tracking-tight">{sol.title}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{sol.desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {SOLUTION_DESC_OVERRIDES[sol.title] ?? sol.desc}
+                </p>
                 {/* Metrics */}
                 <div className="mt-5 grid grid-cols-3 gap-2 border-t border-border/40 pt-5">
                   {sol.metrics.map((m) => (
@@ -64,60 +88,28 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                     </div>
                   ))}
                 </div>
+                <button
+                  onClick={() => onNavigate("contact")}
+                  className="group mt-5 flex items-center justify-between gap-2 border-t border-border/40 pt-4 text-sm font-semibold text-blue-400 transition-colors hover:text-blue-300"
+                >
+                  Talk to us about this
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </button>
               </div>
             </Reveal>
           ))}
         </div>
       </Section>
 
-      {/* Not sure banner */}
-      <Section className="pt-0">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/40 p-8 sm:p-10">
-            <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-center">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                  Not sure which solution fits?
-                </h2>
-                <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Book a free 30-minute consultation — we&apos;ll scope it together and recommend
-                  the right path. A senior engineer joins the call, not a salesperson.
-                </p>
-                <div className="mt-5 flex flex-wrap gap-3">
-                  {[
-                    "Free 30-min consultation",
-                    "Draft architecture included",
-                    "No commitment required",
-                  ].map((b) => (
-                    <span
-                      key={b}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 px-3 py-1.5 text-xs font-medium text-blue-300"
-                    >
-                      <Check className="h-3 w-3" /> {b}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
-                <button
-                  onClick={() => onNavigate("contact")}
-                  className="group inline-flex items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-400 hover:shadow-[0_0_24px_-4px] hover:shadow-blue-500/60"
-                >
-                  Book a Call
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </button>
-                <button
-                  onClick={() => onNavigate("case-studies")}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border/60 bg-card/40 px-5 py-3 text-sm font-semibold text-foreground transition-all hover:border-blue-500/40 hover:bg-card"
-                >
-                  See results
-                  <ArrowUpRight className="h-4 w-4 text-blue-400" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </Section>
+      {/* CTA */}
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Not sure which solution fits?"
+        description="Book a free 30-minute consultation — we'll scope it together and recommend the right path. A senior engineer joins the call, not a salesperson. Free, no commitment, draft architecture included."
+        ctaLabel="Book a free consultation"
+        secondaryLabel="See results"
+        secondaryView="case-studies"
+      />
     </>
   );
 }

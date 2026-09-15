@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowRight, MapPin, Check } from "lucide-react";
-import { CITIES, SERVICE_CATEGORIES, type NavView } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import { ArrowRight, Check } from "lucide-react";
+import { CITIES, CITY_SEO, SERVICE_CATEGORIES, type NavView } from "@/lib/site-data";
+import { Reveal, Section, SectionHeading, LocalTrustStrip, CtaSection } from "@/components/site/section";
 
 type CitiesViewProps = {
   onNavigate: (v: NavView) => void;
@@ -32,11 +32,15 @@ export function CitiesView({ onNavigate }: CitiesViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              ClickTake serves 13 cities across the United Kingdom, United States, United Arab
-              Emirates and Pakistan. Every city gets the full menu of 24 services — delivered by
-              senior engineers who understand your local market.
+              Searching for a digital agency near you? ClickTake Technologies ships custom software,
+              web design, SEO and AI automation for clients across Birmingham, London, Manchester,
+              Leeds, Austin, New York, San Francisco, Dubai, Abu Dhabi, Multan, Lahore, Karachi and
+              Islamabad — 13 cities, 4 countries, one senior engineering team that works your
+              business hours. Every city gets the full menu of 24 services, delivered by people who
+              understand your local market.
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -70,6 +74,23 @@ export function CitiesView({ onNavigate }: CitiesViewProps) {
                     <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                       {city.desc}
                     </p>
+                    {CITY_SEO[city.slug]?.localIntro && (
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground/90">
+                        {CITY_SEO[city.slug].localIntro}
+                      </p>
+                    )}
+                    {CITY_SEO[city.slug]?.keywords?.length ? (
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {CITY_SEO[city.slug].keywords.map((kw) => (
+                          <span
+                            key={kw}
+                            className="rounded-md border border-border/40 bg-white/[0.03] px-2 py-0.5 text-[11px] font-medium text-muted-foreground/80"
+                          >
+                            {kw}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
                     <button
                       onClick={() => onNavigate("services")}
                       className="mt-5 flex items-center gap-1 border-t border-border/40 pt-4 text-sm font-medium text-blue-400 opacity-0 transition-opacity group-hover:opacity-100"
@@ -122,27 +143,14 @@ export function CitiesView({ onNavigate }: CitiesViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section>
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <MapPin className="mx-auto h-10 w-10 text-blue-400" />
-            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              Don&apos;t see your city?
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              We&apos;re remote-first and ship globally. If you&apos;re not in a city listed above,
-              we still deliver — book a free 30-minute consultation.
-            </p>
-            <button
-              onClick={() => onNavigate("contact")}
-              className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60"
-            >
-              Book a free consultation
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Don't see your city?"
+        description="We're remote-first and ship globally. If you're not in one of the 13 cities above, we still deliver — book a free 30-minute consultation and we'll work out the timezone that fits your team."
+        ctaLabel="Book a free consultation"
+        secondaryLabel="View services"
+        secondaryView="services"
+      />
     </>
   );
 }

@@ -1,13 +1,13 @@
 "use client";
 
-import { ArrowRight, Scale, ShieldCheck, Cookie, Clock } from "lucide-react";
+import { Scale, ShieldCheck, Cookie, Clock } from "lucide-react";
 import {
   LEGAL_DOCS,
   LEGAL_LINKS,
   type NavView,
   type LegalDoc,
 } from "@/lib/site-data";
-import { Reveal, Section } from "@/components/site/section";
+import { Reveal, Section, CtaSection } from "@/components/site/section";
 import { cn } from "@/lib/utils";
 
 type LegalViewProps = {
@@ -47,7 +47,17 @@ export function LegalView({ docId, onNavigate }: LegalViewProps) {
             </div>
           </Reveal>
           <Reveal delay={0.15}>
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">{doc.intro}</p>
+            <p className="mt-6 text-base leading-relaxed text-foreground sm:text-lg">
+              We tried to keep this short and in plain English — but it&apos;s still a real legal
+              document. If anything below is unclear, email{" "}
+              <a href="mailto:info@clicktaketech.com" className="font-medium text-blue-400 underline-offset-4 hover:underline">
+                info@clicktaketech.com
+              </a>{" "}
+              and a human will reply.
+            </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">{doc.intro}</p>
           </Reveal>
         </div>
       </section>
@@ -109,20 +119,12 @@ export function LegalView({ docId, onNavigate }: LegalViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section className="border-t border-border/40">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Ready to start your project?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Free 30-minute consultation. No commitment, no sales pitch — just a draft architecture.
-            </p>
-            <button onClick={() => onNavigate("contact")} className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60">
-              Get Started
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Ready to start your project?"
+        description="Free 30-minute consultation. No commitment, no sales pitch — just a draft architecture and a straight answer on whether we can help."
+        ctaLabel="Get Started"
+      />
     </>
   );
 }

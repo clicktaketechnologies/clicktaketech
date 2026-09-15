@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowRight, ExternalLink, MapPin } from "lucide-react";
+import { ExternalLink, MapPin } from "lucide-react";
 import { PORTFOLIO, type NavView } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import { Reveal, Section, LocalTrustStrip, CtaSection } from "@/components/site/section";
 
 type PortfolioViewProps = {
   onNavigate: (v: NavView) => void;
@@ -32,11 +32,12 @@ export function PortfolioView({ onNavigate }: PortfolioViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Twelve client platforms built and maintained by ClickTake Technologies — SaaS products,
-              education portals, and e-commerce stores across the UK and globally. Every link is a
-              live deployment, not a mockup.
+              Twelve client platforms we built and still maintain — SaaS products, repair-shop
+              commerce sites, and education portals. Every one is a live deployment, not a mockup,
+              and we still push to production every week.
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -87,20 +88,14 @@ export function PortfolioView({ onNavigate }: PortfolioViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section className="border-t border-border/40">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Your product, live next.</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              From first whiteboard sketch to a 24/7 production deployment — we own the entire lifecycle.
-            </p>
-            <button onClick={() => onNavigate("contact")} className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60">
-              Start your project
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Your product, live next."
+        description="From the first whiteboard sketch to a 24/7 production deployment — we own the entire lifecycle, so you ship once and ship right."
+        ctaLabel="Start your project"
+        secondaryLabel="See case studies"
+        secondaryView="case-studies"
+      />
     </>
   );
 }

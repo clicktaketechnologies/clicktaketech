@@ -1,12 +1,18 @@
 "use client";
 
-import { ArrowRight, Check, X, Sparkles } from "lucide-react";
+import { Check, X, Sparkles } from "lucide-react";
 import {
   PRICING_TIERS,
   PRICING_FAQS,
   type NavView,
 } from "@/lib/site-data";
-import { Reveal, Section, SectionHeading } from "@/components/site/section";
+import {
+  Reveal,
+  Section,
+  SectionHeading,
+  LocalTrustStrip,
+  CtaSection,
+} from "@/components/site/section";
 import {
   Accordion,
   AccordionContent,
@@ -37,12 +43,16 @@ export function PricingView({ onNavigate }: PricingViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              ClickTake Technologies ships four engagement tiers across the UK, Pakistan, USA and
-              Dubai. These are starting points — every project is scoped in a free 30-minute
-              discovery call to match your specific goals, audience and budget. No fake universal
-              pricing, no hidden fees.
+              Most agencies hide their prices or quote a number from thin air. We don&apos;t. Here are
+              real starting points for our four engagement tiers — actual{" "}
+              <span className="text-foreground">web design pricing</span>,{" "}
+              <span className="text-foreground">SEO pricing</span> and{" "}
+              <span className="text-foreground">AI automation cost</span> ranges, all in GBP. Every
+              project is still scoped in a free 30-minute call to match your goals and budget.
+              <span className="text-foreground"> No fake universal pricing, no hidden fees.</span>
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -110,7 +120,7 @@ export function PricingView({ onNavigate }: PricingViewProps) {
               What&apos;s never included — <span className="text-gradient-pink">and never will be.</span>
             </>
           }
-          description="Four things you will never see in a ClickTake engagement. Ever."
+          description="Four things you will never see on a ClickTake invoice. Ever. If you find one, forward it to us and we&apos;ll refund the whole engagement."
           align="center"
         />
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -142,6 +152,7 @@ export function PricingView({ onNavigate }: PricingViewProps) {
               Frequently asked <span className="text-gradient-brand">questions.</span>
             </>
           }
+          description="The pricing questions founders ask on the first call — answered straight, before you book anything."
           align="center"
         />
         <Reveal delay={0.05}>
@@ -159,20 +170,14 @@ export function PricingView({ onNavigate }: PricingViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section className="border-t border-border/40">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Not sure which tier fits?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Book a free 30-minute discovery call. We&apos;ll recommend the right tier for your goals, audience and budget — no pressure.
-            </p>
-            <button onClick={() => onNavigate("contact")} className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60">
-              Book a discovery call
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Not sure which tier fits?"
+        description="Book a free 30-minute discovery call. We&apos;ll recommend the right tier for your goals, audience and budget — and if none of them fit, we&apos;ll tell you that too."
+        ctaLabel="Book a discovery call"
+        secondaryLabel="View services"
+        secondaryView="services"
+      />
     </>
   );
 }

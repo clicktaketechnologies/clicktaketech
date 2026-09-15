@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Clock, Search, BookOpen } from "lucide-react";
 import { BLOG_POSTS, BLOG_CATEGORIES, type NavView } from "@/lib/site-data";
-import { Reveal, Section } from "@/components/site/section";
+import { Reveal, Section, LocalTrustStrip, CtaSection } from "@/components/site/section";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -43,11 +43,12 @@ export function BlogView({ onNavigate }: BlogViewProps) {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Practical, no-fluff articles on SEO, web development, AI automation, e-commerce and
+              Practical, no-fluff articles on SEO, web development, AI automation, ecommerce and
               growth marketing — written by the engineers, marketers and designers who ship this
-              work every day for clients across the UK, Pakistan, USA and Dubai.
+              work every day.
             </p>
           </Reveal>
+          <LocalTrustStrip className="mt-8 border-t border-border/40 pt-6" />
         </div>
       </section>
 
@@ -136,20 +137,14 @@ export function BlogView({ onNavigate }: BlogViewProps) {
       </Section>
 
       {/* CTA */}
-      <Section className="border-t border-border/40">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/10 p-8 text-center sm:p-12">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Want a playbook for your business?</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              Book a free 30-minute consultation and we&apos;ll scope a custom roadmap — drawing on the same frameworks behind these articles.
-            </p>
-            <button onClick={() => onNavigate("contact")} className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60">
-              Book a free consultation
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
-          </div>
-        </Reveal>
-      </Section>
+      <CtaSection
+        onNavigate={onNavigate}
+        title="Want a playbook for your business?"
+        description="Book a free 30-minute consultation and we'll scope a custom roadmap — drawing on the same frameworks behind these articles. No pitch deck, just a real conversation with a senior engineer."
+        ctaLabel="Book a free consultation"
+        secondaryLabel="View services"
+        secondaryView="services"
+      />
     </>
   );
 }
