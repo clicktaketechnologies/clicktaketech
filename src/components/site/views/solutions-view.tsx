@@ -107,7 +107,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
                 <button
-                  onClick={() => onNavigate("work")}
+                  onClick={() => onNavigate("case-studies")}
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-border/60 bg-card/40 px-5 py-3 text-sm font-semibold text-foreground transition-all hover:border-blue-500/40 hover:bg-card"
                 >
                   See results

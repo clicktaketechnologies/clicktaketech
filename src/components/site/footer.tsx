@@ -1,7 +1,7 @@
 "use client";
 
 import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
-import { OFFICES, TECH_STACK, type NavView } from "@/lib/site-data";
+import { OFFICES, TECH_STACK, LEGAL_LINKS, type NavView } from "@/lib/site-data";
 
 type FooterProps = {
   onNavigate: (v: NavView) => void;
@@ -29,13 +29,22 @@ const footerNav: { title: string; links: { label: string; view: NavView }[] }[] 
     ],
   },
   {
+    title: "Resources",
+    links: [
+      { label: "Portfolio", view: "portfolio" },
+      { label: "Case Studies", view: "case-studies" },
+      { label: "Blog", view: "blog" },
+      { label: "Pricing", view: "pricing" },
+    ],
+  },
+  {
     title: "Company",
     links: [
-      { label: "About Us", view: "about" },
-      { label: "Case Studies", view: "work" },
-      { label: "Portfolio", view: "work" },
+      { label: "About ClickTake", view: "about" },
+      { label: "Our Team", view: "team" },
       { label: "Careers", view: "careers" },
-      { label: "Resources", view: "resources" },
+      { label: "Connect", view: "connect" },
+      { label: "Cities We Serve", view: "cities" },
       { label: "Contact", view: "contact" },
     ],
   },
@@ -48,10 +57,7 @@ export function Footer({ onNavigate }: FooterProps) {
       <div className="overflow-hidden border-b border-border/40 py-4">
         <div className="flex w-max animate-marquee items-center gap-3">
           {[...TECH_STACK, ...TECH_STACK].map((tech, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 text-xs font-medium text-muted-foreground"
-            >
+            <span key={i} className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-card/40 px-4 py-1.5 text-xs font-medium text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
               {tech}
             </span>
@@ -60,26 +66,14 @@ export function Footer({ onNavigate }: FooterProps) {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-14">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
-                  <path
-                    d="M4 7h16M4 12h10M4 17h7"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M17 14l3 3-3 3"
-                    stroke="currentColor"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+                  <path d="M4 7h16M4 12h10M4 17h7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M17 14l3 3-3 3" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
               <span className="text-base font-bold tracking-tight">ClickTake</span>
@@ -91,28 +85,14 @@ export function Footer({ onNavigate }: FooterProps) {
               since 2019.
             </p>
             <div className="mt-5 space-y-2 text-sm">
-              <a
-                href="mailto:info@clicktaketech.com"
-                className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400"
-              >
-                <Mail className="h-4 w-4" />
-                info@clicktaketech.com
+              <a href="mailto:info@clicktaketech.com" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
+                <Mail className="h-4 w-4" /> info@clicktaketech.com
               </a>
-              <a
-                href="tel:+447391653377"
-                className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400"
-              >
-                <Phone className="h-4 w-4" />
-                +44 7391 653377
+              <a href="tel:+447391653377" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
+                <Phone className="h-4 w-4" /> +44 7391 653377
               </a>
-              <a
-                href="https://wa.link/iqz8eg"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400"
-              >
-                <MessageCircle className="h-4 w-4" />
-                WhatsApp
+              <a href="https://wa.link/iqz8eg" target="_blank" rel="noreferrer" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
+                <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
           </div>
@@ -120,9 +100,7 @@ export function Footer({ onNavigate }: FooterProps) {
           {/* Nav columns */}
           {footerNav.map((col) => (
             <div key={col.title}>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">
-                {col.title}
-              </h4>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">{col.title}</h4>
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>
@@ -148,9 +126,7 @@ export function Footer({ onNavigate }: FooterProps) {
             <div key={o.city} className="flex items-start gap-2.5">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-blue-400" />
               <div>
-                <div className="text-sm font-medium">
-                  {o.flag} {o.city}
-                </div>
+                <div className="text-sm font-medium">{o.flag} {o.city}</div>
                 <div className="text-xs text-muted-foreground">{o.country}</div>
                 <div className="text-xs text-blue-400/70">{o.role}</div>
               </div>
@@ -158,15 +134,24 @@ export function Footer({ onNavigate }: FooterProps) {
           ))}
         </div>
 
-        {/* Bottom bar */}
+        {/* Bottom bar with Legal links */}
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-6 sm:flex-row">
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} ClickTake Technologies. All rights reserved.
           </p>
-          <div className="flex items-center gap-5 text-xs text-muted-foreground">
-            <button className="transition-colors hover:text-foreground">Privacy</button>
-            <button className="transition-colors hover:text-foreground">Terms</button>
-            <button className="transition-colors hover:text-foreground">Cookies</button>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
+            {LEGAL_LINKS.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => {
+                  onNavigate(link.id);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+                className="transition-colors hover:text-blue-400"
+              >
+                {link.label}
+              </button>
+            ))}
             <span className="text-blue-400/70">Built with Next.js</span>
           </div>
         </div>

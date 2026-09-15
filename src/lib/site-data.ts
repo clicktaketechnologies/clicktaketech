@@ -38,27 +38,82 @@ import {
   Workflow,
   MessageSquare,
   Zap,
+  BookOpen,
+  Tag,
+  Briefcase,
+  Building2,
+  Scale,
+  FileText,
+  Cookie,
+  Heart,
+  Linkedin,
+  Facebook,
+  Instagram,
+  Twitter,
+  Rss,
+  CheckCircle2,
+  XCircle,
 } from "lucide-react";
 
 export type NavView =
   | "home"
   | "services"
   | "solutions"
-  | "work"
+  | "portfolio"
+  | "case-studies"
+  | "blog"
+  | "pricing"
   | "about"
+  | "team"
   | "careers"
   | "cities"
-  | "resources"
-  | "contact";
+  | "connect"
+  | "contact"
+  | "legal-privacy"
+  | "legal-terms"
+  | "legal-cookies";
 
-export const NAV_ITEMS: { id: NavView; label: string }[] = [
-  { id: "home", label: "Home" },
-  { id: "services", label: "Services" },
-  { id: "solutions", label: "Solutions" },
-  { id: "work", label: "Work" },
-  { id: "about", label: "About" },
-  { id: "resources", label: "Resources" },
-  { id: "contact", label: "Contact" },
+type NavDropdownItem = {
+  id: NavView;
+  label: string;
+  desc: string;
+  icon: LucideIcon;
+};
+
+type NavItem =
+  | { id: NavView; label: string; kind: "link" }
+  | { id: "services"; label: string; kind: "mega" }
+  | { id: "resources"; label: string; kind: "dropdown"; items: NavDropdownItem[] }
+  | { id: "company"; label: string; kind: "dropdown"; items: NavDropdownItem[] };
+
+export const NAV_ITEMS: NavItem[] = [
+  { id: "home", label: "Home", kind: "link" },
+  { id: "services", label: "Services", kind: "mega" },
+  { id: "solutions", label: "Solutions", kind: "link" },
+  {
+    id: "resources",
+    label: "Resources",
+    kind: "dropdown",
+    items: [
+      { id: "portfolio", label: "Portfolio", desc: "12 live client deployments", icon: Briefcase },
+      { id: "case-studies", label: "Case Studies", desc: "Real metrics from real engagements", icon: BarChart3 },
+      { id: "blog", label: "Blog", desc: "Field notes on SEO, web & AI", icon: BookOpen },
+      { id: "pricing", label: "Pricing", desc: "Starter · Growth · Scale · Custom", icon: Tag },
+    ],
+  },
+  {
+    id: "company",
+    label: "Company",
+    kind: "dropdown",
+    items: [
+      { id: "about", label: "About ClickTake", desc: "AI-native agency since 2019", icon: Building2 },
+      { id: "team", label: "Our Team", desc: "28 people across 4 offices", icon: Users },
+      { id: "careers", label: "Careers", desc: "Open roles across all practices", icon: Briefcase },
+      { id: "connect", label: "Connect", desc: "Direct contact & social", icon: Heart },
+      { id: "cities", label: "Cities We Serve", desc: "13 cities · 4 countries", icon: MapPin },
+      { id: "contact", label: "Contact", desc: "Free 30-min consult", icon: Mail },
+    ],
+  },
 ];
 
 export const STATS = [
@@ -963,4 +1018,517 @@ export const PROJECT_NEEDS = [
   "Security Audit",
   "Growth / Marketing",
   "Something else",
+];
+
+// ===== BLOG =====
+export type BlogPost = {
+  slug: string;
+  title: string;
+  category: string;
+  excerpt: string;
+  date: string;
+  readTime: string;
+};
+
+export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: "blog-7-best-ai-chatbots-for-capturing-website-leads-2026",
+    title: "7 Best AI Chatbots for Capturing Website Leads (2026)",
+    category: "AI Automation",
+    excerpt:
+      "If you're asking what is the best AI chatbot for capturing leads on a website, the answer depends on something most buying guides skip entirely: whether the bot actually qualifies prospects or merely collects their contact details.",
+    date: "5 Aug 2026",
+    readTime: "14 min",
+  },
+  {
+    slug: "blog-7-social-media-content-types-that-actually-drive-sales",
+    title: "7 social media content types that actually drive sales",
+    category: "Digital Marketing",
+    excerpt:
+      "Most brands measure social media performance by likes, shares, and follower growth. These metrics feel meaningful; they're easy to report, and they generate the kind of positive momentum that keeps stakeholders happy in a monthly review.",
+    date: "27 Jul 2026",
+    readTime: "11 min",
+  },
+  {
+    slug: "blog-ai-automations-that-actually-work-for-small-businesses",
+    title: "AI Automations That Actually Work for Small Businesses",
+    category: "AI Automation",
+    excerpt:
+      "If you're wondering what AI automations actually work for small businesses, you're not alone — and the answer is more straightforward than most vendors make it sound.",
+    date: "18 Jul 2026",
+    readTime: "12 min",
+  },
+  {
+    slug: "blog-ai-business-automation-what-actually-works-for-smes",
+    title: "AI business automation: what actually works for SMEs",
+    category: "AI Automation",
+    excerpt:
+      "A practical breakdown of the AI automations that deliver real ROI for small and medium enterprises — and the ones that are smoke and mirrors.",
+    date: "10 Jul 2026",
+    readTime: "13 min",
+  },
+  {
+    slug: "blog-how-to-build-a-social-media-content-strategy-in-2026",
+    title: "How to build a social media content strategy in 2026",
+    category: "Digital Marketing",
+    excerpt:
+      "A repeatable framework for building a social media content strategy that compounds — from audience research to editorial calendar to measurement.",
+    date: "2 Jul 2026",
+    readTime: "15 min",
+  },
+  {
+    slug: "blog-leading-platforms-for-website-user-behavior-analytics-in-2026",
+    title: "Leading Platforms for Website User Behavior Analytics in 2026",
+    category: "Web",
+    excerpt:
+      "A technical comparison of the leading user behavior analytics platforms — PostHog, FullStory, Hotjar, Microsoft Clarity — and when to pick each.",
+    date: "24 Jun 2026",
+    readTime: "16 min",
+  },
+  {
+    slug: "blog-next-js-pagespeed-optimisation-how-to-hit-90-scores",
+    title: "Next.js PageSpeed optimisation: how to hit 90+ scores",
+    category: "Web",
+    excerpt:
+      "The exact performance patterns we use to ship Next.js 16 apps that hit 90+ Lighthouse scores — from RSC to image optimization to edge caching.",
+    date: "16 Jun 2026",
+    readTime: "13 min",
+  },
+  {
+    slug: "blog-seo-audit-checklist-25-steps-to-rank-higher-in-2026",
+    title: "SEO Audit Checklist: 25 Steps to Rank Higher in 2026",
+    category: "SEO",
+    excerpt:
+      "The exact 25-step technical SEO audit we run on every new engagement — covering crawlability, indexation, Core Web Vitals, structured data, and content gaps.",
+    date: "8 Jun 2026",
+    readTime: "20 min",
+  },
+  {
+    slug: "blog-social-media-for-ecommerce-turning-views-into-sales",
+    title: "Social media for ecommerce: turning views into sales",
+    category: "Ecommerce",
+    excerpt:
+      "How D2C brands turn social media views into actual sales — the content formats, funnel design, and attribution models that work in 2026.",
+    date: "1 Jun 2026",
+    readTime: "12 min",
+  },
+];
+
+export const BLOG_CATEGORIES = [
+  "All",
+  "AI Automation",
+  "Digital Marketing",
+  "SEO",
+  "Web",
+  "Ecommerce",
+];
+
+// ===== PRICING =====
+export type PricingTier = {
+  name: string;
+  tagline: string;
+  audience: string;
+  price: string;
+  cadence: string;
+  popular?: boolean;
+  features: string[];
+  notIncluded: string[];
+  cta: string;
+};
+
+export const PRICING_TIERS: PricingTier[] = [
+  {
+    name: "Starter",
+    tagline: "For new founders & local businesses",
+    audience: "From £1,500",
+    price: "£1,500",
+    cadence: "one-off project",
+    cta: "Start with Starter",
+    features: [
+      "Up to 5-page mobile-first Next.js website",
+      "Google Business Profile setup + optimization",
+      "Foundational on-page SEO (titles, meta, schema, sitemap)",
+      "Contact form with spam protection + email notifications",
+      "SSL, CDN, analytics and Search Console setup",
+      "Domain + 1 year managed hosting",
+      "2 rounds of revisions",
+      "14-day post-launch support",
+    ],
+    notIncluded: ["AI chatbot or automation", "Ongoing monthly SEO", "Paid media management"],
+  },
+  {
+    name: "Growth",
+    tagline: "For scaling brands & e-commerce stores",
+    audience: "From £6,000",
+    price: "£6,000",
+    cadence: "one-off + monthly retainer",
+    popular: true,
+    cta: "Start with Growth",
+    features: [
+      "Production-ready website or e-commerce rebuild",
+      "Headless commerce (Shopify / Medusa) with 1.5s LCP",
+      "AI automation (chatbot, lead scoring, or workflow)",
+      "Ongoing monthly SEO (technical + content)",
+      "Paid media management (Google + Meta)",
+      "Conversion rate optimization (A/B testing)",
+      "Design system in Storybook + Playwright E2E",
+      "Weekly demos + 30-day post-launch hypercare",
+    ],
+    notIncluded: ["Multi-agent orchestration", "Custom LLM fine-tuning"],
+  },
+  {
+    name: "Scale",
+    tagline: "For SaaS platforms & enterprises",
+    audience: "From £18,000",
+    price: "£18,000",
+    cadence: "one-off + monthly retainer",
+    cta: "Start with Scale",
+    features: [
+      "Multi-tenant SaaS platform engineering",
+      "Custom AI / multi-agent orchestration (LangGraph)",
+      "Cloud DevOps (AWS/GCP/Azure) with Terraform IaC",
+      "Kubernetes autoscaling + observability stack",
+      "SOC 2 Type II audit prep + security hardening",
+      "Dedicated lead engineer + 4-person pod",
+      "p99 120ms SLA + 99.9% uptime guarantee",
+      "24/7 on-call runbook + quarterly roadmapping",
+    ],
+    notIncluded: [],
+  },
+  {
+    name: "Custom Quote",
+    tagline: "For something that doesn't fit a box",
+    audience: "Let's scope it",
+    price: "Custom",
+    cadence: "scoped in a free 30-min call",
+    cta: "Book a discovery call",
+    features: [
+      "Fixed-scope, fixed-fee PoC in 6 weeks",
+      "Senior engineer (not salesperson) on the call",
+      "Draft architecture + ballpark estimate",
+      "Pick any mix of the 24 services",
+      "No long-term contract required to start",
+      "NDA signed before any discovery call",
+      "UK Ltd Co + GDPR-compliant invoicing",
+      "Code + keys handed over, never locked in",
+    ],
+    notIncluded: [],
+  },
+];
+
+export const PRICING_FAQS = [
+  {
+    q: "Are these prices fixed?",
+    a: "These are starting points. Every engagement is scoped in a free 30-minute discovery call to match your specific goals, audience and budget. No fake universal pricing, no hidden fees.",
+  },
+  {
+    q: "What payment methods do you accept?",
+    a: "Bank transfer (GBP, USD, PKR, AED), Stripe, and Wise. Invoices are due within 14 days of issue. Deposits at project kickoff are non-refundable once work commences.",
+  },
+  {
+    q: "Do you offer monthly retainers?",
+    a: "Yes. Growth and Scale tiers include monthly retainers for ongoing SEO, paid media, CRO, and hypercare. Retainers are month-to-month with a 30-day notice period — no long-term lock-in.",
+  },
+  {
+    q: "What's never included — and never will be?",
+    a: "Juniors learning on your budget, vague discovery phases that drag on for months, vendor lock-in, and surprise launch fees. The architecture is always handed over.",
+  },
+];
+
+// ===== TEAM =====
+export const TEAM_STATS = [
+  { value: "28", label: "Team members" },
+  { value: "4", label: "Offices" },
+  { value: "5", label: "Departments" },
+  { value: "2.4 yrs", label: "Avg tenure" },
+];
+
+export type Department = {
+  num: string;
+  name: string;
+  headcount: string;
+  location: string;
+  icon: LucideIcon;
+  desc: string;
+};
+
+export const DEPARTMENTS: Department[] = [
+  {
+    num: "01",
+    name: "Leadership",
+    headcount: "3 people",
+    location: "Birmingham + Multan",
+    icon: Users,
+    desc: "Founders and practice leads who own P&L, client relationships, and engineering standards across every engagement.",
+  },
+  {
+    num: "02",
+    name: "Development",
+    headcount: "12 people",
+    location: "Multan",
+    icon: Code2,
+    desc: "Full-stack engineers, AI/ML engineers, and DevOps specialists shipping production Next.js, Python, and LangGraph systems.",
+  },
+  {
+    num: "03",
+    name: "Marketing",
+    headcount: "3 people",
+    location: "Birmingham + Multan",
+    icon: Megaphone,
+    desc: "SEO specialists, paid media managers, and content strategists who compound qualified pipeline month over month.",
+  },
+  {
+    num: "04",
+    name: "Creative",
+    headcount: "3 people",
+    location: "Multan + Birmingham",
+    icon: Palette,
+    desc: "Graphic designers, web designers, and video producers who make every client product look premium.",
+  },
+  {
+    num: "05",
+    name: "Operations",
+    headcount: "4 people",
+    location: "Distributed",
+    icon: Cpu,
+    desc: "Project managers, finance, and people ops who keep the 4-office, 18-hour workday engine running smoothly.",
+  },
+];
+
+export const HIRING_STAGES = [
+  {
+    num: "01",
+    title: "Recruiter Screen",
+    duration: "30 min",
+    desc: "A conversation about your background, expectations, and whether the role is a mutual fit.",
+  },
+  {
+    num: "02",
+    title: "Technical Interview",
+    duration: "60 min",
+    desc: "A senior engineer walks through your past work and a live system-design or code-review exercise.",
+  },
+  {
+    num: "03",
+    title: "Take-Home Exercise",
+    duration: "4–6 hours, paid",
+    desc: "A realistic, paid exercise relevant to the role — never a LeetCode puzzle or free spec work.",
+  },
+  {
+    num: "04",
+    title: "Team & Culture Fit",
+    duration: "45 min",
+    desc: "Meet 2–3 future teammates to confirm working style and values alignment.",
+  },
+];
+
+export const TEAM_VALUES = [
+  { icon: Globe, title: "Hybrid by default", desc: "In-office 2–3 days/week for engineering; fully remote options for senior roles." },
+  { icon: Cpu, title: "Senior-first", desc: "8+ yr average tenure. No juniors learning on client budgets." },
+  { icon: Users, title: "Cross-office pods", desc: "Every engagement is staffed with a UK account lead + Pakistan tech lead." },
+  { icon: Zap, title: "Real production work", desc: "You ship to 10M+ req/day systems from week one — no busywork." },
+];
+
+// ===== CONNECT (social + direct) =====
+export const SOCIAL_LINKS = [
+  { icon: Facebook, label: "Facebook", value: "clicktaketechnologies", href: "https://www.facebook.com/clicktaketechnologies/" },
+  { icon: Instagram, label: "Instagram", value: "clicktaketechologiesuk", href: "https://www.instagram.com/clicktaketechologiesuk/" },
+  { icon: Linkedin, label: "LinkedIn", value: "clicktake-technologies", href: "#" },
+  { icon: Twitter, label: "Twitter / X", value: "@clicktaketech", href: "#" },
+  { icon: Rss, label: "Blog RSS", value: "feed.xml", href: "#" },
+];
+
+// ===== LEGAL =====
+export type LegalSection = {
+  num: string;
+  title: string;
+  body: string[];
+};
+
+export type LegalDoc = {
+  id: "legal-privacy" | "legal-terms" | "legal-cookies";
+  title: string;
+  updated: string;
+  badge: string;
+  intro: string;
+  sections: LegalSection[];
+};
+
+export const LEGAL_DOCS: Record<LegalDoc["id"], LegalDoc> = {
+  "legal-privacy": {
+    id: "legal-privacy",
+    title: "Privacy Policy",
+    updated: "May 26, 2026",
+    badge: "GDPR · UK DPA Compliant",
+    intro:
+      "ClickTake Technologies Ltd. (\"we\", \"us\", \"our\") respects your privacy and is committed to protecting your personal data. This privacy policy informs you how we look after your personal data when you visit our website, submit discovery calls, fill out project inquiry forms, or apply for vacancies.",
+    sections: [
+      {
+        num: "01",
+        title: "Introduction & Scope",
+        body: [
+          "This policy applies to all individuals who interact with ClickTake Technologies Ltd. via our website, forms, email, or any of our digital services.",
+          "We are a UK-registered limited company (Companies House) operating across the United Kingdom, Pakistan, the United States, and the United Arab Emirates. We act as both a data controller (for prospective-client and applicant data) and a data processor (for data processed on behalf of clients under a separate DPA).",
+        ],
+      },
+      {
+        num: "02",
+        title: "Personal Data We Collect",
+        body: [
+          "Identity Data: First name, last name, username, and job titles.",
+          "Contact Data: Email address, telephone numbers, billing addresses, and country.",
+          "Technical Data: IP address, login data, browser types, operating systems, and device specs.",
+          "Usage Data: Information about how you interact with our website, services, forms, and calculators.",
+        ],
+      },
+      {
+        num: "03",
+        title: "How We Use Your Data",
+        body: [
+          "We will only use your personal data when the law allows us to. Most commonly, we will use your data to:",
+          "Register you as a new customer and scope your project requirements.",
+          "Deliver custom development, search engine optimization campaigns, and automation pipelines.",
+          "Manage our ongoing partnership relationship (notifying you about milestones, payments, or updates).",
+          "Screen prospective applicants who submit portfolios via our Careers portal.",
+        ],
+      },
+      {
+        num: "04",
+        title: "Data Security",
+        body: [
+          "We have put in place appropriate technical and organizational measures to protect your personal data, including TLS encryption in transit, AES-256 encryption at rest, role-based access control, and quarterly security reviews.",
+          "Access to personal data is restricted to authorized personnel on a need-to-know basis and is logged for audit.",
+        ],
+      },
+      {
+        num: "05",
+        title: "Data Retention & Your Rights",
+        body: [
+          "We retain personal data only for as long as necessary to fulfill the purposes for which it was collected, including legal, accounting, and reporting requirements.",
+          "Under the GDPR and UK DPA, you have the right to access, rectify, erase, restrict, or object to the processing of your personal data, and the right to data portability.",
+          "To exercise any of these rights, email info@clicktaketech.com. We respond within 30 days.",
+        ],
+      },
+    ],
+  },
+  "legal-terms": {
+    id: "legal-terms",
+    title: "Terms of Service",
+    updated: "May 26, 2026",
+    badge: "Service Agreement",
+    intro:
+      "By accessing or using the services provided by ClickTake Technologies Ltd. (\"the Company\", \"we\", \"us\"), you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must not engage with our services or use our website.",
+    sections: [
+      {
+        num: "01",
+        title: "Acceptance of Terms",
+        body: [
+          "By engaging with ClickTake Technologies, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and any Statement of Work (SOW) you sign with us.",
+        ],
+      },
+      {
+        num: "02",
+        title: "Services & Engagements",
+        body: [
+          "We provide digital services including but not limited to: custom software, web and mobile application development; AI, machine learning and automation solutions; search engine optimization, paid media and digital marketing; and brand identity, design and creative production.",
+          "Each engagement is governed by a separate Statement of Work (SOW) that specifies deliverables, timeline, price, and acceptance criteria. In the event of a conflict, the SOW prevails over these Terms.",
+        ],
+      },
+      {
+        num: "03",
+        title: "Payment Terms",
+        body: [
+          "Unless otherwise stated in your SOW, invoices are due within 14 days of issue. We accept bank transfer (GBP, USD, PKR, AED), Stripe, and Wise.",
+          "Late payments may incur a 1.5% monthly interest charge. Deposits at project kickoff are non-refundable once work commences.",
+        ],
+      },
+      {
+        num: "04",
+        title: "Intellectual Property",
+        body: [
+          "Upon receipt of full payment, all custom-developed source code, designs, and assets delivered under an SOW are transferred to the client under a worldwide, perpetual, royalty-free license.",
+          "We retain rights to reusable components, libraries, and frameworks developed prior to or independently of the engagement, which are licensed to the client on a non-exclusive basis.",
+        ],
+      },
+      {
+        num: "05",
+        title: "Confidentiality & NDAs",
+        body: [
+          "We treat all client information as confidential and will not disclose it to third parties without consent. We are happy to sign mutual NDAs before any discovery call — this is standard practice for us.",
+        ],
+      },
+      {
+        num: "06",
+        title: "Limitation of Liability",
+        body: [
+          "To the maximum extent permitted by law, ClickTake Technologies shall not be liable for any indirect, incidental, special, or consequential damages, or any loss of profits or revenue, arising from the use of our services.",
+          "Our total liability under any SOW is limited to the fees paid by the client for the services giving rise to the claim during the 12 months preceding the claim.",
+        ],
+      },
+      {
+        num: "07",
+        title: "Governing Law",
+        body: [
+          "These Terms and any SOW are governed by the laws of England and Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales, unless otherwise agreed in writing.",
+        ],
+      },
+    ],
+  },
+  "legal-cookies": {
+    id: "legal-cookies",
+    title: "Cookie Policy",
+    updated: "May 26, 2026",
+    badge: "EU ePrivacy · PECR Compliant",
+    intro:
+      "This Cookie Policy explains how ClickTake Technologies Ltd. uses cookies and similar technologies on our website. Cookies are small text files placed on your device by the websites you visit.",
+    sections: [
+      {
+        num: "01",
+        title: "What Are Cookies",
+        body: [
+          "Cookies are small text files placed on your device by the websites you visit. They are widely used to make websites work more efficiently and to provide information to site owners.",
+          "Cookies may be session cookies (deleted when you close your browser) or persistent cookies (remain until they expire or you delete them).",
+        ],
+      },
+      {
+        num: "02",
+        title: "How We Use Cookies",
+        body: [
+          "Essential: Required for the website to function (e.g. session, theme preference).",
+          "Analytics: To understand how visitors use our site (e.g. Google Analytics 4, anonymized).",
+          "Marketing: To measure the effectiveness of our campaigns on Meta, LinkedIn, and Google Ads.",
+          "Functional: To remember your preferences (e.g. dark mode, language).",
+        ],
+      },
+      {
+        num: "03",
+        title: "Third-Party Cookies",
+        body: [
+          "We use third-party services that may set their own cookies, including Cloudflare Turnstile (bot protection), Google Analytics (usage analytics), and Meta Pixel (campaign attribution).",
+          "Each third-party provider manages its own cookies according to its own privacy policy. We encourage you to review their policies.",
+        ],
+      },
+      {
+        num: "04",
+        title: "Managing Cookies",
+        body: [
+          "You can control or delete cookies through your browser settings. Note that disabling all cookies may affect website functionality — for example, you may not be able to submit the contact form or save your theme preference.",
+          "Most browsers allow you to: (a) accept all cookies; (b) reject all cookies; (c) delete existing cookies; or (d) block cookies from specific sites.",
+        ],
+      },
+      {
+        num: "05",
+        title: "Updates to This Policy",
+        body: [
+          "We may update this Cookie Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically.",
+        ],
+      },
+    ],
+  },
+};
+
+export const LEGAL_LINKS: { id: NavView; label: string }[] = [
+  { id: "legal-privacy", label: "Privacy Policy" },
+  { id: "legal-terms", label: "Terms of Service" },
+  { id: "legal-cookies", label: "Cookie Policy" },
 ];
