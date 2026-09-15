@@ -19,14 +19,36 @@ import {
   Mail,
   Phone,
   MessageCircle,
+  Megaphone,
+  Target,
+  PenTool,
+  Search,
+  Share2,
+  BarChart3,
+  Layers,
+  Server,
+  Lock,
+  Database,
+  Palette,
+  Video,
+  Monitor,
+  Sparkles,
+  Brain,
+  Eye,
+  Workflow,
+  MessageSquare,
+  Zap,
 } from "lucide-react";
 
 export type NavView =
   | "home"
   | "services"
   | "solutions"
-  | "about"
   | "work"
+  | "about"
+  | "careers"
+  | "cities"
+  | "resources"
   | "contact";
 
 export const NAV_ITEMS: { id: NavView; label: string }[] = [
@@ -35,6 +57,7 @@ export const NAV_ITEMS: { id: NavView; label: string }[] = [
   { id: "solutions", label: "Solutions" },
   { id: "work", label: "Work" },
   { id: "about", label: "About" },
+  { id: "resources", label: "Resources" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -63,45 +86,260 @@ export type Capability = {
 export const CAPABILITIES: Capability[] = [
   {
     num: "01",
-    icon: Code2,
-    title: "Custom Software",
-    desc: "Multi-tenant SaaS, dashboards, and internal tools. Built on Next.js + Postgres + Stripe with design systems and observability from day one.",
-    tags: ["Next.js 16", "Postgres", "Stripe", "Prisma"],
+    icon: Megaphone,
+    title: "Digital Marketing",
+    desc: "PPC, content strategy, CRO, SEO, and social media. Data-led marketing that compounds qualified pipeline — measured against your analytics.",
+    tags: ["PPC", "SEO", "CRO", "Social"],
   },
   {
     num: "02",
-    icon: Bot,
-    title: "AI Agents",
-    desc: "Autonomous goal-pursuing agents with tool-use, memory, and planning. Multi-agent orchestration with evals, guardrails, and human-in-loop fallbacks.",
-    tags: ["LangGraph", "OpenAI", "Anthropic", "pgvector"],
+    icon: Code2,
+    title: "Web & Software",
+    desc: "Full-stack web development, SaaS engineering, auth, Python APIs, WordPress & ecommerce. Production-grade apps with CI/CD from day one.",
+    tags: ["Next.js", "SaaS", "Python", "WordPress"],
   },
   {
     num: "03",
-    icon: Cloud,
-    title: "Cloud & DevOps",
-    desc: "AWS · GCP · Azure. Terraform IaC, GitOps pipelines, autoscaling K8s clusters, and observability stacks that surface regressions before users do.",
-    tags: ["AWS", "Terraform", "Kubernetes", "ArgoCD"],
+    icon: Bot,
+    title: "AI & Automation",
+    desc: "Custom LLMs, chatbots, prompt engineering, computer vision & NLP, AI automation, and agent development — from PoC to production in 6 weeks.",
+    tags: ["LLM", "Agents", "RAG", "Automation"],
   },
   {
     num: "04",
-    icon: Smartphone,
-    title: "Web & Mobile",
-    desc: "Next.js 16 + React Native. Production apps with CI/CD from day one — design systems in Storybook and E2E Playwright coverage.",
-    tags: ["React Native", "Flutter", "CI/CD", "Playwright"],
+    icon: Palette,
+    title: "Creative & Brand",
+    desc: "Graphic design, professional web design, B2B video production, and responsive web design for small businesses and enterprises alike.",
+    tags: ["Branding", "Video", "UI/UX", "Responsive"],
+  },
+];
+
+// ===== SERVICES (4 categories × 6 services = 24) =====
+export type ServiceItem = {
+  slug: string;
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+  features: string[];
+};
+
+export type ServiceCategory = {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  tagline: string;
+  blurb: string;
+  services: ServiceItem[];
+};
+
+export const SERVICE_CATEGORIES: ServiceCategory[] = [
+  {
+    id: "digital-marketing",
+    label: "Digital Marketing",
+    icon: Megaphone,
+    tagline: "Data-led growth that compounds pipeline.",
+    blurb:
+      "Performance marketing engineered around measurable revenue — not vanity metrics. Every channel is tracked end-to-end from impression to closed-won.",
+    services: [
+      {
+        slug: "ppc-paid-ads",
+        icon: Target,
+        title: "PPC / Paid Ads",
+        desc: "Google, Meta, LinkedIn & TikTok ad campaigns engineered around profitable CPA, not clicks. Full-funnel tracking from impression to revenue.",
+        features: ["Google Ads", "Meta & LinkedIn", "ROAS optimization", "Conversion tracking"],
+      },
+      {
+        slug: "content-strategy-seo",
+        icon: PenTool,
+        title: "Content Strategy & SEO",
+        desc: "Topical authority maps, content clusters, and editorial calendars that compound organic traffic month over month.",
+        features: ["Topic clusters", "Editorial calendar", "On-page SEO", "Content ops"],
+      },
+      {
+        slug: "conversion-rate-optimization",
+        icon: BarChart3,
+        title: "Conversion Rate Optimization",
+        desc: "A/B testing, heatmaps, and funnel analysis that lift checkout conversion by 25–60% without extra ad spend.",
+        features: ["A/B testing", "Funnel analysis", "Heatmaps", "Landing page CRO"],
+      },
+      {
+        slug: "seo-services",
+        icon: Search,
+        title: "SEO Services",
+        desc: "Technical, on-page, and off-page SEO. We move you into the top 3 of the local pack and keep you there.",
+        features: ["Technical SEO", "Local SEO", "Link building", "Core Web Vitals"],
+      },
+      {
+        slug: "social-media-marketing",
+        icon: Share2,
+        title: "Social Media Marketing",
+        desc: "Organic and paid social strategy that turns followers into a community and views into sales.",
+        features: ["Content calendars", "Community management", "Paid social", "Influencer ops"],
+      },
+      {
+        slug: "seo-web-design-services",
+        icon: Monitor,
+        title: "SEO & Web Design Services",
+        desc: "Sites built SEO-first from the ground up — fast, indexable, and structured for ranking from launch day.",
+        features: ["SEO-first build", "Schema markup", "PageSpeed 90+", "Indexability audit"],
+      },
+    ],
   },
   {
-    num: "05",
-    icon: ShieldCheck,
-    title: "Security Systems",
-    desc: "Zero-trust architectures, SOC 2 Type II audit prep, SAST/DAST in CI, and pen-test remediation. Compliance as code.",
-    tags: ["Zero-trust", "SOC 2", "SAST/DAST", "Pen-test"],
+    id: "web-software",
+    label: "Web & Software",
+    icon: Code2,
+    tagline: "Production-grade apps, not prototypes.",
+    blurb:
+      "Full-stack engineering on Next.js, React, Python and Node — shipped with design systems, observability, CI/CD, and E2E test coverage from day one.",
+    services: [
+      {
+        slug: "full-stack-web-development",
+        icon: Layers,
+        title: "Full-Stack Web Development",
+        desc: "Next.js 16 + TypeScript + Prisma + Postgres. Design systems, Storybook, Playwright E2E, and CI/CD from day one.",
+        features: ["Next.js 16", "TypeScript", "Prisma + Postgres", "Playwright E2E"],
+      },
+      {
+        slug: "saas-platform-engineering",
+        icon: Cloud,
+        title: "SaaS Platform Engineering",
+        desc: "Multi-tenant SaaS with billing (Stripe), RBAC, audit logs, and usage metering — architected to scale to 100K tenants.",
+        features: ["Multi-tenancy", "Stripe billing", "RBAC", "Usage metering"],
+      },
+      {
+        slug: "auth-identity",
+        icon: Lock,
+        title: "Auth & Identity",
+        desc: "NextAuth, OAuth, SSO, SAML, and passkey-based authentication with zero-trust session handling.",
+        features: ["NextAuth v4", "OAuth / SSO / SAML", "Passkeys", "Zero-trust sessions"],
+      },
+      {
+        slug: "python-backend-apis",
+        icon: Server,
+        title: "Python Backend & APIs",
+        desc: "FastAPI services, async workers, and typed REST/GraphQL APIs with OpenAPI docs and p99 120ms SLAs.",
+        features: ["FastAPI", "Async workers", "GraphQL", "OpenAPI docs"],
+      },
+      {
+        slug: "wordpress-web-design-services",
+        icon: Monitor,
+        title: "WordPress Web Design Services",
+        desc: "Custom WordPress + WooCommerce builds with headless options, ACF blocks, and Lighthouse 90+ performance.",
+        features: ["WordPress + Woo", "Headless WP", "ACF blocks", "Lighthouse 90+"],
+      },
+      {
+        slug: "ecommerce-web-design-services",
+        icon: ShoppingCart,
+        title: "Ecommerce Web Design Services",
+        desc: "Headless Shopify, Medusa, and custom commerce — sub-second LCP, +25–60% CVR, and infinite scale.",
+        features: ["Headless Shopify", "Medusa", "Stripe checkout", "1.5s LCP"],
+      },
+    ],
   },
   {
-    num: "06",
-    icon: TrendingUp,
-    title: "Growth Systems",
-    desc: "SEO, paid, and CRO. Data-led marketing that compounds qualified pipeline — measured against your analytics, not vanity metrics.",
-    tags: ["SEO", "Paid", "CRO", "Analytics"],
+    id: "ai-automation",
+    label: "AI & Automation",
+    icon: Bot,
+    tagline: "From PoC to production in 6 weeks.",
+    blurb:
+      "Custom LLMs, autonomous agents, and AI automation with evals, guardrails, and human-in-loop fallbacks — built for real production workloads, not demos.",
+    services: [
+      {
+        slug: "custom-llm-solutions",
+        icon: Brain,
+        title: "Custom LLM Solutions",
+        desc: "Fine-tuned and RAG-grounded LLMs over your private data — with eval harnesses, guardrails, and cost controls.",
+        features: ["RAG pipelines", "Fine-tuning", "Eval harness", "Guardrails"],
+      },
+      {
+        slug: "ai-chatbots-assistants",
+        icon: MessageSquare,
+        title: "AI Chatbots & Assistants",
+        desc: "Production chatbots with tool-use, memory, and human handoff — deployed on your site, WhatsApp, and Slack.",
+        features: ["Tool-use", "Memory", "Human handoff", "Multi-channel"],
+      },
+      {
+        slug: "prompt-engineering",
+        icon: Sparkles,
+        title: "Prompt Engineering",
+        desc: "Systematic prompt design, evaluation, and version control for reliable LLM behaviour at scale.",
+        features: ["Prompt versioning", "Eval suites", "Few-shot design", "Cost optimization"],
+      },
+      {
+        slug: "computer-vision-nlp",
+        icon: Eye,
+        title: "Computer Vision & NLP",
+        desc: "OCR, object detection, document intelligence, and classification models deployed to production endpoints.",
+        features: ["OCR & document AI", "Object detection", "Classification", "Edge deployment"],
+      },
+      {
+        slug: "ai-automation",
+        icon: Workflow,
+        title: "AI Automation",
+        desc: "Workflows that eliminate 30+ hours/week of manual work — connecting your tools with intelligent agents.",
+        features: ["Workflow orchestration", "Tool integrations", "Human-in-loop", "Monitoring"],
+      },
+      {
+        slug: "ai-agent-development",
+        icon: Bot,
+        title: "AI Agent Development",
+        desc: "Autonomous goal-pursuing agents with planning, memory, and multi-agent orchestration via LangGraph.",
+        features: ["LangGraph", "Planning & memory", "Multi-agent", "Production evals"],
+      },
+    ],
+  },
+  {
+    id: "creative-brand",
+    label: "Creative & Brand",
+    icon: Palette,
+    tagline: "Premium craft, delivered on deadline.",
+    blurb:
+      "Brand identity, web design, and video production that make your product unforgettable — executed at an elite level across every touchpoint.",
+    services: [
+      {
+        slug: "graphic-design",
+        icon: PenTool,
+        title: "Graphic Design",
+        desc: "Logos, brand systems, marketing collateral, and social creatives that look premium and convert.",
+        features: ["Brand identity", "Logo systems", "Marketing collateral", "Social creatives"],
+      },
+      {
+        slug: "professional-web-design-services",
+        icon: Monitor,
+        title: "Professional Web Design Services",
+        desc: "Conversion-focused web design with UX research, wireframes, and pixel-perfect Figma handoff.",
+        features: ["UX research", "Wireframes", "Figma design systems", "Hi-fi prototypes"],
+      },
+      {
+        slug: "b2b-video-production",
+        icon: Video,
+        title: "B2B Video Production",
+        desc: "Explainer videos, product demos, and ad creatives — scripted, shot, and edited end-to-end.",
+        features: ["Explainer videos", "Product demos", "Ad creatives", "Motion graphics"],
+      },
+      {
+        slug: "web-design-services",
+        icon: Layers,
+        title: "Web Design Services",
+        desc: "End-to-end web design from concept to launch — design systems, UI kits, and developer handoff.",
+        features: ["Design systems", "UI kits", "Dev handoff", "Design QA"],
+      },
+      {
+        slug: "small-business-web-design-services",
+        icon: Store,
+        title: "Small Business Web Design Services",
+        desc: "Affordable, fast-launch websites for small businesses — local-SEO-ready and conversion-optimized.",
+        features: ["Fast launch", "Local-SEO ready", "Mobile-first", "Easy CMS"],
+      },
+      {
+        slug: "responsive-web-design-services",
+        icon: Smartphone,
+        title: "Responsive Web Design Services",
+        desc: "Flawless experiences across every device — mobile, tablet, desktop, and ultra-wide — with no layout shifts.",
+        features: ["Mobile-first", "Fluid layouts", "No CLS", "WCAG 2.2 AA"],
+      },
+    ],
   },
 ];
 
@@ -194,100 +432,7 @@ export const TECH_STACK = [
   "Redis",
 ];
 
-// ===== SERVICES VIEW =====
-export type Service = {
-  num: string;
-  icon: LucideIcon;
-  title: string;
-  tagline: string;
-  desc: string;
-  stack: string[];
-  deliverables: string[];
-};
-
-export const SERVICES: Service[] = [
-  {
-    num: "01",
-    icon: Code2,
-    title: "Custom Web & Mobile Apps",
-    tagline: "Production-grade applications, not prototypes.",
-    desc: "Built on Next.js 16, React Native, and Flutter. We ship products with design systems, observability, CI/CD, and E2E test coverage from day one.",
-    stack: ["Next.js 16", "React 19", "TypeScript", "React Native", "Flutter", "Tailwind", "Prisma"],
-    deliverables: [
-      "Design system + Storybook",
-      "Playwright E2E suite",
-      "Lighthouse 95+ baseline",
-      "WCAG 2.2 AA compliance",
-    ],
-  },
-  {
-    num: "02",
-    icon: Cloud,
-    title: "Enterprise Cloud DevOps",
-    tagline: "AWS, GCP, Azure — pick one or all three.",
-    desc: "Infrastructure-as-code, GitOps pipelines, autoscaling K8s clusters, and observability stacks that surface regressions before your users do.",
-    stack: ["AWS", "GCP", "Azure", "Terraform", "ArgoCD", "Kubernetes", "OpenTelemetry", "Grafana"],
-    deliverables: [
-      "Terraform modules library",
-      "GitOps release pipeline",
-      "Cost optimization (avg 35%↓)",
-      "24/7 on-call runbook",
-    ],
-  },
-  {
-    num: "03",
-    icon: Bot,
-    title: "AI / ML Pipelines",
-    tagline: "From PoC to production in 6 weeks.",
-    desc: "From RAG over your internal knowledge base to multi-agent orchestration handling real customer workflows — with evals, guardrails, and human-in-loop fallbacks.",
-    stack: ["LangGraph", "OpenAI", "Anthropic", "Pinecone", "Weaviate", "pgvector", "vLLM", "LangSmith"],
-    deliverables: [
-      "Multi-agent orchestration",
-      "Enterprise RAG (10M+ docs)",
-      "Custom LLM fine-tuning",
-      "Eval harness + guardrails",
-    ],
-  },
-  {
-    num: "04",
-    icon: ShieldCheck,
-    title: "Security Systems",
-    tagline: "Zero-trust, compliance as code.",
-    desc: "Zero-trust architectures, compliance as code, and pen-test-ready hardening. We've taken 20+ clients through SOC 2 Type II audit prep.",
-    stack: ["Zero-trust", "SOC 2", "SAST/DAST", "Pen-test", "Vault", "OWASP", "CIS Benchmarks"],
-    deliverables: [
-      "Zero-trust network design",
-      "SOC 2 Type II audit prep",
-      "SAST/DAST pipelines in CI",
-      "Pen-test remediation report",
-    ],
-  },
-];
-
-export const SERVICE_PROCESS = [
-  {
-    num: "01",
-    title: "Discovery",
-    desc: "Roadmap mapping, ROI prioritization, fixed-price PoC scoping.",
-  },
-  {
-    num: "02",
-    title: "3D Prototyping",
-    desc: "Interactive prototypes validated with real users before a line of production code.",
-  },
-  {
-    num: "03",
-    title: "Agile Sprints",
-    desc: "Two-week sprints with weekly demos, CI/CD from day one, design system in Storybook.",
-  },
-  {
-    num: "04",
-    title: "Deploy & Scale",
-    desc: "Production launch, 30-day hypercare, runbooks, and on-call rotation handoff.",
-  },
-];
-
-// ===== SOLUTIONS VIEW =====
+// ===== SOLUTIONS =====
 export type Solution = {
   icon: LucideIcon;
   audience: string;
@@ -554,7 +699,7 @@ export const PORTFOLIO: PortfolioItem[] = [
   },
 ];
 
-// ===== ABOUT VIEW =====
+// ===== ABOUT =====
 export const ABOUT_STATS = [
   { value: "2019", label: "Founded" },
   { value: "120+", label: "Projects shipped" },
@@ -638,7 +783,7 @@ export const COMPARE_ROWS = [
 export const FAQS = [
   {
     q: "What does ClickTake actually do?",
-    a: "We are a full-stack, AI-native software engineering firm. We ship custom SaaS platforms, autonomous AI agents, cloud architecture, web & mobile apps, security systems, and growth marketing — structured as six practices under one delivery engine.",
+    a: "We are a full-stack, AI-native software engineering firm organized across four practice areas: Digital Marketing, Web & Software, AI & Automation, and Creative & Brand. We ship 24 specialized services under one delivery engine.",
   },
   {
     q: "How fast can you ship a working PoC?",
@@ -650,7 +795,7 @@ export const FAQS = [
   },
   {
     q: "Where are you based?",
-    a: "Four offices: Birmingham (UK HQ), Multan (engineering hub), Austin (US business desk), and Dubai (MENA office). The combined time zones give us 18-hour workday coverage on every engagement.",
+    a: "Four offices: Birmingham (UK HQ), Multan (engineering hub), Austin (US business desk), and Dubai (MENA office). We serve 12+ cities across the UK, Pakistan, USA and UAE.",
   },
   {
     q: "How is pricing structured?",
@@ -660,6 +805,122 @@ export const FAQS = [
     q: "Do you sign NDAs and comply with GDPR / SOC 2?",
     a: "Yes. We are a UK-registered Ltd Co, GDPR-compliant, and have taken 20+ clients through SOC 2 Type II audit prep. NDAs are signed before any discovery call.",
   },
+];
+
+// ===== CAREERS =====
+export type Job = {
+  slug: string;
+  title: string;
+  location: string;
+  type: string;
+  department: string;
+  desc: string;
+};
+
+export const JOBS: Job[] = [
+  {
+    slug: "senior-nextjs-engineer",
+    title: "Senior Next.js Engineer",
+    location: "Remote · UK / Pakistan",
+    type: "Full-time",
+    department: "Web & Software",
+    desc: "Lead production Next.js 16 builds for enterprise clients. Own architecture, CI/CD, and mentor mid-level engineers.",
+  },
+  {
+    slug: "ai-ml-engineer",
+    title: "AI / ML Engineer",
+    location: "Remote · UK / Pakistan",
+    type: "Full-time",
+    department: "AI & Automation",
+    desc: "Design and ship multi-agent systems, RAG pipelines, and custom LLM solutions with evals and guardrails.",
+  },
+  {
+    slug: "seo-specialist",
+    title: "SEO Specialist",
+    location: "Birmingham, UK · Hybrid",
+    type: "Full-time",
+    department: "Digital Marketing",
+    desc: "Drive technical, on-page, and local SEO for clients across 4 continents. Own rankings, Core Web Vitals, and reporting.",
+  },
+  {
+    slug: "graphic-designer",
+    title: "Graphic Designer",
+    location: "Dubai, UAE · Hybrid",
+    type: "Full-time",
+    department: "Creative & Brand",
+    desc: "Craft brand identities, marketing creatives, and web design systems for clients across the UK, US and MENA.",
+  },
+  {
+    slug: "frontend-engineer-intern",
+    title: "Frontend Engineer Intern",
+    location: "Multan, Pakistan · On-site",
+    type: "Internship",
+    department: "Web & Software",
+    desc: "Learn production Next.js, React, and TypeScript alongside senior engineers. Paid, 3-month rotational program.",
+  },
+];
+
+export const CAREERS_PERKS = [
+  { icon: Globe, title: "Remote-first", desc: "Work from any of our 4 office cities or fully remote." },
+  { icon: Cpu, title: "Senior mentorship", desc: "8+ yr engineers review every PR you ship." },
+  { icon: Zap, title: "Real production work", desc: "Ship to 10M+ req/day systems from week one." },
+  { icon: Users, title: "Global team", desc: "Collaborate across UK, Pakistan, US & UAE time zones." },
+];
+
+// ===== CITIES =====
+export type City = {
+  slug: string;
+  name: string;
+  country: string;
+  flag: string;
+  desc: string;
+};
+
+export const CITIES: City[] = [
+  { slug: "birmingham", name: "Birmingham", country: "United Kingdom", flag: "🇬🇧", desc: "Our UK HQ — serving local businesses, repair shops, and SaaS startups across the Midlands." },
+  { slug: "london", name: "London", country: "United Kingdom", flag: "🇬🇧", desc: "Enterprise fintech, ecommerce, and AI engagements for the capital's scale-ups." },
+  { slug: "manchester", name: "Manchester", country: "United Kingdom", flag: "🇬🇧", desc: "SaaS platforms and digital marketing for the North's tech corridor." },
+  { slug: "leeds", name: "Leeds", country: "United Kingdom", flag: "🇬🇧", desc: "Local SEO, web design, and repair-shop commerce across West Yorkshire." },
+  { slug: "austin", name: "Austin, TX", country: "United States", flag: "🇺🇸", desc: "Our US business desk — SaaS growth channels and AI automation for US startups." },
+  { slug: "new-york", name: "New York", country: "United States", flag: "🇺🇸", desc: "Fintech, media, and enterprise AI engagements on the East Coast." },
+  { slug: "san-francisco", name: "San Francisco", country: "United States", flag: "🇺🇸", desc: "Series-A to Series-C SaaS and AI-native product engineering." },
+  { slug: "dubai", name: "Dubai", country: "United Arab Emirates", flag: "🇦🇪", desc: "Our MENA office — market entry, branding, and AI for the GCC region." },
+  { slug: "abu-dhabi", name: "Abu Dhabi", country: "United Arab Emirates", flag: "🇦🇪", desc: "Government, healthcare, and enterprise web platforms." },
+  { slug: "multan", name: "Multan", country: "Pakistan", flag: "🇵🇰", desc: "Our engineering hub — 18-hour workday delivery coverage." },
+  { slug: "lahore", name: "Lahore", country: "Pakistan", flag: "🇵🇰", desc: "Full-stack engineering and AI talent pool." },
+  { slug: "karachi", name: "Karachi", country: "Pakistan", flag: "🇵🇰", desc: "Digital marketing, SEO, and creative production." },
+  { slug: "islamabad", name: "Islamabad", country: "Pakistan", flag: "🇵🇰", desc: "SaaS engineering and cloud DevOps talent." },
+];
+
+// ===== RESOURCES =====
+export type Resource = {
+  slug: string;
+  title: string;
+  category: string;
+  desc: string;
+  readTime: string;
+};
+
+export const RESOURCES: Resource[] = [
+  { slug: "birmingham-seo-guide", title: "Birmingham SEO Guide", category: "SEO", desc: "Rank in the local pack across the Midlands with this step-by-step technical and local SEO playbook.", readTime: "12 min" },
+  { slug: "ai-adoption-playbook-2026", title: "AI Adoption Playbook 2026", category: "AI", desc: "How to identify, scope, and ship the highest-ROI AI automation for your business in 6 weeks.", readTime: "18 min" },
+  { slug: "dubai-market-entry", title: "Dubai Market Entry", category: "Strategy", desc: "Launching a digital presence in the GCC — legal, cultural, and technical considerations.", readTime: "15 min" },
+  { slug: "austin-saas-growth-channels", title: "Austin SaaS Growth Channels", category: "Growth", desc: "The paid, organic, and partnership channels driving SaaS pipeline in the US tech corridor.", readTime: "10 min" },
+  { slug: "headless-shopify-vs-medusa", title: "Headless Shopify vs Medusa", category: "Ecommerce", desc: "A technical comparison of the two leading headless commerce stacks — when to pick each.", readTime: "14 min" },
+  { slug: "pakistan-tech-talent-guide", title: "Pakistan Tech Talent Guide", category: "Hiring", desc: "How to hire and manage senior engineering talent across Pakistan's tech hubs.", readTime: "11 min" },
+  { slug: "next-js-pagespeed-optimisation", title: "Next.js PageSpeed Optimisation", category: "Web", desc: "Hit 90+ Lighthouse scores with these Next.js 16 performance patterns.", readTime: "13 min" },
+  { slug: "seo-audit-checklist-2026", title: "SEO Audit Checklist — 25 Steps to Rank Higher in 2026", category: "SEO", desc: "The exact 25-step technical SEO audit we run on every new engagement.", readTime: "20 min" },
+];
+
+export const RESOURCE_CATEGORIES = [
+  "All",
+  "SEO",
+  "AI",
+  "Growth",
+  "Ecommerce",
+  "Web",
+  "Strategy",
+  "Hiring",
 ];
 
 // ===== OFFICES & CONTACT =====

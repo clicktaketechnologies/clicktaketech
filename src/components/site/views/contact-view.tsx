@@ -125,14 +125,14 @@ export function ContactView() {
       <section className="relative overflow-hidden pt-32 pb-12 sm:pt-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3.5 py-1.5 text-xs font-medium text-blue-300">
               Contact · Free 30-min Consult
             </span>
           </Reveal>
           <Reveal delay={0.05}>
             <h1 className="mt-6 max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
               Let&apos;s build something{" "}
-              <span className="text-gradient-emerald">extraordinary.</span>
+              <span className="text-gradient-brand">extraordinary.</span>
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
@@ -150,7 +150,7 @@ export function ContactView() {
           {/* Form card */}
           <Reveal>
             <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-card/40 p-6 sm:p-8 lg:p-10">
-              <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-500/10 blur-3xl" />
+              <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
               <AnimatePresence mode="wait">
                 {done ? (
                   <motion.div
@@ -160,7 +160,7 @@ export function ContactView() {
                     exit={{ opacity: 0 }}
                     className="flex flex-col items-center py-10 text-center"
                   >
-                    <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500 text-emerald-950 animate-pulse-ring">
+                    <span className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-500 text-white animate-pulse-ring">
                       <PartyPopper className="h-8 w-8" />
                     </span>
                     <h2 className="mt-6 text-2xl font-bold tracking-tight sm:text-3xl">
@@ -173,7 +173,7 @@ export function ContactView() {
                     </p>
                     <button
                       onClick={reset}
-                      className="mt-7 inline-flex items-center gap-2 rounded-xl border border-border/60 bg-card/40 px-5 py-2.5 text-sm font-semibold text-foreground transition-all hover:border-emerald-500/40 hover:bg-card"
+                      className="mt-7 inline-flex items-center gap-2 rounded-xl border border-border/60 bg-card/40 px-5 py-2.5 text-sm font-semibold text-foreground transition-all hover:border-blue-500/40 hover:bg-card"
                     >
                       Submit another inquiry
                     </button>
@@ -201,8 +201,8 @@ export function ContactView() {
                           <div
                             className={cn(
                               "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors",
-                              s < step && "bg-emerald-500 text-emerald-950",
-                              s === step && "bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/40",
+                              s < step && "bg-blue-500 text-white",
+                              s === step && "bg-blue-500/15 text-blue-400 ring-1 ring-blue-500/40",
                               s > step && "bg-white/5 text-muted-foreground"
                             )}
                           >
@@ -212,7 +212,7 @@ export function ContactView() {
                             <div
                               className={cn(
                                 "h-px flex-1 transition-colors",
-                                s < step ? "bg-emerald-500" : "bg-border/60"
+                                s < step ? "bg-blue-500" : "bg-border/60"
                               )}
                             />
                           )}
@@ -288,13 +288,13 @@ export function ContactView() {
                                   className={cn(
                                     "flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm font-medium transition-all",
                                     form.need === need
-                                      ? "border-emerald-500/60 bg-emerald-500/10 text-foreground ring-1 ring-emerald-500/40"
-                                      : "border-border/50 bg-background/40 text-muted-foreground hover:border-emerald-500/30 hover:text-foreground"
+                                      ? "border-blue-500/60 bg-blue-500/10 text-foreground ring-1 ring-blue-500/40"
+                                      : "border-border/50 bg-background/40 text-muted-foreground hover:border-blue-500/30 hover:text-foreground"
                                   )}
                                 >
                                   {need}
                                   {form.need === need && (
-                                    <Check className="h-4 w-4 text-emerald-400" />
+                                    <Check className="h-4 w-4 text-blue-400" />
                                   )}
                                 </button>
                               ))}
@@ -345,7 +345,7 @@ export function ContactView() {
                                 </div>
                                 <div className="flex justify-between gap-2">
                                   <dt className="text-muted-foreground">Need</dt>
-                                  <dd className="font-medium text-emerald-400">
+                                  <dd className="font-medium text-blue-400">
                                     {form.need || "—"}
                                   </dd>
                                 </div>
@@ -361,14 +361,14 @@ export function ContactView() {
                       <button
                         onClick={back}
                         disabled={step === 0}
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-border/60 bg-card/40 px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:border-emerald-500/40 hover:bg-card disabled:cursor-not-allowed disabled:opacity-40"
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-border/60 bg-card/40 px-4 py-2.5 text-sm font-semibold text-foreground transition-all hover:border-blue-500/40 hover:bg-card disabled:cursor-not-allowed disabled:opacity-40"
                       >
                         <ArrowLeft className="h-4 w-4" /> Back
                       </button>
                       {step < 2 ? (
                         <button
                           onClick={next}
-                          className="group inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-emerald-950 transition-all hover:bg-emerald-400 hover:shadow-[0_0_24px_-4px] hover:shadow-emerald-500/60"
+                          className="group inline-flex items-center gap-1.5 rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-blue-400 hover:shadow-[0_0_24px_-4px] hover:shadow-blue-500/60"
                         >
                           Continue
                           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -377,7 +377,7 @@ export function ContactView() {
                         <button
                           onClick={submit}
                           disabled={submitting}
-                          className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-emerald-950 transition-all hover:bg-emerald-400 hover:shadow-[0_0_24px_-4px] hover:shadow-emerald-500/60 disabled:opacity-60"
+                          className="inline-flex items-center gap-2 rounded-xl bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-blue-400 hover:shadow-[0_0_24px_-4px] hover:shadow-blue-500/60 disabled:opacity-60"
                         >
                           {submitting ? (
                             <>
@@ -413,21 +413,21 @@ export function ContactView() {
                       href={m.href}
                       target={m.href.startsWith("http") ? "_blank" : undefined}
                       rel="noreferrer"
-                      className="group flex items-center gap-3 rounded-xl border border-border/50 bg-background/40 p-3 transition-all hover:border-emerald-500/40 hover:bg-card"
+                      className="group flex items-center gap-3 rounded-xl border border-border/50 bg-background/40 p-3 transition-all hover:border-blue-500/40 hover:bg-card"
                     >
-                      <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+                      <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
                         <m.icon className="h-5 w-5" />
                       </span>
                       <div className="min-w-0">
                         <div className="text-xs text-muted-foreground">{m.label}</div>
                         <div className="truncate text-sm font-medium">{m.value}</div>
                       </div>
-                      <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-emerald-400" />
+                      <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-blue-400" />
                     </a>
                   ))}
                 </div>
                 <div className="mt-4 flex items-center gap-2 rounded-xl bg-background/40 p-3 text-xs text-muted-foreground">
-                  <MapPin className="h-4 w-4 shrink-0 text-emerald-400" />
+                  <MapPin className="h-4 w-4 shrink-0 text-blue-400" />
                   Remote-first · Global team across 4 offices
                 </div>
               </div>
@@ -436,12 +436,12 @@ export function ContactView() {
             <Reveal delay={0.1}>
               <div className="rounded-3xl border border-border/50 bg-card/40 p-6">
                 <h3 className="flex items-center gap-2 text-lg font-semibold">
-                  <Clock className="h-4 w-4 text-emerald-400" /> What happens next?
+                  <Clock className="h-4 w-4 text-blue-400" /> What happens next?
                 </h3>
                 <ol className="mt-5 space-y-4">
                   {NEXT_STEPS.map((s) => (
                     <li key={s.num} className="flex gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-sm font-bold text-emerald-400 ring-1 ring-emerald-500/20">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-sm font-bold text-blue-400 ring-1 ring-blue-500/20">
                         {s.num}
                       </span>
                       <div>
@@ -465,7 +465,7 @@ export function ContactView() {
           eyebrow="Global Presence"
           title={
             <>
-              Four offices, <span className="text-gradient-emerald">18-hour workdays.</span>
+              Four offices, <span className="text-gradient-brand">18-hour workdays.</span>
             </>
           }
         />
@@ -476,7 +476,7 @@ export function ContactView() {
                 <div className="text-4xl">{o.flag}</div>
                 <h3 className="mt-3 text-base font-semibold">{o.city}</h3>
                 <p className="text-xs text-muted-foreground">{o.country}</p>
-                <span className="mt-3 inline-block rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-400">
+                <span className="mt-3 inline-block rounded-full bg-blue-500/10 px-3 py-1 text-[11px] font-medium text-blue-400">
                   {o.role}
                 </span>
               </div>

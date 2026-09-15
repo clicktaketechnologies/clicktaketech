@@ -11,6 +11,9 @@ import { SolutionsView } from "@/components/site/views/solutions-view";
 import { AboutView } from "@/components/site/views/about-view";
 import { WorkView } from "@/components/site/views/work-view";
 import { ContactView } from "@/components/site/views/contact-view";
+import { CareersView } from "@/components/site/views/careers-view";
+import { CitiesView } from "@/components/site/views/cities-view";
+import { ResourcesView } from "@/components/site/views/resources-view";
 import type { NavView } from "@/lib/site-data";
 
 export default function Page() {
@@ -27,11 +30,14 @@ export default function Page() {
   // Keep the document title in sync with the active view.
   useEffect(() => {
     const titles: Record<NavView, string> = {
-      home: "ClickTake — AI-Native Software Engineering",
-      services: "Services — ClickTake Technologies",
-      solutions: "Solutions — ClickTake Technologies",
-      about: "About — ClickTake Technologies",
-      work: "Case Studies & Portfolio — ClickTake Technologies",
+      home: "ClickTake Technologies — AI-Native Software Engineering & Digital Agency",
+      services: "Services — 24 Services across 4 Practices | ClickTake Technologies",
+      solutions: "Solutions — By Audience & Industry | ClickTake Technologies",
+      about: "About — AI Digital Agency | ClickTake Technologies",
+      work: "Case Studies & Portfolio — Real Engagements, Real Metrics | ClickTake Technologies",
+      careers: "Careers — Join ClickTake Technologies",
+      cities: "Cities We Serve — 13 Cities, 4 Countries | ClickTake Technologies",
+      resources: "Resources — Guides & Playbooks | ClickTake Technologies",
       contact: "Contact — Free 30-min Consult | ClickTake Technologies",
     };
     document.title = titles[view];
@@ -55,6 +61,9 @@ export default function Page() {
             {view === "solutions" && <SolutionsView onNavigate={navigate} />}
             {view === "about" && <AboutView onNavigate={navigate} />}
             {view === "work" && <WorkView onNavigate={navigate} />}
+            {view === "careers" && <CareersView onNavigate={navigate} />}
+            {view === "cities" && <CitiesView onNavigate={navigate} />}
+            {view === "resources" && <ResourcesView onNavigate={navigate} />}
             {view === "contact" && <ContactView />}
           </motion.div>
         </AnimatePresence>

@@ -30,14 +30,14 @@ export function AboutView({ onNavigate }: AboutViewProps) {
       <section className="relative overflow-hidden pt-32 pb-12 sm:pt-40">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-medium text-emerald-300">
+            <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3.5 py-1.5 text-xs font-medium text-blue-300">
               About ClickTake
             </span>
           </Reveal>
           <Reveal delay={0.05}>
             <h1 className="mt-6 max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
               A multi-region agency engineering{" "}
-              <span className="text-gradient-emerald">AI, Web &amp; Growth</span> systems since 2019.
+              <span className="text-gradient-brand">AI, Web &amp; Growth</span> systems since 2019.
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
@@ -53,7 +53,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/50 bg-border/40 sm:grid-cols-4">
               {ABOUT_STATS.map((s) => (
                 <div key={s.label} className="bg-card/50 p-5 text-center">
-                  <div className="text-2xl font-bold text-gradient-emerald sm:text-3xl">
+                  <div className="text-2xl font-bold text-gradient-brand sm:text-3xl">
                     {s.value}
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground sm:text-sm">{s.label}</div>
@@ -70,7 +70,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           {COMPANY_VALUES.map((v, i) => (
             <Reveal key={v.title} delay={i * 0.06}>
               <div className="h-full rounded-2xl border border-border/50 bg-card/40 p-6">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20">
                   <v.icon className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 text-lg font-semibold">{v.title}</h3>
@@ -88,7 +88,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           title={
             <>
               From a Birmingham web shop to a{" "}
-              <span className="text-gradient-emerald">four-continent engineering firm.</span>
+              <span className="text-gradient-brand">four-continent engineering firm.</span>
             </>
           }
         />
@@ -97,10 +97,10 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             <Reveal key={item.period} delay={i * 0.06}>
               <div className="grid gap-4 rounded-2xl border border-border/50 bg-card/40 p-6 sm:grid-cols-[180px_1fr] sm:p-8">
                 <div>
-                  <span className="font-mono text-sm font-semibold text-emerald-400">
+                  <span className="font-mono text-sm font-semibold text-blue-400">
                     {item.period}
                   </span>
-                  <div className="mt-2 hidden h-full w-px bg-gradient-to-b from-emerald-500/40 to-transparent sm:block" />
+                  <div className="mt-2 hidden h-full w-px bg-gradient-to-b from-blue-500/40 to-transparent sm:block" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold tracking-tight">{item.title}</h3>
@@ -120,7 +120,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           eyebrow="How We Run Engagements"
           title={
             <>
-              5 phases, 4 offices, <span className="text-gradient-amber">one team.</span>
+              5 phases, 4 offices, <span className="text-gradient-pink">one team.</span>
             </>
           }
           description="A repeatable engagement model with fixed deliverables, fixed timelines, and a written exit criterion at every phase."
@@ -129,7 +129,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           {ENGAGEMENT_PHASES.map((phase, i) => (
             <Reveal key={phase.num} delay={i * 0.05}>
               <div className="relative h-full rounded-2xl border border-border/50 bg-card/40 p-5">
-                <span className="text-3xl font-bold text-gradient-emerald">{phase.num}</span>
+                <span className="text-3xl font-bold text-gradient-brand">{phase.num}</span>
                 <h3 className="mt-3 text-base font-semibold">{phase.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{phase.desc}</p>
               </div>
@@ -145,7 +145,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           title={
             <>
               ClickTake vs.{" "}
-              <span className="text-gradient-emerald">the alternatives.</span>
+              <span className="text-gradient-brand">the alternatives.</span>
             </>
           }
           description="An honest comparison against a UK boutique agency, an offshore firm, and an in-house hire."
@@ -156,7 +156,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
               <thead>
                 <tr className="bg-card/60">
                   <th className="p-4 text-left text-sm font-semibold">Capability</th>
-                  <th className="p-4 text-center text-sm font-semibold text-emerald-400">
+                  <th className="p-4 text-center text-sm font-semibold text-blue-400">
                     ClickTake
                   </th>
                   <th className="p-4 text-center text-sm font-semibold text-muted-foreground">
@@ -200,7 +200,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           eyebrow="Where We Are"
           title={
             <>
-              Four offices. <span className="text-gradient-emerald">18-hour workdays.</span>
+              Four offices. <span className="text-gradient-brand">18-hour workdays.</span>
             </>
           }
         />
@@ -211,7 +211,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
                 <div className="text-4xl">{o.flag}</div>
                 <h3 className="mt-3 text-base font-semibold">{o.city}</h3>
                 <p className="text-xs text-muted-foreground">{o.country}</p>
-                <span className="mt-3 inline-block rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-medium text-emerald-400">
+                <span className="mt-3 inline-block rounded-full bg-blue-500/10 px-3 py-1 text-[11px] font-medium text-blue-400">
                   {o.role}
                 </span>
               </div>
@@ -226,7 +226,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           eyebrow="FAQ"
           title={
             <>
-              Frequently asked <span className="text-gradient-emerald">questions.</span>
+              Frequently asked <span className="text-gradient-brand">questions.</span>
             </>
           }
           align="center"
@@ -256,7 +256,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
       {/* CTA */}
       <Section>
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 via-card/40 to-amber-500/5 p-8 text-center sm:p-12">
+          <div className="relative overflow-hidden rounded-3xl border border-blue-500/20 bg-gradient-to-br from-blue-500/10 via-card/40 to-pink-500/5 p-8 text-center sm:p-12">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               Want to talk to a real engineer, not a salesperson?
             </h2>
@@ -265,7 +265,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
             </p>
             <button
               onClick={() => onNavigate("contact")}
-              className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-all hover:bg-emerald-400 hover:shadow-[0_0_28px_-4px] hover:shadow-emerald-500/60"
+              className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-blue-500 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-400 hover:shadow-[0_0_28px_-4px] hover:shadow-blue-500/60"
             >
               Book a 30-min intro call
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -288,7 +288,7 @@ function CompareCell({
     return (
       <span
         className={`inline-flex h-7 w-7 items-center justify-center rounded-full ${
-          highlight ? "bg-emerald-500 text-emerald-950" : "bg-emerald-500/15 text-emerald-400"
+          highlight ? "bg-blue-500 text-white" : "bg-blue-500/15 text-blue-400"
         }`}
       >
         <Check className="h-4 w-4" />
