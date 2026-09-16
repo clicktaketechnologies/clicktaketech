@@ -1,0 +1,2002 @@
+     1→import type { ServiceContent } from "@/lib/site-data";
+     2→
+     3→// Detailed, keyword-optimised content for each of the 24 ClickTake services.
+     4→// Drives the per-service detail page (slug → content). One entry per slug.
+     5→
+     6→export const SERVICE_CONTENT: Record<string, ServiceContent> = {
+     7→  // ===== Digital Marketing =====
+     8→  "ppc-paid-ads": {
+     9→    slug: "ppc-paid-ads",
+    10→    primaryKeyword: "PPC management services",
+    11→    secondaryKeywords: [
+    12→      "Google Ads management",
+    13→      "Meta Ads management",
+    14→      "paid media agency",
+    15→      "PPC advertising services",
+    16→      "Google Ads agency",
+    17→    ],
+    18→    shortTermKeywords: [
+    19→      "PPC agency for small business UK",
+    20→      "Google Ads management Birmingham",
+    21→      "affordable PPC services",
+    22→      "local paid ads management",
+    23→      "B2B paid advertising London",
+    24→    ],
+    25→    longTermKeywords: [
+    26→      "best PPC agency UK",
+    27→      "enterprise paid advertising company",
+    28→      "top paid media agency",
+    29→    ],
+    30→    metaTitle: "PPC Management Services | ClickTake",
+    31→    metaDescription:
+    32→      "PPC management services across Google, Meta, LinkedIn and TikTok — engineered around profitable CPA. Book a free audit today.",
+    33→    overview:
+    34→      "We run profitable paid media across Google, Meta, LinkedIn and TikTok, built around a CPA target you set — not vanity clicks. Daily budget pacing, creative testing and landing-page CRO are baked in, with full-funnel GA4 and server-side tracking. You keep the ad accounts; we keep the spend working.",
+    35→    benefits: [
+    36→      {
+    37→        title: "CPA-first campaign architecture",
+    38→        desc: "We structure accounts around your target cost-per-acquisition from day one — every bid, budget and creative decision is scored against it.",
+    39→      },
+    40→      {
+    41→        title: "Multi-platform expertise",
+    42→        desc: "One team running Google Ads, Meta, LinkedIn and TikTok with platform-native best practices, not copy-paste campaigns.",
+    43→      },
+    44→      {
+    45→        title: "Creative testing engine",
+    46→        desc: "Weekly creative rotation with hook, format and offer tests so winning ads compound instead of fatiguing.",
+    47→      },
+    48→      {
+    49→        title: "Server-side conversion tracking",
+    50→        desc: "GA4, server-side tagging and consent-mode v2 set up so iOS, Safari and cookieless traffic still reports accurately.",
+    51→      },
+    52→      {
+    53→        title: "Landing-page CRO included",
+    54→        desc: "Every campaign ships with a tested landing page — not just ads — so conversion rate isn't bottlenecked by your homepage.",
+    55→      },
+    56→      {
+    57→        title: "You own the assets",
+    58→        desc: "Ad accounts, audiences, creative and pixels live in your business manager — no lock-in, no hostage data.",
+    59→      },
+    60→    ],
+    61→    process: [
+    62→      {
+    63→        num: "01",
+    64→        title: "Account audit & CPA modelling",
+    65→        desc: "We audit your existing accounts, model a realistic CPA from your margins, and map the gap between today's spend and target returns.",
+    66→      },
+    67→      {
+    68→        num: "02",
+    69→        title: "Build & tracking setup",
+    70→        desc: "We rebuild campaigns with SKAG-free modern structure, install server-side GA4 tagging, and validate conversion data against your CRM.",
+    71→      },
+    72→      {
+    73→        num: "03",
+    74→        title: "Creative & landing-page sprints",
+    75→        desc: "Weekly creative refreshes and landing-page A/B tests run in parallel, with a clear losing-variant kill rule to keep budgets on winners.",
+    76→      },
+    77→      {
+    78→        num: "04",
+    79→        title: "Scale or sunset",
+    80→        desc: "At 90 days we review profitable cohorts against your CPA target — scaling winners with incremental budget and pausing what doesn't pay back.",
+    81→      },
+    82→    ],
+    83→    faqs: [
+    84→      {
+    85→        q: "How much ad spend do I need before you take us on?",
+    86→        a: "We work with accounts from £5k/month on Google and £3k/month on Meta. Below that, the data is too thin for our testing cadence to be profitable.",
+    87→      },
+    88→      {
+    89→        q: "Do you charge a percentage of ad spend?",
+    90→        a: "No — we charge a fixed monthly retainer so our incentive is your CPA, not your budget. You'll see the full fee before signing.",
+    91→      },
+    92→      {
+    93→        q: "Will you keep using my old campaigns?",
+    94→        a: "We audit first, then decide. We keep what's profitable, rebuild what isn't, and never pause a winning campaign just to claim credit for it.",
+    95→      },
+    96→      {
+    97→        q: "Which platforms do you actually run?",
+    98→        a: "Google Ads (Search, Performance Max, YouTube), Meta (Facebook + Instagram), LinkedIn Ads, and TikTok Ads. We don't run X, Pinterest or Reddit in-house.",
+    99→      },
+   100→    ],
+   101→  },
+   102→
+   103→  "content-strategy-seo": {
+   104→    slug: "content-strategy-seo",
+   105→    primaryKeyword: "content strategy services",
+   106→    secondaryKeywords: [
+   107→      "topical authority SEO",
+   108→      "content clusters",
+   109→      "editorial calendar services",
+   110→      "SEO content marketing",
+   111→      "content marketing agency",
+   112→    ],
+   113→    shortTermKeywords: [
+   114→      "content strategy services UK",
+   115→      "B2B content marketing Birmingham",
+   116→      "topical authority SEO for SaaS",
+   117→      "editorial calendar services for startups",
+   118→      "SEO content strategy London",
+   119→    ],
+   120→    longTermKeywords: [
+   121→      "best content marketing agency UK",
+   122→      "top SEO content strategy company",
+   123→      "enterprise content marketing services",
+   124→    ],
+   125→    metaTitle: "Content Strategy Services | ClickTake",
+   126→    metaDescription:
+   127→      "Content strategy services that build topical authority: content clusters, editorial calendars and on-page SEO. Book a free content audit.",
+   128→    overview:
+   129→      "We build topical authority, not blog posts — content clusters mapped to commercial intent and an editorial calendar your team can actually ship. Every brief targets a primary keyword with clear intent, internal links to your money pages, and a measurable SERP position to win.",
+   130→    benefits: [
+   131→      {
+   132→        title: "Topical authority mapping",
+   133→        desc: "We map your domain against 3-5 competitor sites and design pillar/cluster structures that close every content gap that matters.",
+   134→      },
+   135→      {
+   136→        title: "Intent-scored briefs",
+   137→        desc: "Every brief carries a primary keyword, search intent tag, suggested word count and the exact internal links to place — writers don't guess.",
+   138→      },
+   139→      {
+   140→        title: "12-month editorial calendar",
+   141→        desc: "You get a quarter-by-quarter calendar with publishing dates, owners and target SERP positions — no 'just write something about X' briefs.",
+   142→      },
+   143→      {
+   144→        title: "On-page SEO baked in",
+   145→        desc: "Briefs include schema, H-tag hierarchy, meta title/description targets and entity coverage so each page is technical-SEO ready on day one.",
+   146→      },
+   147→      {
+   148→        title: "Internal linking blueprint",
+   149→        desc: "We hand you a link map showing which existing pages should link to new ones — to pass authority where it converts, not where it's nice to have.",
+   150→      },
+   151→      {
+   152→        title: "Performance reporting",
+   153→        desc: "Monthly reports track rankings, organic clicks, assisted conversions and cost-per-ranked-page — not vanity traffic.",
+   154→      },
+   155→    ],
+   156→    process: [
+   157→      {
+   158→        num: "01",
+   159→        title: "Content gap & SERP analysis",
+   160→        desc: "We crawl your site and 3 competitor domains, identify every commercially-relevant keyword gap, and score each by intent and difficulty.",
+   161→      },
+   162→      {
+   163→        num: "02",
+   164→        title: "Cluster & pillar design",
+   165→        desc: "We design pillar pages with supporting cluster articles, mapping internal links so authority flows toward your conversion pages.",
+   166→      },
+   167→      {
+   168→        num: "03",
+   169→        title: "Brief & calendar delivery",
+   170→        desc: "You receive intent-scored briefs for each article plus a 12-month publishing calendar your writers can execute without further input.",
+   171→      },
+   172→      {
+   173→        num: "04",
+   174→        title: "Publish, monitor, refine",
+   175→        desc: "As articles ship, we track SERP positions, prune underperformers, and refresh winners so the cluster compounds quarterly.",
+   176→      },
+   177→    ],
+   178→    faqs: [
+   179→      {
+   180→        q: "Do you write the content or just plan it?",
+   181→        a: "We can do either. Our default is briefs + calendar your writers execute, but we have in-house writers for B2B SaaS, ecommerce and professional services if you'd prefer a turnkey service.",
+   182→      },
+   183→      {
+   184→        q: "How long before we see ranking movement?",
+   185→        a: "Most clusters show movement within 8-12 weeks of the first articles publishing. Topical authority compounds over 6-12 months — we set expectations per cluster, not per article.",
+   186→      },
+   187→      {
+   188→        q: "Will you work with our existing writers?",
+   189→        a: "Yes. Briefs are written to be picked up by any competent writer — including an AI-assisted one with human editing — and we run a quality check on the first 3 articles to calibrate.",
+   190→      },
+   191→      {
+   192→        q: "Can you help with content pruning?",
+   193→        a: "Yes. We audit existing pages, flag redirects, consolidations and updates, and give you a prune list ranked by traffic impact so you can free crawl budget for what matters.",
+   194→      },
+   195→    ],
+   196→  },
+   197→
+   198→  "conversion-rate-optimization": {
+   199→    slug: "conversion-rate-optimization",
+   200→    primaryKeyword: "conversion rate optimization services",
+   201→    secondaryKeywords: [
+   202→      "CRO agency",
+   203→      "A/B testing services",
+   204→      "funnel analysis",
+   205→      "heatmap analysis",
+   206→      "landing page optimization",
+   207→    ],
+   208→    shortTermKeywords: [
+   209→      "CRO services for small business UK",
+   210→      "conversion rate optimization Birmingham",
+   211→      "A/B testing services for ecommerce",
+   212→      "affordable CRO audits",
+   213→      "Shopify CRO agency London",
+   214→    ],
+   215→    longTermKeywords: [
+   216→      "best CRO agency UK",
+   217→      "top conversion rate optimization company",
+   218→      "enterprise CRO services",
+   219→    ],
+   220→    metaTitle: "Conversion Rate Optimization Services",
+   221→    metaDescription:
+   222→      "Conversion rate optimization services: A/B testing, heatmaps and funnel analysis that lift CVR 25-60%. Free CRO audit — book today.",
+   223→    overview:
+   224→      "We diagnose why visitors don't convert and ship tests that move revenue — typically a 25-60% CVR lift within 90 days. Our playbook pairs session replay, funnel analysis and A/B testing on high-traffic pages, so every experiment is measurable. You get a prioritised roadmap, shipped tests and a learnings library.",
+   225→    benefits: [
+   226→      {
+   227→        title: "Quantified conversion lift",
+   228→        desc: "Every test ships with a hypothesis, minimum detectable effect and pre-registered success metric — no cherry-picked wins.",
+   229→      },
+   230→      {
+   231→        title: "Funnel & session analysis",
+   232→        desc: "We use GA4 funnels, Microsoft Clarity heatmaps and session replays to find the friction, not just the symptoms.",
+   233→      },
+   234→      {
+   235→        title: "Statistical integrity",
+   236→        desc: "Tests run to significance with proper sample sizing — we call inconclusive results inconclusive, not 'directional wins'.",
+   237→      },
+   238→      {
+   239→        title: "Test pipeline, not one-offs",
+   240→        desc: "You get a 12-week prioritised test pipeline scored by ICE (impact, confidence, ease) — not random 'let's try this' experiments.",
+   241→      },
+   242→      {
+   243→        title: "Experimentation library",
+   244→        desc: "Every shipped test is documented with hypothesis, variant, result and learning — so institutional knowledge doesn't walk out the door.",
+   245→      },
+   246→      {
+   247→        title: "No vendor lock-in tools",
+   248→        desc: "We work in your existing stack (VWO, Optimizely, GA4 Experiments, Convert) and hand over the experiment code and learnings.",
+   249→      },
+   250→    ],
+   251→    process: [
+   252→      {
+   253→        num: "01",
+   254→        title: "Quantitative funnel audit",
+   255→        desc: "We instrument GA4 funnels, review session replays, and quantify drop-off at each step from landing to checkout.",
+   256→      },
+   257→      {
+   258→        num: "02",
+   259→        title: "Hypothesis & ICE prioritisation",
+   260→        desc: "We draft testable hypotheses, score each by Impact/Confidence/Ease, and sequence the next 12 weeks of experiments.",
+   261→      },
+   262→      {
+   263→        num: "03",
+   264→        title: "Design, build & ship tests",
+   265→        desc: "Each test is designed, built and QA'd in your experimentation tool, with variant code shipped and verified live before traffic splits.",
+   266→      },
+   267→      {
+   268→        num: "04",
+   269→        title: "Readout & learnings library",
+   270→        desc: "Each concluded test is documented with the result, statistical confidence, and the next iteration — win, lose or inconclusive.",
+   271→      },
+   272→    ],
+   273→    faqs: [
+   274→      {
+   275→        q: "What conversion rate lift can we realistically expect?",
+   276→        a: "Most clients see 25-60% CVR lift on optimised pages within 90 days. Pages with severe friction or weak messaging can exceed that; genuinely good pages move less.",
+   277→      },
+   278→      {
+   279→        q: "What traffic do we need to run tests?",
+   280→        a: "We need roughly 1,000 conversions per month per variant for statistically valid tests. Below that, we'll focus on heuristic audits and high-confidence fixes first.",
+   281→      },
+   282→      {
+   283→        q: "Will you redesign our pages or just test?",
+   284→        a: "Both. Tests often need redesigned variants — we design, build and ship those in your stack, then document what worked.",
+   285→      },
+   286→      {
+   287→        q: "Do you handle ecommerce and lead-gen?",
+   288→        a: "Yes — Shopify, WooCommerce, headless commerce, SaaS self-serve, and B2B lead-gen funnels. The testing methodology is the same; the metric definitions differ.",
+   289→      },
+   290→    ],
+   291→  },
+   292→
+   293→  "seo-services": {
+   294→    slug: "seo-services",
+   295→    primaryKeyword: "SEO services",
+   296→    secondaryKeywords: [
+   297→      "technical SEO audit",
+   298→      "on-page SEO",
+   299→      "off-page SEO services",
+   300→      "local SEO services",
+   301→      "SEO agency",
+   302→    ],
+   303→    shortTermKeywords: [
+   304→      "SEO services for small business UK",
+   305→      "local SEO services Birmingham",
+   306→      "affordable SEO services London",
+   307→      "technical SEO audit for SaaS",
+   308→      "SEO services for ecommerce UK",
+   309→    ],
+   310→    longTermKeywords: [
+   311→      "best SEO agency UK",
+   312→      "top SEO services company",
+   313→      "enterprise SEO services",
+   314→    ],
+   315→    metaTitle: "SEO Services | Technical, On-Page & Local",
+   316→    metaDescription:
+   317→      "SEO services covering technical, on-page and off-page SEO — built to land you in the top 3 local pack. Free SEO audit, book today.",
+   318→    overview:
+   319→      "We run technical, on-page and off-page SEO as one system, not three disconnected workstreams. Crawlability, schema, internal links, content and backlinks compound toward defensible rankings. Local businesses get a top-3 Maps pack strategy; SaaS and ecommerce get programmatic SEO.",
+   320→    benefits: [
+   321→      {
+   322→        title: "Technical SEO foundation",
+   323→        desc: "Crawl budget, indexation, Core Web Vitals, schema and site architecture audited and fixed before any content work begins.",
+   324→      },
+   325→      {
+   326→        title: "On-page optimisation",
+   327→        desc: "Title tags, meta descriptions, H1s, internal anchors and entity coverage — applied across your existing pages, not just new ones.",
+   328→      },
+   329→      {
+   330→        title: "Top-3 local pack strategy",
+   331→        desc: "Google Business Profile, citations, review velocity and locality signals — built to land you in the top 3 map results.",
+   332→      },
+   333→      {
+   334→        title: "Programmatic & topical SEO",
+   335→        desc: "For SaaS and ecommerce: programmatic landing pages and topical clusters that scale indexed pages from hundreds to thousands.",
+   336→      },
+   337→      {
+   338→        title: "Authority backlinks",
+   339→        desc: "Digital PR, guest posts and HARO placements on real, indexed sites — no PBNs, no link farms, no risky disavows later.",
+   340→      },
+   341→      {
+   342→        title: "Transparent monthly reporting",
+   343→        desc: "Rankings, organic clicks, conversions and assisted revenue — reported monthly with the actual work done, not jargon.",
+   344→      },
+   345→    ],
+   346→    process: [
+   347→      {
+   348→        num: "01",
+   349→        title: "Technical & competitive audit",
+   350→        desc: "We crawl your site, audit competitors, and benchmark current rankings, traffic and Core Web Vitals to set baselines.",
+   351→      },
+   352→      {
+   353→        num: "02",
+   354→        title: "Roadmap & quick wins",
+   355→        desc: "You receive a 6-month roadmap with technical fixes, content priorities and link targets — plus the quick wins we ship in week one.",
+   356→      },
+   357→      {
+   358→        num: "03",
+   359→        title: "Execution sprints",
+   360→        desc: "Technical fixes, on-page edits, new content and link outreach run in two-week sprints with a clear owner and acceptance criteria.",
+   361→      },
+   362→      {
+   363→        num: "04",
+   364→        title: "Reporting & compounding",
+   365→        desc: "Monthly rankings and traffic reports, quarterly strategy reviews, and roadmap re-prioritisation based on what actually moved.",
+   366→      },
+   367→    ],
+   368→    faqs: [
+   369→      {
+   370→        q: "How soon will we see ranking improvements?",
+   371→        a: "Technical fixes show movement in 4-8 weeks. Content and link campaigns compound over 3-6 months. We give you per-keyword estimates, not vague '3-6 months' ranges.",
+   372→      },
+   373→      {
+   374→        q: "Do you guarantee #1 rankings?",
+   375→        a: "No — and you should distrust anyone who does. We guarantee the work, the methodology and the reporting; rankings depend on your niche, competition and history.",
+   376→      },
+   377→      {
+   378→        q: "Do you work with new domains or only established sites?",
+   379→        a: "Both. For new domains we focus on crawlability, topical authority and early links; for established sites we focus on technical debt, content pruning and authority building.",
+   380→      },
+   381→      {
+   382→        q: "What about link building — is it safe?",
+   383→        a: "We only build links on real, indexed sites through digital PR, guest posts and HARO. No PBNs, no link exchanges, no bought links — your domain stays clean.",
+   384→      },
+   385→    ],
+   386→  },
+   387→
+   388→  "social-media-marketing": {
+   389→    slug: "social-media-marketing",
+   390→    primaryKeyword: "social media marketing services",
+   391→    secondaryKeywords: [
+   392→      "social media management",
+   393→      "paid social advertising",
+   394→      "influencer marketing services",
+   395→      "community management",
+   396→      "social media agency",
+   397→    ],
+   398→    shortTermKeywords: [
+   399→      "social media marketing for small business UK",
+   400→      "social media management Birmingham",
+   401→      "affordable social media agency London",
+   402→      "B2B social media marketing services",
+   403→      "Instagram marketing for ecommerce UK",
+   404→    ],
+   405→    longTermKeywords: [
+   406→      "best social media agency UK",
+   407→      "top social media marketing company",
+   408→      "enterprise social media services",
+   409→    ],
+   410→    metaTitle: "Social Media Marketing Services | ClickTake",
+   411→    metaDescription:
+   412→      "Social media marketing services: organic content, paid social, community and influencer ops. Free strategy call — book today.",
+   413→    overview:
+   414→      "We run organic, paid, community and influencer as one engine, not four contractors. Organic builds reach, paid converts it, community turns customers into advocates, and influencer ops scale distribution. Every post has a commercial goal and every channel a defined funnel role.",
+   415→    benefits: [
+   416→      {
+   417→        title: "Channel-role strategy",
+   418→        desc: "We assign each platform a defined role (awareness, consideration, conversion or retention) so your feed doesn't try to do everything everywhere.",
+   419→      },
+   420→      {
+   421→        title: "Native content production",
+   422→        desc: "Reels, carousels, shorts and TikToks shot and edited in-platform-native formats — not resized landscape videos.",
+   423→      },
+   424→      {
+   425→        title: "Paid social amplification",
+   426→        desc: "Top organic posts get amplified with paid spend on Meta, TikTok and LinkedIn — creative testing pays for itself.",
+   427→      },
+   428→      {
+   429→        title: "Community & DM management",
+   430→        desc: "We respond to comments and DMs within 4 working hours, escalate issues to your team, and turn complaints into trust signals.",
+   431→      },
+   432→      {
+   433→        title: "Influencer ops",
+   434→        desc: "Briefs, contracts, usage rights and reporting for influencer campaigns — from micro (1k-10k) to mid-tier (50k-500k) creators.",
+   435→      },
+   436→      {
+   437→        title: "Revenue-attributed reporting",
+   438→        desc: "Monthly reports tie social activity to assisted revenue, not just engagement — using UTM, GA4 and platform-native attribution.",
+   439→      },
+   440→    ],
+   441→    process: [
+   442→      {
+   443→        num: "01",
+   444→        title: "Audit & channel strategy",
+   445→        desc: "We audit your current channels, map competitors, and assign each platform a defined commercial role before any content is produced.",
+   446→      },
+   447→      {
+   448→        num: "02",
+   449→        title: "Content system build",
+   450→        desc: "We design a 30-day content calendar, build templates and briefs, and produce the first batch of native-format posts.",
+   451→      },
+   452→      {
+   453→        num: "03",
+   454→        title: "Publish, engage, amplify",
+   455→        desc: "Posts publish on schedule, community is managed daily, and the top organic performers are amplified with paid budget.",
+   456→      },
+   457→      {
+   458→        num: "04",
+   459→        title: "Optimise & scale",
+   460→        desc: "Monthly creative performance review, channel-role adjustment, and creator/influencer pipeline expansion based on what's converting.",
+   461→      },
+   462→    ],
+   463→    faqs: [
+   464→      {
+   465→        q: "Which platforms do you actually manage?",
+   466→        a: "Instagram, TikTok, LinkedIn, X, Facebook, YouTube Shorts and Pinterest. We don't manage Snapchat or Threads in-house, but can advise on them.",
+   467→      },
+   468→      {
+   469→        q: "Do you create the content or just schedule it?",
+   470→        a: "Both. We script, shoot/edit and publish — including UGC-style vertical video. You can supply brand assets and we handle the rest.",
+   471→      },
+   472→      {
+   473→        q: "How many posts per week?",
+   474→        a: "Typically 4 organic posts per platform per week plus daily stories/reels — calibrated to your team's capacity to engage. Volume without engagement is wasted.",
+   475→      },
+   476→      {
+   477→        q: "Can you run influencer campaigns too?",
+   478→        a: "Yes — sourcing, briefing, contracting, usage rights and reporting. We work with micro and mid-tier creators; we don't manage celebrity-tier campaigns.",
+   479→      },
+   480→    ],
+   481→  },
+   482→
+   483→  "seo-web-design-services": {
+   484→    slug: "seo-web-design-services",
+   485→    primaryKeyword: "SEO web design services",
+   486→    secondaryKeywords: [
+   487→      "SEO-friendly websites",
+   488→      "PageSpeed optimisation",
+   489→      "schema markup",
+   490→      "indexable web design",
+   491→      "SEO-first web development",
+   492→    ],
+   493→    shortTermKeywords: [
+   494→      "SEO web design services UK",
+   495→      "SEO-friendly websites Birmingham",
+   496→      "fast-loading websites for small business",
+   497→      "schema markup web design London",
+   498→      "indexable WordPress design UK",
+   499→    ],
+   500→    longTermKeywords: [
+   501→      "best SEO web design agency UK",
+   502→      "top SEO web design company",
+   503→      "enterprise SEO-friendly websites",
+   504→    ],
+   505→    metaTitle: "SEO Web Design Services | ClickTake",
+   506→    metaDescription:
+   507→      "SEO web design services: PageSpeed 90+, schema, indexability and SEO-first builds. Free technical design audit — book today.",
+   508→    overview:
+   509→      "We design websites that rank before they look pretty — PageSpeed 90+, full schema, clean crawl paths and zero render-blocking resources. Every page is indexable, every image optimised, every internal link mapped to commercial intent. You get a site that converts search visitors.",
+   510→    benefits: [
+   511→      {
+   512→        title: "PageSpeed 90+ guaranteed",
+   513→        desc: "Every site ships with a Lighthouse Performance score of 90+ on mobile — measured against your real production URLs, not a demo.",
+   514→      },
+   515→      {
+   516→        title: "Schema-first architecture",
+   517→        desc: "Organisation, Product, Article, FAQ, Breadcrumb and LocalBusiness schema deployed from the template, not bolted on later.",
+   518→      },
+   519→      {
+   520→        title: "Indexability by design",
+   521→        desc: "Clean URL structure, XML sitemaps, canonical tags and robots directives baked in — no orphan pages, no accidental noindex.",
+   522→      },
+   523→      {
+   524→        title: "Internal-link blueprint",
+   525→        desc: "We map every internal link to a commercial intent so authority flows to your money pages, not your blog tag pages.",
+   526→      },
+   527→      {
+   528→        title: "Mobile-first responsive",
+   529→        desc: "Sites designed mobile-first with no CLS and a layout that doesn't shift — Google indexes the mobile version, so do we.",
+   530→      },
+   531→      {
+   532→        title: "Headless-ready CMS",
+   533→        desc: "WordPress, Sanity, Payload or Contentful — your editors get a familiar CMS, your site stays fast and SEO-friendly.",
+   534→      },
+   535→    ],
+   536→    process: [
+   537→      {
+   538→        num: "01",
+   539→        title: "SEO & technical audit",
+   540→        desc: "We audit your current site's rankings, Core Web Vitals, schema and indexability — then map the redesign against those baselines.",
+   541→      },
+   542→      {
+   543→        num: "02",
+   544→        title: "Information architecture",
+   545→        desc: "We design URL structure, internal links and content hierarchy around commercial intent — so the site architecture serves SEO.",
+   546→      },
+   547→      {
+   548→        num: "03",
+   549→        title: "Design & build",
+   550→        desc: "Sites are built with PageSpeed 90+, full schema and clean markup — tested against real Lighthouse runs, not 'it looks fast'.",
+   551→      },
+   552→      {
+   553→        num: "04",
+   554→        title: "Migration & monitoring",
+   555→        desc: "On launch we redirect old URLs, resubmit sitemaps, and monitor rankings and Core Web Vitals weekly for 30 days.",
+   556→      },
+   557→    ],
+   558→    faqs: [
+   559→      {
+   560→        q: "Will you redesign our existing site or rebuild it?",
+   561→        a: "Depends on your current stack. We can redesign in place if the platform supports SEO targets, or rebuild on Next.js, Astro or WordPress if it doesn't — we'll tell you which in the audit.",
+   562→      },
+   563→      {
+   564→        q: "Do you guarantee a Lighthouse score?",
+   565→        a: "Yes — 90+ on mobile Performance for production URLs. If we don't hit it on launch, we keep working until we do, at no extra cost.",
+   566→      },
+   567→      {
+   568→        q: "What about schema — do you set it up?",
+   569→        a: "Yes. We deploy schema for Organisation, Product/Service, Article, FAQ, Breadcrumb and LocalBusiness as standard, validated against Google's Rich Results test.",
+   570→      },
+   571→      {
+   572→        q: "Can you handle the site migration without losing rankings?",
+   573→        a: "Yes. We map 301 redirects, preserve canonical URLs, pre-submit sitemaps, and monitor rankings daily for 30 days post-launch — and we'll flag any expected risk before we ship.",
+   574→      },
+   575→    ],
+   576→  },
+   577→
+   578→  // ===== Web & Software =====
+   579→  "full-stack-web-development": {
+   580→    slug: "full-stack-web-development",
+   581→    primaryKeyword: "full-stack web development services",
+   582→    secondaryKeywords: [
+   583→      "Next.js development agency",
+   584→      "TypeScript web development",
+   585→      "Prisma Postgres development",
+   586→      "Playwright E2E testing",
+   587→      "web application development",
+   588→    ],
+   589→    shortTermKeywords: [
+   590→      "full-stack web development UK",
+   591→      "Next.js development agency London",
+   592→      "TypeScript web development Birmingham",
+   593→      "web app development for SaaS UK",
+   594→      "Postgres Prisma development services",
+   595→    ],
+   596→    longTermKeywords: [
+   597→      "best full-stack development agency UK",
+   598→      "top web application development company",
+   599→      "enterprise full-stack development services",
+   600→    ],
+   601→    metaTitle: "Full-Stack Web Development Services",
+   602→    metaDescription:
+   603→      "Full-stack web development with Next.js 16, TypeScript, Prisma, Postgres and Playwright E2E. Free architecture review — book today.",
+   604→    overview:
+   605→      "We ship production web apps on Next.js 16, TypeScript, Prisma and Postgres, with Playwright E2E tests guarding every release. Type-safe APIs, server actions, optimistic UI, queued jobs and a real CI/CD pipeline. You get a codebase your team can own, not a black-box handover.",
+   606→    benefits: [
+   607→      {
+   608→        title: "Type-safe end to end",
+   609→        desc: "TypeScript from the database (Prisma) through server actions to the UI — runtime errors caught at compile time, not in production.",
+   610→      },
+   611→      {
+   612→        title: "Server components & actions",
+   613→        desc: "Next.js 16 server components and server actions used appropriately — not a React SPA with a thin API layer bolted on.",
+   614→      },
+   615→      {
+   616→        title: "Playwright E2E suite",
+   617→        desc: "Every critical user journey is covered by an automated Playwright test that runs on every PR — regressions don't reach production.",
+   618→      },
+   619→      {
+   620→        title: "CI/CD pipeline included",
+   621→        desc: "GitHub Actions, preview deploys on every PR, automated migrations, and one-command rollbacks — no 'works on my machine' releases.",
+   622→      },
+   623→      {
+   624→        title: "Background jobs & queues",
+   625→        desc: "Email, webhooks, PDF generation and heavy compute handled by queue workers (BullMQ or Inngest), not blocking the request cycle.",
+   626→      },
+   627→      {
+   628→        title: "Observable by default",
+   629→        desc: "Structured logging, OpenTelemetry traces and Sentry error tracking wired in from day one — not retrofitted after the first outage.",
+   630→      },
+   631→    ],
+   632→    process: [
+   633→      {
+   634→        num: "01",
+   635→        title: "Architecture & schema",
+   636→        desc: "We design the data model, API surface, auth boundaries and deployment topology — documented in an architecture decision record.",
+   637→      },
+   638→      {
+   639→        num: "02",
+   640→        title: "Build sprints",
+   641→        desc: "Two-week sprints ship features against the ADR, with demoable work at the end of each sprint and a staging environment always live.",
+   642→      },
+   643→      {
+   644→        num: "03",
+   645→        title: "Test & QA hardening",
+   646→        desc: "Playwright E2E, Vitest unit tests, and OWASP-aligned security review run against every release — no manual 'looks fine' sign-off.",
+   647→      },
+   648→      {
+   649→        num: "04",
+   650→        title: "Launch & handover",
+   651→        desc: "Production launch with runbooks, monitoring dashboards and a 2-week paired handover to your in-house engineers.",
+   652→      },
+   653→    ],
+   654→    faqs: [
+   655→      {
+   656→        q: "Do you work with our existing engineering team?",
+   657→        a: "Yes. Most engagements are mixed — our engineers pair with yours, run code reviews, and document decisions so the team can own the codebase post-launch.",
+   658→      },
+   659→      {
+   660→        q: "Why Next.js 16 specifically?",
+   661→        a: "Server components, server actions, partial prerendering and the App Router let us ship type-safe, fast, SEO-friendly apps without bolting a separate backend onto a SPA. It's our default for new web apps.",
+   662→      },
+   663→      {
+   664→        q: "What about deployment — AWS, Vercel, self-hosted?",
+   665→        a: "All three. Vercel for fast-moving SaaS, AWS (ECS/Fargate) for cost-sensitive scale, self-hosted for regulated workloads. We'll recommend based on your traffic, compliance and budget.",
+   666→      },
+   667→      {
+   668→        q: "Do you write tests or ship fast?",
+   669→        a: "Both. Critical paths get E2E tests in the same sprint they ship — we don't trade velocity for tests because tests are how we keep velocity.",
+   670→      },
+   671→    ],
+   672→  },
+   673→
+   674→  "saas-platform-engineering": {
+   675→    slug: "saas-platform-engineering",
+   676→    primaryKeyword: "SaaS platform engineering services",
+   677→    secondaryKeywords: [
+   678→      "multi-tenant SaaS development",
+   679→      "Stripe billing integration",
+   680→      "RBAC implementation",
+   681→      "usage metering",
+   682→      "SaaS backend engineering",
+   683→    ],
+   684→    shortTermKeywords: [
+   685→      "SaaS platform engineering UK",
+   686→      "multi-tenant SaaS development London",
+   687→      "Stripe billing integration services",
+   688→      "RBAC implementation for SaaS UK",
+   689→      "usage-based billing development",
+   690→    ],
+   691→    longTermKeywords: [
+   692→      "best SaaS development agency UK",
+   693→      "top SaaS platform engineering company",
+   694→      "enterprise multi-tenant SaaS services",
+   695→    ],
+   696→    metaTitle: "SaaS Platform Engineering Services",
+   697→    metaDescription:
+   698→      "SaaS platform engineering: multi-tenant architecture, Stripe billing, RBAC and usage metering. Free architecture review — book today.",
+   699→    overview:
+   700→      "We engineer SaaS platforms that scale from 10 to 10,000 tenants without rewrites — multi-tenant isolation, Stripe billing with usage metering, RBAC, and a daily-shipping release pipeline. Auth, billing, audit logs and observability are designed in from day one, not bolted on later.",
+   701→    benefits: [
+   702→      {
+   703→        title: "Multi-tenant data isolation",
+   704→        desc: "Row-level security or schema-per-tenant — chosen against your compliance needs, not by accident — with no cross-tenant data leaks.",
+   705→      },
+   706→      {
+   707→        title: "Stripe billing & metering",
+   708→        desc: "Subscription, usage-based and hybrid billing models wired into Stripe with idempotent webhooks and proper proration.",
+   709→      },
+   710→      {
+   711→        title: "Granular RBAC",
+   712→        desc: "Role definitions, resource-level permissions and org-scoped access — built so adding a new role doesn't require a migration.",
+   713→      },
+   714→      {
+   715→        title: "Usage metering pipeline",
+   716→        desc: "Event ingestion, aggregation and rollups that feed Stripe — so customers see accurate usage in real time, not a monthly surprise.",
+   717→      },
+   718→      {
+   719→        title: "Admin & audit tooling",
+   720→        desc: "Impersonation, feature flags, audit logs and admin actions — every privileged operation recorded and replayable.",
+   721→      },
+   722→      {
+   723→        title: "Ship multiple times a day",
+   724→        desc: "Feature flags, trunk-based development and progressive rollouts — releases aren't a quarterly drama, they're a non-event.",
+   725→      },
+   726→    ],
+   727→    process: [
+   728→      {
+   729→        num: "01",
+   730→        title: "Tenancy & billing model",
+   731→        desc: "We design the multi-tenant model, billing entities and usage metering pipeline — documented against your pricing page and compliance needs.",
+   732→      },
+   733→      {
+   734→        num: "02",
+   735→        title: "Auth, RBAC & admin",
+   736→        desc: "We implement auth (NextAuth/Clerk/Auth0), RBAC enforcement, org-scoped queries and admin tooling with full audit logging.",
+   737→      },
+   738→      {
+   739→        num: "03",
+   740→        title: "Stripe & metering build",
+   741→        desc: "We wire Stripe subscriptions, usage-based pricing, webhook handling and the metering pipeline that feeds it — with reconciliation jobs.",
+   742→      },
+   743→      {
+   744→        num: "04",
+   745→        title: "Launch & scale",
+   746→        desc: "We ship to production with load testing, observability dashboards, and a runbook for tenant onboarding, billing failures and incident response.",
+   747→      },
+   748→    ],
+   749→    faqs: [
+   750→      {
+   751→        q: "Do you support usage-based pricing?",
+   752→        a: "Yes — we build the event ingestion, aggregation and rollup pipeline that feeds Stripe's Usage Records API. Customers see real-time usage in your UI; Stripe invoices accurately at period end.",
+   753→      },
+   754→      {
+   755→        q: "How do you handle multi-tenancy?",
+   756→        a: "Row-level security on Postgres for most SaaS, schema-per-tenant for stricter isolation needs, or separate databases for regulated workloads. We recommend the model in the architecture review and document the tradeoffs.",
+   757→      },
+   758→      {
+   759→        q: "Can you integrate our existing Stripe account?",
+   760→        a: "Yes — we'll work with your existing products, prices and customers. If your Stripe setup needs cleanup, we'll flag that as a separate workstream before billing integration.",
+   761→      },
+   762→      {
+   763→        q: "What about SOC 2 / ISO 27001 readiness?",
+   764→        a: "We engineer to SOC 2 controls — audit logs, access reviews, change management — but we don't issue the certification. We can introduce a compliance partner for the audit itself.",
+   765→      },
+   766→    ],
+   767→  },
+   768→
+   769→  "auth-identity": {
+   770→    slug: "auth-identity",
+   771→    primaryKeyword: "authentication & identity services",
+   772→    secondaryKeywords: [
+   773→      "NextAuth development",
+   774→      "OAuth SSO integration",
+   775→      "SAML SSO services",
+   776→      "passkey implementation",
+   777→      "zero-trust session management",
+   778→    ],
+   779→    shortTermKeywords: [
+   780→      "authentication services UK",
+   781→      "NextAuth development London",
+   782→      "SAML SSO services for B2B SaaS",
+   783→      "passkey implementation UK",
+   784→      "zero-trust session management services",
+   785→    ],
+   786→    longTermKeywords: [
+   787→      "best identity & auth services UK",
+   788→      "top authentication engineering company",
+   789→      "enterprise SSO & identity platform",
+   790→    ],
+   791→    metaTitle: "Authentication & Identity Services",
+   792→    metaDescription:
+   793→      "Authentication & identity services: NextAuth, OAuth/SAML SSO, passkeys and zero-trust sessions. Free security review — book today.",
+   794→    overview:
+   795→      "We build authentication that doesn't get your users phished — NextAuth, OAuth/SAML SSO for enterprise, passkeys for passwordless, and zero-trust session management. MFA, device pairing, step-up auth and audit logs are designed in. You get a system your CISO can defend.",
+   796→    benefits: [
+   797→      {
+   798→        title: "NextAuth with adapter strategy",
+   799→        desc: "Auth.js v5 with database or JWT sessions — adapter chosen against your scaling needs, not by default.",
+   800→      },
+   801→      {
+   802→        title: "Enterprise SSO (SAML & OIDC)",
+   803→        desc: "SAML and OIDC SSO for enterprise customers — the kind that closes a 6-figure deal — with IdP-specific metadata handling.",
+   804→      },
+   805→      {
+   806→        title: "Passkeys & passwordless",
+   807→        desc: "WebAuthn passkeys deployed alongside passwords so users can opt in — and we measure how fast adoption actually happens.",
+   808→      },
+   809→      {
+   810→        title: "Zero-trust sessions",
+   811→        desc: "Short-lived rotating tokens, device binding and server-side session revocation that survives a stolen refresh token.",
+   812→      },
+   813→      {
+   814→        title: "Step-up & MFA flows",
+   815→        desc: "Risk-based step-up auth for sensitive actions (billing, exports, admin) — not a blanket MFA prompt on every login.",
+   816→      },
+   817→      {
+   818→        title: "Audit logs for everything",
+   819→        desc: "Every login, MFA challenge, SSO link and admin action logged with user, IP, device and timestamp — exportable for SOC 2.",
+   820→      },
+   821→    ],
+   822→    process: [
+   823→      {
+   824→        num: "01",
+   825→        title: "Threat model & auth matrix",
+   826→        desc: "We map your user types, devices, risk levels and required auth factors — documented before any code is written.",
+   827→      },
+   828→      {
+   829→        num: "02",
+   830→        title: "Provider & session design",
+   831→        desc: "We choose auth providers, session strategy and token lifetimes against your threat model, not against convenience.",
+   832→      },
+   833→      {
+   834→        num: "03",
+   835→        title: "Implementation & hardening",
+   836→        desc: "We implement auth, MFA, SSO and audit logging, with rate limiting, account lockout and credential-stuffing protections.",
+   837→      },
+   838→      {
+   839→        num: "04",
+   840→        title: "Security review & launch",
+   841→        desc: "We run an OWASP-aligned review, ship to production behind feature flags, and monitor for anomalies over the first 30 days.",
+   842→      },
+   843→    ],
+   844→    faqs: [
+   845→      {
+   846→        q: "Should we use Auth.js, Clerk or Auth0?",
+   847→        a: "Depends on your team size, SSO needs and budget. Auth.js for full control, Clerk for speed-to-market on B2B SaaS, Auth0 or WorkOS for enterprise SSO-heavy sales. We'll recommend in the audit.",
+   848→      },
+   849→      {
+   850→        q: "Can you add SSO to our existing app?",
+   851→        a: "Yes — we add SAML/OIDC SSO alongside existing password auth, scoped to enterprise plans. Existing users keep their passwords; enterprise customers get SSO. No forced migration.",
+   852→      },
+   853→      {
+   854→        q: "Do passkeys actually work for non-technical users?",
+   855→        a: "Yes, with caveats. We deploy them alongside passwords, measure adoption, and fall back gracefully. Adoption typically reaches 30-50% within 6 months on consumer apps.",
+   856→      },
+   857→      {
+   858→        q: "How do you handle account takeover protection?",
+   859→        a: "Rate limiting, IP-based lockouts, credential-stuffing detection (haveibeenpwned API), and forced password reset on suspicious activity. MFA is the last line of defense, not the first.",
+   860→      },
+   861→    ],
+   862→  },
+   863→
+   864→  "python-backend-apis": {
+   865→    slug: "python-backend-apis",
+   866→    primaryKeyword: "Python backend & API development",
+   867→    secondaryKeywords: [
+   868→      "FastAPI development",
+   869→      "async Python workers",
+   870→      "GraphQL API development",
+   871→      "OpenAPI documentation",
+   872→      "high-performance Python APIs",
+   873→    ],
+   874→    shortTermKeywords: [
+   875→      "Python backend development UK",
+   876→      "FastAPI development services London",
+   877→      "GraphQL API development Birmingham",
+   878→      "async Python workers services",
+   879→      "Python API development for startups UK",
+   880→    ],
+   881→    longTermKeywords: [
+   882→      "best Python development agency UK",
+   883→      "top backend API engineering company",
+   884→      "enterprise Python API services",
+   885→    ],
+   886→    metaTitle: "Python Backend & API Development",
+   887→    metaDescription:
+   888→      "Python backend & API development with FastAPI, async workers, GraphQL and OpenAPI at p99 120ms. Free architecture review — book today.",
+   889→    overview:
+   890→      "We build Python backends that hold a p99 of 120ms under load — FastAPI for async requests, Celery or RQ workers for background jobs, REST or GraphQL with OpenAPI for clients, and proper connection pooling so the DB isn't the bottleneck. Typed with Pydantic, tested with pytest, observable with OpenTelemetry.",
+   891→    benefits: [
+   892→      {
+   893→        title: "FastAPI async by default",
+   894→        desc: "Async request handlers, async DB drivers and async HTTP clients — so a single worker handles thousands of concurrent requests, not dozens.",
+   895→      },
+   896→      {
+   897→        title: "Pydantic type safety",
+   898→        desc: "Request and response models validated with Pydantic v2 — runtime errors surface at the schema boundary, not three layers deep.",
+   899→      },
+   900→      {
+   901→        title: "OpenAPI auto-generated",
+   902→        desc: "Clients get a typed OpenAPI schema generated from your route definitions — SDKs in TypeScript, Python and Go, with no drift.",
+   903→      },
+   904→      {
+   905→        title: "Async background workers",
+   906→        desc: "Celery, RQ or Arq workers for email, webhooks, PDF and heavy compute — separated from the request cycle so p99 stays predictable.",
+   907→      },
+   908→      {
+   909→        title: "GraphQL when you need it",
+   910→        desc: "Strawberry or Ariadne GraphQL added when clients genuinely need flexible queries — not as a default that complicates caching.",
+   911→      },
+   912→      {
+   913→        title: "Observable & profileable",
+   914→        desc: "OpenTelemetry traces, Pyroscope profiling and structured logging — so when p99 spikes, you find the slow query, not a 'feeling'.",
+   915→      },
+   916→    ],
+   917→    process: [
+   918→      {
+   919→        num: "01",
+   920→        title: "API surface & schema design",
+   921→        desc: "We design the resource model, endpoint surface and Pydantic schemas — documented in OpenAPI before the first route ships.",
+   922→      },
+   923→      {
+   924→        num: "02",
+   925→        title: "Async architecture",
+   926→        desc: "We choose async DB drivers, connection pool sizes, worker backends and queue topology against your expected load profile.",
+   927→      },
+   928→      {
+   929→        num: "03",
+   930→        title: "Implementation & testing",
+   931→        desc: "Routes ship with pytest unit tests, contract tests against the OpenAPI schema, and load tests proving the p99 target holds.",
+   932→      },
+   933→      {
+   934→        num: "04",
+   935→        title: "Observability & launch",
+   936→        desc: "OpenTelemetry, Sentry and structured logging wired in before production launch — with dashboards that show p99, error rate and queue depth.",
+   937→      },
+   938→    ],
+   939→    faqs: [
+   940→      {
+   941→        q: "Why FastAPI over Flask or Django?",
+   942→        a: "Async request handling, native Pydantic validation and auto-generated OpenAPI make FastAPI our default for new API services. We still use Django for admin-heavy apps and Flask for small internal tools — we'll recommend based on the workload.",
+   943→      },
+   944→      {
+   945→        q: "Can you hit a real 120ms p99?",
+   946→        a: "Yes, on standard infrastructure — with async DB drivers, proper indexes and connection pooling. We measure against production load, not a single localhost request, and we'll show you the trace if we miss it.",
+   947→      },
+   948→      {
+   949→        q: "GraphQL or REST?",
+   950→        a: "REST with OpenAPI by default — simpler caching, simpler clients. GraphQL when you have many clients with genuinely different data needs. We don't recommend GraphQL for a single web client.",
+   951→      },
+   952→      {
+   953→        q: "How do you handle background jobs?",
+   954→        a: "Celery for complex workflows, RQ for simple ones, Arq for async-native. We design idempotent jobs, retry strategies and dead-letter queues — jobs don't silently fail.",
+   955→      },
+   956→    ],
+   957→  },
+   958→
+   959→  "wordpress-web-design-services": {
+   960→    slug: "wordpress-web-design-services",
+   961→    primaryKeyword: "WordPress web design services",
+   962→    secondaryKeywords: [
+   963→      "WooCommerce development",
+   964→      "headless WordPress",
+   965→      "ACF block development",
+   966→      "WordPress SEO",
+   967→      "Lighthouse optimisation",
+   968→    ],
+   969→    shortTermKeywords: [
+   970→      "WordPress web design services UK",
+   971→      "WooCommerce development Birmingham",
+   972→      "headless WordPress London",
+   973→      "ACF block development services",
+   974→      "WordPress web design for small business UK",
+   975→    ],
+   976→    longTermKeywords: [
+   977→      "best WordPress web design agency UK",
+   978→      "top WooCommerce development company",
+   979→      "enterprise WordPress development services",
+   980→    ],
+   981→    metaTitle: "WordPress Web Design Services | ClickTake",
+   982→    metaDescription:
+   983→      "WordPress web design services: WooCommerce, ACF, headless WP and Lighthouse 90+. Free site audit — book today.",
+   984→    overview:
+   985→      "We build WordPress sites that don't slow you down — WooCommerce, ACF blocks, headless WP and Lighthouse 90+. Custom themes, custom blocks, an editing experience your team can use. No page-builder bloat and no plugins we'd be embarrassed to defend in a security review.",
+   986→    benefits: [
+   987→      {
+   988→        title: "Custom ACF block system",
+   989→        desc: "A bespoke Gutenberg block library built with ACF Blocks or native blocks — your editors compose pages without touching HTML.",
+   990→      },
+   991→      {
+   992→        title: "WooCommerce done right",
+   993→        desc: "WooCommerce stores with proper indexing, transactional emails and a checkout that doesn't lose customers to a 5-second spinner.",
+   994→      },
+   995→      {
+   996→        title: "Headless WordPress option",
+   997→        desc: "Headless WP on Next.js or Astro when Lighthouse 95+ and edge caching matter more than visual theme editors.",
+   998→      },
+   999→      {
+  1000→        title: "Lighthouse 90+ as standard",
+  1001→        desc: "Every site ships with mobile Lighthouse Performance 90+ — measured on production URLs, not a sandbox.",
+  1002→      },
+  1003→      {
+  1004→        title: "Security-hardened defaults",
+  1005→        desc: "Minimal plugin footprint, patched core, WAF rules and forced HTTPS — we don't ship sites that get pwned in week one.",
+  1006→      },
+  1007→      {
+  1008→        title: "Editor-friendly CMS",
+  1009→        desc: "Your marketing team gets a documented editing workflow with preview, scheduling and reusable block patterns — not a page builder they avoid.",
+  1010→      },
+  1011→    ],
+  1012→    process: [
+  1013→      {
+  1014→        num: "01",
+  1015→        title: "Audit & information architecture",
+  1016→        desc: "We audit your current WP install (plugins, theme, content) and redesign the information architecture around commercial intent.",
+  1017→      },
+  1018→      {
+  1019→        num: "02",
+  1020→        title: "Block system & theme build",
+  1021→        desc: "We build a custom ACF or native block library and a hardened theme — no off-the-shelf theme with 50 unused features.",
+  1022→      },
+  1023→      {
+  1024→        num: "03",
+  1025→        title: "WooCommerce & integrations",
+  1026→        desc: "Where needed, we wire WooCommerce, payment gateways, shipping plugins and email automation with idempotent order handling.",
+  1027→      },
+  1028→      {
+  1029→        num: "04",
+  1030→        title: "Migration & hardening",
+  1031→        desc: "We migrate content, redirect old URLs, run a security review and ship to production with monitoring on Core Web Vitals.",
+  1032→      },
+  1033→    ],
+  1034→    faqs: [
+  1035→      {
+  1036→        q: "Do you use page builders like Elementor or Divi?",
+  1037→        a: "Generally no — page builders hurt Lighthouse scores, complicate maintenance and lock you into their ecosystem. We build custom ACF blocks or native Gutenberg blocks instead. We'll use a builder only if your team is already trained on it.",
+  1038→      },
+  1039→      {
+  1040→        q: "Can you make our existing WordPress site faster?",
+  1041→        a: "Yes — we run a Lighthouse audit, fix Core Web Vitals, replace heavy plugins, optimise images and add caching. Often a 2-3x speed improvement without a full rebuild.",
+  1042→      },
+  1043→      {
+  1044→        q: "Do you do headless WordPress?",
+  1045→        a: "Yes — headless WP with Next.js, Astro or Gatsby as the front-end. Recommended when you need Lighthouse 95+, edge caching or a custom UI WP themes can't deliver.",
+  1046→      },
+  1047→      {
+  1048→        q: "Will you maintain the site after launch?",
+  1049→        a: "Optionally. We offer monthly maintenance — core updates, plugin patching, backups, uptime monitoring and security review — but you own the site and can hand it to any WordPress developer.",
+  1050→      },
+  1051→    ],
+  1052→  },
+  1053→
+  1054→  "ecommerce-web-design-services": {
+  1055→    slug: "ecommerce-web-design-services",
+  1056→    primaryKeyword: "ecommerce web design services",
+  1057→    secondaryKeywords: [
+  1058→      "headless Shopify development",
+  1059→      "Medusa commerce",
+  1060→      "Stripe ecommerce integration",
+  1061→      "Shopify Plus development",
+  1062→      "ecommerce CRO",
+  1063→    ],
+  1064→    shortTermKeywords: [
+  1065→      "ecommerce web design services UK",
+  1066→      "headless Shopify development London",
+  1067→      "Medusa commerce Birmingham",
+  1068→      "Shopify Plus development for small business",
+  1069→      "ecommerce web design for DTC brands UK",
+  1070→    ],
+  1071→    longTermKeywords: [
+  1072→      "best ecommerce web design agency UK",
+  1073→      "top Shopify development company",
+  1074→      "enterprise ecommerce development services",
+  1075→    ],
+  1076→    metaTitle: "Ecommerce Web Design Services | ClickTake",
+  1077→    metaDescription:
+  1078→      "Ecommerce web design services: headless Shopify/Medusa, Stripe, 1.5s LCP and +25-60% CVR. Free store audit — book today.",
+  1079→    overview:
+  1080→      "We build ecommerce stores that load in 1.5s and convert 25-60% better — headless Shopify, Medusa or Next.js storefronts, Stripe checkout, CRO baked in. No theme bloat, no plugin soup, no checkout that loses carts. You get a store that's fast, indexed and measurable.",
+  1081→    benefits: [
+  1082→      {
+  1083→        title: "1.5s LCP storefront",
+  1084→        desc: "Headless Next.js or Hydrogen storefronts that load in 1.5s on mobile — measured on production URLs, not a staging demo.",
+  1085→      },
+  1086→      {
+  1087→        title: "Headless Shopify / Medusa",
+  1088→        desc: "We decouple the storefront from the commerce engine so you can iterate on UX without touching cart, inventory or tax logic.",
+  1089→      },
+  1090→      {
+  1091→        title: "Stripe & Shopify Payments",
+  1092→        desc: "Stripe, Shopify Payments, Apple Pay and Google Pay wired in with idempotent webhooks and proper 3DS handling.",
+  1093→      },
+  1094→      {
+  1095→        title: "+25-60% CVR by design",
+  1096→        desc: "CRO is part of the build — quick view, sticky ATC, urgency, trust signals and a checkout that doesn't ask for the same field twice.",
+  1097→      },
+  1098→      {
+  1099→        title: "SEO-friendly by default",
+  1100→        desc: "Schema for Product, Offer and Review; crawlable product URLs; clean pagination; and no JS-required content for SEO bots.",
+  1101→      },
+  1102→      {
+  1103→        title: "Composable commerce",
+  1104→        desc: "Best-of-breed stack: Shopify or Medusa for commerce, Algolia for search, Sanity for content, Klaviyo for email — no monolith lock-in.",
+  1105→      },
+  1106→    ],
+  1107→    process: [
+  1108→      {
+  1109→        num: "01",
+  1110→        title: "Commerce audit & stack choice",
+  1111→        desc: "We audit your current store's CVR, PageSpeed and revenue per visit — then recommend Shopify Plus, Medusa or custom build against your volume.",
+  1112→      },
+  1113→      {
+  1114→        num: "02",
+  1115→        title: "Storefront design & build",
+  1116→        desc: "We design and build a headless storefront with CRO patterns baked in — quick view, sticky ATC, optimised PDP and PLP templates.",
+  1117→      },
+  1118→      {
+  1119→        num: "03",
+  1120→        title: "Payments & integrations",
+  1121→        desc: "We wire Stripe or Shopify Payments, Klaviyo, Algolia/search, shipping and ERP/OMS integrations with proper error handling.",
+  1122→      },
+  1123→      {
+  1124→        num: "04",
+  1125→        title: "Launch, monitor, optimise",
+  1126→        desc: "We launch with monitoring on CVR, AOV, PageSpeed and Core Web Vitals — then run a 90-day CRO sprint to lift CVR 25-60%.",
+  1127→      },
+  1128→    ],
+  1129→    faqs: [
+  1130→      {
+  1131→        q: "Shopify, Medusa or custom build?",
+  1132→        a: "Shopify Plus for fastest time-to-market and lowest ops overhead, Medusa for full control and lower fees at scale, custom Next.js storefronts for brands that need a unique UX. We recommend based on your volume, team and roadmap.",
+  1133→      },
+  1134→      {
+  1135→        q: "Will you migrate our existing store?",
+  1136→        a: "Yes — we migrate products, customers, orders, URLs and reviews from Shopify, WooCommerce, Magento or BigCommerce, with 301 redirects and a launch-day traffic plan to preserve SEO.",
+  1137→      },
+  1138→      {
+  1139→        q: "How fast can you make our store?",
+  1140→        a: "Headless storefronts typically hit 1.5s LCP on mobile. Heavier existing stores often go from 5-8s to under 2.5s with caching, image optimisation and a CDN.",
+  1141→      },
+  1142→      {
+  1143→        q: "Do you handle Klaviyo, search and ERP integrations?",
+  1144→        a: "Yes — Klaviyo for email/SMS, Algolia or Searchspring for search, and ERP/OMS integration through idempotent webhooks. We scope integrations explicitly, not as 'we'll figure it out'.",
+  1145→      },
+  1146→    ],
+  1147→  },
+  1148→
+  1149→  // ===== AI & Automation =====
+  1150→  "custom-llm-solutions": {
+  1151→    slug: "custom-llm-solutions",
+  1152→    primaryKeyword: "custom LLM solutions",
+  1153→    secondaryKeywords: [
+  1154→      "RAG development",
+  1155→      "LLM fine-tuning services",
+  1156→      "LLM evaluation harness",
+  1157→      "AI guardrails",
+  1158→      "LLM cost optimisation",
+  1159→    ],
+  1160→    shortTermKeywords: [
+  1161→      "custom LLM solutions UK",
+  1162→      "RAG development services London",
+  1163→      "LLM fine-tuning Birmingham",
+  1164→      "custom AI chatbot for enterprise UK",
+  1165→      "private LLM deployment services",
+  1166→    ],
+  1167→    longTermKeywords: [
+  1168→      "best custom LLM development agency UK",
+  1169→      "top enterprise LLM solutions company",
+  1170→      "production AI platform services",
+  1171→    ],
+  1172→    metaTitle: "Custom LLM Solutions | ClickTake",
+  1173→    metaDescription:
+  1174→      "Custom LLM solutions: RAG, fine-tuning, eval harness, guardrails and cost control. Free architecture review — book today.",
+  1175→    overview:
+  1176→      "We build LLM systems that ship to production — RAG over your real data, fine-tuning where it earns its keep, eval harnesses for regressions, guardrails for safe outputs, and cost controls. You get measured accuracy, a fallback chain and a runbook for misbehaviour.",
+  1177→    benefits: [
+  1178→      {
+  1179→        title: "RAG over your real data",
+  1180→        desc: "Retrieval over your actual documents, tickets and knowledge base — not a generic chatbot trained on the open web.",
+  1181→      },
+  1182→      {
+  1183→        title: "Fine-tuning when warranted",
+  1184→        desc: "We fine-tune only when prompts and RAG can't close the gap — and we measure lift against the baseline before you pay for it.",
+  1185→      },
+  1186→      {
+  1187→        title: "Eval harness included",
+  1188→        desc: "Every prompt and model change runs against a labelled eval set — so accuracy is measured, not vibes-based.",
+  1189→      },
+  1190→      {
+  1191→        title: "Guardrails for safety",
+  1192→        desc: "Input and output moderation, PII redaction, jailbreak detection and topic filtering — shipped, not 'we'll add it later'.",
+  1193→      },
+  1194→      {
+  1195→        title: "Cost control by default",
+  1196→        desc: "Token budgeting, prompt caching, model routing and small-model fallbacks — so your LLM bill scales with revenue, not surprise.",
+  1197→      },
+  1198→      {
+  1199→        title: "Multi-model & fallback",
+  1200→        desc: "OpenAI, Anthropic, open-source (Llama, Mistral) wired behind one interface — so a model outage doesn't take your product down.",
+  1201→      },
+  1202→    ],
+  1203→    process: [
+  1204→      {
+  1205→        num: "01",
+  1206→        title: "Use case & data audit",
+  1207→        desc: "We map the use case, available data, accuracy targets and cost ceiling — and decide whether RAG, fine-tuning or both are warranted.",
+  1208→      },
+  1209→      {
+  1210→        num: "02",
+  1211→        title: "RAG pipeline & eval set",
+  1212→        desc: "We build the retrieval pipeline (embeddings, vector store, reranker) and a labelled eval set — so every change is measured.",
+  1213→      },
+  1214→      {
+  1215→        num: "03",
+  1216→        title: "Guardrails & cost controls",
+  1217→        desc: "We add input/output moderation, PII redaction, token budgeting and model routing — safety and cost designed in, not bolted on.",
+  1218→      },
+  1219→      {
+  1220→        num: "04",
+  1221→        title: "Production & monitoring",
+  1222→        desc: "We ship to production with logging, eval-on-deploy and a runbook for the inevitable 'the model is misbehaving' page.",
+  1223→      },
+  1224→    ],
+  1225→    faqs: [
+  1226→      {
+  1227→        q: "Should we fine-tune a model or use RAG?",
+  1228→        a: "Usually RAG first — it's cheaper, faster to iterate and easier to debug. We fine-tune when RAG can't close the accuracy gap, the domain is narrow, or latency/cost demands a smaller model. We'll recommend in the audit.",
+  1229→      },
+  1230→      {
+  1231→        q: "Which LLM do you use?",
+  1232→        a: "Whichever fits the use case — GPT-4/4o, Claude, Gemini, or open-source Llama/Mistral for on-prem or cost-sensitive workloads. We wire multiple models behind one interface so you can switch without rewriting.",
+  1233→      },
+  1234→      {
+  1235→        q: "How do we know the model is accurate?",
+  1236→        a: "We build a labelled eval set for your use case and run every change against it. You see accuracy numbers, not 'it feels better'. We also track production metrics — answer rate, escalation rate, human-edit rate.",
+  1237→      },
+  1238→      {
+  1239→        q: "What about data privacy?",
+  1240→        a: "We can deploy on VPC, on-prem or use API providers with zero-retention contracts. Your data is never used to train third-party models. We'll document the data flow before any code is written.",
+  1241→      },
+  1242→    ],
+  1243→  },
+  1244→
+  1245→  "ai-chatbots-assistants": {
+  1246→    slug: "ai-chatbots-assistants",
+  1247→    primaryKeyword: "AI chatbot development",
+  1248→    secondaryKeywords: [
+  1249→      "AI assistant development",
+  1250→      "tool-using LLM agents",
+  1251→      "conversational AI",
+  1252→      "human handoff chatbots",
+  1253→      "multi-channel AI assistants",
+  1254→    ],
+  1255→    shortTermKeywords: [
+  1256→      "AI chatbot development UK",
+  1257→      "AI assistant development London",
+  1258→      "custom chatbot for small business UK",
+  1259→      "WhatsApp AI chatbot Birmingham",
+  1260→      "Slack AI assistant services",
+  1261→    ],
+  1262→    longTermKeywords: [
+  1263→      "best AI chatbot development agency UK",
+  1264→      "top conversational AI company",
+  1265→      "enterprise AI assistant platform",
+  1266→    ],
+  1267→    metaTitle: "AI Chatbot Development | ClickTake",
+  1268→    metaDescription:
+  1269→      "AI chatbot development with tool-use, memory, human handoff and multi-channel deploy (site/WhatsApp/Slack). Free scope call — book today.",
+  1270→    overview:
+  1271→      "We build chatbots that actually do things — call your APIs, query your database, escalate to a human when stuck, and remember conversations across sessions. Deployed on your site, WhatsApp, Slack or Teams. You get a bot with a defined tool surface, human fallback and full conversation logs.",
+  1272→    benefits: [
+  1273→      {
+  1274→        title: "Tool-using agents",
+  1275→        desc: "Bots call your real APIs — order lookup, refund initiation, ticket creation — not 'I'll forward this to the team'.",
+  1276→      },
+  1277→      {
+  1278→        title: "Conversation memory",
+  1279→        desc: "Sessions remember context across channels and visits — a customer on WhatsApp continues on your site without restarting.",
+  1280→      },
+  1281→      {
+  1282→        title: "Human handoff built in",
+  1283→        desc: "Escalation to a human agent with full conversation context, summary and intent classification — not 'a specialist will be in touch'.",
+  1284→      },
+  1285→      {
+  1286→        title: "Multi-channel deploy",
+  1287→        desc: "Same bot, multiple channels — your website, WhatsApp Business, Slack, MS Teams and Instagram DMs — from one codebase.",
+  1288→      },
+  1289→      {
+  1290→        title: "Guardrails & moderation",
+  1291→        desc: "Topic filtering, PII redaction and refusal behaviour for out-of-scope requests — the bot doesn't answer questions it shouldn't.",
+  1292→      },
+  1293→      {
+  1294→        title: "Full conversation logs",
+  1295→        desc: "Every conversation logged with intent, outcome, tool calls and satisfaction score — for QA, training and compliance.",
+  1296→      },
+  1297→    ],
+  1298→    process: [
+  1299→      {
+  1300→        num: "01",
+  1301→        title: "Use case & tool surface",
+  1302→        desc: "We map the use case (support, sales, internal), the tools the bot can call, the escalation rules and the success metrics.",
+  1303→      },
+  1304→      {
+  1305→        num: "02",
+  1306→        title: "Build & eval set",
+  1307→        desc: "We build the bot with tool-use, memory and guardrails, and an eval set of real conversations to measure accuracy and deflection.",
+  1308→      },
+  1309→      {
+  1310→        num: "03",
+  1311→        title: "Channel integration",
+  1312→        desc: "We deploy to your site, WhatsApp, Slack or Teams — with channel-specific UX and a shared conversation backend.",
+  1313→      },
+  1314→      {
+  1315→        num: "04",
+  1316→        title: "Monitor, train, scale",
+  1317→        desc: "We monitor deflection, satisfaction and escalation, retrain on edge cases, and expand the tool surface as the bot proves itself.",
+  1318→      },
+  1319→    ],
+  1320→    faqs: [
+  1321→      {
+  1322→        q: "Will the chatbot replace our support team?",
+  1323→        a: "No — it deflects 40-70% of repetitive tickets so your team handles the complex 30-60% that need a human. We design for human handoff, not human replacement.",
+  1324→      },
+  1325→      {
+  1326→        q: "What channels do you deploy to?",
+  1327→        a: "Website widget, WhatsApp Business, Slack, MS Teams and Instagram DMs. Same bot backend, channel-specific UX. We don't currently deploy to SMS or voice in-house.",
+  1328→      },
+  1329→      {
+  1330→        q: "How do you prevent hallucinations?",
+  1331→        a: "Tool-use over generation — the bot queries your data instead of inventing answers. Guardrails on input and output. And a labelled eval set that runs on every change to catch regressions.",
+  1332→      },
+  1333→      {
+  1334→        q: "Can the bot call our internal APIs?",
+  1335→        a: "Yes — we expose a defined tool surface (order lookup, refund, ticket creation, scheduling) with auth scoped to the bot. The bot can't do anything your team hasn't explicitly authorised.",
+  1336→      },
+  1337→    ],
+  1338→  },
+  1339→
+  1340→  "prompt-engineering": {
+  1341→    slug: "prompt-engineering",
+  1342→    primaryKeyword: "prompt engineering services",
+  1343→    secondaryKeywords: [
+  1344→      "prompt versioning",
+  1345→      "LLM evaluation suites",
+  1346→      "few-shot prompting",
+  1347→      "prompt optimisation",
+  1348→      "LLM cost reduction",
+  1349→    ],
+  1350→    shortTermKeywords: [
+  1351→      "prompt engineering services UK",
+  1352→      "LLM evaluation suites London",
+  1353→      "few-shot prompting services",
+  1354→      "prompt optimisation for SaaS UK",
+  1355→      "affordable prompt engineering Birmingham",
+  1356→    ],
+  1357→    longTermKeywords: [
+  1358→      "best prompt engineering agency UK",
+  1359→      "top LLM optimisation company",
+  1360→      "enterprise prompt engineering services",
+  1361→    ],
+  1362→    metaTitle: "Prompt Engineering Services | ClickTake",
+  1363→    metaDescription:
+  1364→      "Prompt engineering services: versioning, eval suites, few-shot and cost optimisation. Free prompt audit — book today.",
+  1365→    overview:
+  1366→      "We engineer prompts like code — versioned, tested, evaluated against labelled sets, and optimised for cost and latency. No vibes, no 'we tried a few and this felt best'. You get a prompt library with version history, an eval suite that catches regressions, and per-prompt cost targets.",
+  1367→    benefits: [
+  1368→      {
+  1369→        title: "Prompt versioning & history",
+  1370→        desc: "Every prompt is versioned in Git with a changelog — rollback to last-known-good takes seconds, not a Slack archaeology session.",
+  1371→      },
+  1372→      {
+  1373→        title: "Eval suite per use case",
+  1374→        desc: "Each prompt ships with a labelled eval set — accuracy, format adherence and refusal rate measured on every change.",
+  1375→      },
+  1376→      {
+  1377→        title: "Few-shot where it helps",
+  1378→        desc: "Few-shot examples added where they measurably lift accuracy — and removed where they add cost without benefit.",
+  1379→      },
+  1380→      {
+  1381→        title: "Cost & latency targets",
+  1382→        desc: "Token budgeting, prompt caching, and model routing to smaller models for easy cases — so cost scales with revenue, not surprise.",
+  1383→      },
+  1384→      {
+  1385→        title: "A/B testing in production",
+  1386→        desc: "New prompts roll out as experiments with guardrail metrics — accuracy, latency, cost, satisfaction — not gut feel.",
+  1387→      },
+  1388→      {
+  1389→        title: "Documented prompt library",
+  1390→        desc: "Your team gets a documented library of prompts with intent, inputs, outputs and tradeoffs — not a single .txt file in someone's laptop.",
+  1391→      },
+  1392→    ],
+  1393→    process: [
+  1394→      {
+  1395→        num: "01",
+  1396→        title: "Use case & baseline",
+  1397→        desc: "We map the use case, baseline prompt, accuracy targets, cost ceiling and existing examples — documented before any optimisation.",
+  1398→      },
+  1399→      {
+  1400→        num: "02",
+  1401→        title: "Eval set & versioning",
+  1402→        desc: "We build a labelled eval set for the use case and version every prompt change in Git with a changelog and eval run.",
+  1403→      },
+  1404→      {
+  1405→        num: "03",
+  1406→        title: "Optimise & measure",
+  1407→        desc: "We iterate on prompts — system message, few-shot, structured output, model routing — measured against the eval set and cost targets.",
+  1408→      },
+  1409→      {
+  1410→        num: "04",
+  1411→        title: "Deploy & monitor",
+  1412→        desc: "We roll out behind feature flags with guardrail metrics and a rollback plan — and re-eval monthly as models and usage evolve.",
+  1413→      },
+  1414→    ],
+  1415→    faqs: [
+  1416→      {
+  1417→        q: "Isn't prompt engineering just 'trying prompts until one works'?",
+  1418→        a: "No — that's prompt trying. Prompt engineering is versioned, measured and reproducible. We treat prompts like code: tested, peer-reviewed, with rollback and eval.",
+  1419→      },
+  1420→      {
+  1421→        q: "Which models do you write prompts for?",
+  1422→        a: "All major frontier models — GPT-4/4o, Claude, Gemini — plus open-source Llama and Mistral. Prompt patterns differ; we adapt to the model's strengths.",
+  1423→      },
+  1424→      {
+  1425→        q: "Can you reduce our LLM costs?",
+  1426→        a: "Usually 30-60% — through prompt compression, model routing (small models for easy cases), prompt caching and few-shot optimisation. We measure cost per successful response, not per token.",
+  1427→      },
+  1428→      {
+  1429→        q: "Do you train our team on prompt engineering?",
+  1430→        a: "Yes — optional workshop on prompt patterns, eval design and cost control, with a documented prompt library your team can extend. We don't gatekeep.",
+  1431→      },
+  1432→    ],
+  1433→  },
+  1434→
+  1435→  "computer-vision-nlp": {
+  1436→    slug: "computer-vision-nlp",
+  1437→    primaryKeyword: "computer vision & NLP services",
+  1438→    secondaryKeywords: [
+  1439→      "OCR development",
+  1440→      "object detection models",
+  1441→      "document AI",
+  1442→      "text classification",
+  1443→      "edge AI deployment",
+  1444→    ],
+  1445→    shortTermKeywords: [
+  1446→      "computer vision services UK",
+  1447→      "OCR development London",
+  1448→      "document AI services Birmingham",
+  1449→      "object detection for retail UK",
+  1450→      "edge AI deployment services",
+  1451→    ],
+  1452→    longTermKeywords: [
+  1453→      "best computer vision company UK",
+  1454→      "top document AI platform",
+  1455→      "enterprise NLP services",
+  1456→    ],
+  1457→    metaTitle: "Computer Vision & NLP Services",
+  1458→    metaDescription:
+  1459→      "Computer vision & NLP: OCR, object detection, document AI, classification and edge deployment. Free scope call — book today.",
+  1460→    overview:
+  1461→      "We build computer vision and NLP systems that work in production — OCR, object detection, document AI and text classification, trained on your data and deployable on cloud or edge. No 'we trained a model' demos — you get measured accuracy, an eval harness and a deploy plan.",
+  1462→    benefits: [
+  1463→      {
+  1464→        title: "Trained on your data",
+  1465→        desc: "Models fine-tuned on your real documents, images or text — not a generic ImageNet classifier that breaks on your edge cases.",
+  1466→      },
+  1467→      {
+  1468→        title: "OCR & document AI",
+  1469→        desc: "Tesseract, PaddleOCR or fine-tuned Donut/LayoutLM for invoices, contracts, forms and ID documents — with structured extraction, not just text.",
+  1470→      },
+  1471→      {
+  1472→        title: "Object detection",
+  1473→        desc: "YOLO, DETR or fine-tuned models for retail inventory, defect detection, safety monitoring and queue analytics.",
+  1474→      },
+  1475→      {
+  1476→        title: "NLP & classification",
+  1477→        desc: "Text classification, NER, sentiment and topic modelling for support triage, content moderation and contract analysis.",
+  1478→      },
+  1479→      {
+  1480→        title: "Edge deployment",
+  1481→        desc: "Models quantised and deployed to edge devices — Jetson, mobile or browser via ONNX/WebGPU — when latency or privacy demands it.",
+  1482→      },
+  1483→      {
+  1484→        title: "Eval harness included",
+  1485→        desc: "Every model ships with a labelled eval set and CI test — so regressions are caught before deploy, not by a customer.",
+  1486→      },
+  1487→    ],
+  1488→    process: [
+  1489→      {
+  1490→        num: "01",
+  1491→        title: "Use case & data audit",
+  1492→        desc: "We map the use case, available labelled data, accuracy targets and deployment constraints — and decide build vs fine-tune vs API.",
+  1493→      },
+  1494→      {
+  1495→        num: "02",
+  1496→        title: "Labelling & training",
+  1497→        desc: "We label or curate training data, fine-tune a base model, and run it against a held-out eval set with documented metrics.",
+  1498→      },
+  1499→      {
+  1500→        num: "03",
+  1501→        title: "Pipeline & integration",
+  1502→        desc: "We build the inference pipeline, integrate with your app or data warehouse, and add monitoring for drift and accuracy.",
+  1503→      },
+  1504→      {
+  1505→        num: "04",
+  1506→        title: "Edge or cloud deploy",
+  1507→        desc: "We deploy to cloud (GPU or serverless) or edge (mobile, browser, Jetson) per your latency and privacy constraints — with a retraining cadence.",
+  1508→      },
+  1509→    ],
+  1510→    faqs: [
+  1511→      {
+  1512→        q: "Build or fine-tune or use an API?",
+  1513→        a: "Depends on accuracy targets, data volume, latency and cost. Off-the-shelf APIs (Google Vision, AWS Textract) for common cases, fine-tuned models for domain-specific accuracy, and full custom builds for novel use cases. We recommend in the audit.",
+  1514→      },
+  1515→      {
+  1516→        q: "How much data do we need?",
+  1517→        a: "For fine-tuning: 100-1,000 labelled examples for narrow tasks, 5,000+ for broader ones. For OCR or document AI, we can often start with pre-trained models and 50-100 annotated examples.",
+  1518→      },
+  1519→      {
+  1520→        q: "Can you deploy on edge devices?",
+  1521→        a: "Yes — models quantised to ONNX, TensorRT or TFLite for Jetson, Raspberry Pi, mobile or in-browser via WebGPU. Useful for offline, latency-sensitive or privacy-constrained workloads.",
+  1522→      },
+  1523→      {
+  1524→        q: "How do you handle model drift?",
+  1525→        a: "We monitor prediction confidence and accuracy on a sample of production data, alert on drift, and run a scheduled retraining cadence — quarterly for stable domains, monthly for fast-moving ones.",
+  1526→      },
+  1527→    ],
+  1528→  },
+  1529→
+  1530→  "ai-automation": {
+  1531→    slug: "ai-automation",
+  1532→    primaryKeyword: "AI automation services",
+  1533→    secondaryKeywords: [
+  1534→      "workflow automation",
+  1535→      "AI agent orchestration",
+  1536→      "human-in-the-loop automation",
+  1537→      "integration automation",
+  1538→      "business process automation",
+  1539→    ],
+  1540→    shortTermKeywords: [
+  1541→      "AI automation services UK",
+  1542→      "workflow automation London",
+  1543→      "AI automation for small business UK",
+  1544→      "business process automation Birmingham",
+  1545→      "AI automation for operations UK",
+  1546→    ],
+  1547→    longTermKeywords: [
+  1548→      "best AI automation agency UK",
+  1549→      "top workflow automation company",
+  1550→      "enterprise AI automation services",
+  1551→    ],
+  1552→    metaTitle: "AI Automation Services | ClickTake",
+  1553→    metaDescription:
+  1554→      "AI automation services that eliminate 30+ hrs/wk of manual work — workflow orchestration, integrations and monitoring. Free scope call — book today.",
+  1555→    overview:
+  1556→      "We automate the workflows eating your team's week — invoicing, onboarding, lead routing, reports and support triage — with AI where it earns its keep and deterministic code elsewhere. Human-in-the-loop, monitoring on every job, kill switch included. Typically 30+ hrs/wk saved in 90 days.",
+  1557→    benefits: [
+  1558→      {
+  1559→        title: "Workflow orchestration",
+  1560→        desc: "Multi-step workflows across your tools — Slack, HubSpot, Notion, Gmail, Stripe — orchestrated with retries, idempotency and audit logs.",
+  1561→      },
+  1562→      {
+  1563→        title: "AI where it earns its keep",
+  1564→        desc: "LLMs used for extraction, classification and drafting — not bolted onto every step where a deterministic rule works better.",
+  1565→      },
+  1566→      {
+  1567→        title: "Human-in-the-loop",
+  1568→        desc: "Judgement-heavy steps routed to a human approver with full context — automation handles the 90%, humans the 10% that matter.",
+  1569→      },
+  1570→      {
+  1571→        title: "Monitoring & alerting",
+  1572→        desc: "Every job logs duration, success, cost and output — you see a dashboard, not a 'is it still running?' Slack ping.",
+  1573→      },
+  1574→      {
+  1575→        title: "Kill switch & rollback",
+  1576→        desc: "Every automation has a one-click pause and a manual fallback — when it misbehaves, you stop it in seconds, not in a war room.",
+  1577→      },
+  1578→      {
+  1579→        title: "Real time saved, measured",
+  1580→        desc: "We track hours saved per workflow, weekly — automation either pays for itself or we pause and rethink. No vanity automations.",
+  1581→      },
+  1582→    ],
+  1583→    process: [
+  1584→      {
+  1585→        num: "01",
+  1586→        title: "Workflow audit & ROI map",
+  1587→        desc: "We map your team's manual workflows, score each by hours/week and automation feasibility, and prioritise the highest-ROI candidates first.",
+  1588→      },
+  1589→      {
+  1590→        num: "02",
+  1591→        title: "Build & integrate",
+  1592→        desc: "We build the orchestration with retries, idempotency and audit logs, integrating your existing tools — no rip-and-replace.",
+  1593→      },
+  1594→      {
+  1595→        num: "03",
+  1596→        title: "Human-in-loop & guardrails",
+  1597→        desc: "We add human approval steps where judgement matters, guardrails on AI steps, and a kill switch on every automation.",
+  1598→      },
+  1599→      {
+  1600→        num: "04",
+  1601→        title: "Monitor, measure, scale",
+  1602→        desc: "We monitor hours saved, error rate and cost weekly, iterate on edge cases, and expand to the next workflow once ROI is proven.",
+  1603→      },
+  1604→    ],
+  1605→    faqs: [
+  1606→      {
+  1607→        q: "How many hours per week can you actually save?",
+  1608→        a: "Typically 30+ hours/week within 90 days across 3-5 automated workflows. We measure hours saved per workflow weekly — if a workflow isn't paying for itself, we pause and rethink it.",
+  1609→      },
+  1610→      {
+  1611→        q: "Which tools do you integrate?",
+  1612→        a: "Slack, HubSpot, Salesforce, Notion, Gmail, Stripe, QuickBooks, Airtable, Zapier, Make — plus your internal APIs. If a tool has an API or a webhook, we can integrate it.",
+  1613→      },
+  1614→      {
+  1615→        q: "What about security and access?",
+  1616→        a: "We use scoped OAuth where possible, store secrets in a vault, and log every privileged action. Automation runs with least-privilege credentials — it can't do anything your team hasn't authorised.",
+  1617→      },
+  1618→      {
+  1619→        q: "Will the automation replace our team?",
+  1620→        a: "No — it removes the repetitive 30-50% so your team handles the high-value work. We design for human-in-the-loop, not human replacement. Most clients redeploy freed capacity to higher-leverage work.",
+  1621→      },
+  1622→    ],
+  1623→  },
+  1624→
+  1625→  "ai-agent-development": {
+  1626→    slug: "ai-agent-development",
+  1627→    primaryKeyword: "AI agent development services",
+  1628→    secondaryKeywords: [
+  1629→      "LangGraph development",
+  1630→      "multi-agent orchestration",
+  1631→      "agent memory systems",
+  1632→      "AI planning agents",
+  1633→      "agent evaluation",
+  1634→    ],
+  1635→    shortTermKeywords: [
+  1636→      "AI agent development UK",
+  1637→      "LangGraph development London",
+  1638→      "multi-agent orchestration Birmingham",
+  1639→      "AI agent development for SaaS UK",
+  1640→      "custom AI agent services",
+  1641→    ],
+  1642→    longTermKeywords: [
+  1643→      "best AI agent development agency UK",
+  1644→      "top multi-agent orchestration company",
+  1645→      "enterprise AI agent platform",
+  1646→    ],
+  1647→    metaTitle: "AI Agent Development Services | ClickTake",
+  1648→    metaDescription:
+  1649→      "AI agent development: LangGraph, planning, memory, multi-agent orchestration and production evals. Free scope call — book today.",
+  1650→    overview:
+  1651→      "We build production AI agents that plan, use tools, remember context and orchestrate with others — not single-shot LLM calls. LangGraph for stateful orchestration, structured memory, tool-use with retries, and eval suites. You get an agent that completes multi-step tasks reliably.",
+  1652→    benefits: [
+  1653→      {
+  1654→        title: "LangGraph orchestration",
+  1655→        desc: "Stateful agent graphs with branching, retries and human-in-loop checkpoints — not a single prompt that hopes for the best.",
+  1656→      },
+  1657→      {
+  1658→        title: "Planning & reasoning",
+  1659→        desc: "Agents decompose goals into steps, choose tools per step, and revise the plan when a step fails — observable reasoning, not a black box.",
+  1660→      },
+  1661→      {
+  1662→        title: "Structured memory",
+  1663→        desc: "Short-term working memory and long-term vector memory — agents remember context across sessions, not just within one.",
+  1664→      },
+  1665→      {
+  1666→        title: "Multi-agent orchestration",
+  1667→        desc: "Specialist agents (researcher, coder, reviewer) orchestrated by a planner — each with its own tools, prompts and eval sets.",
+  1668→      },
+  1669→      {
+  1670→        title: "Production evals",
+  1671→        desc: "Every agent change runs against a labelled task suite — success rate, tool-call accuracy and cost measured on every release.",
+  1672→      },
+  1673→      {
+  1674→        title: "Observability & cost control",
+  1675→        desc: "Every agent run is traced end-to-end with LangSmith or Langfuse — you see which step cost what, and where the failure was.",
+  1676→      },
+  1677→    ],
+  1678→    process: [
+  1679→      {
+  1680→        num: "01",
+  1681→        title: "Task & tool surface design",
+  1682→        desc: "We map the task, the tools the agent can call, the success criteria and the failure modes — documented before any code.",
+  1683→      },
+  1684→      {
+  1685→        num: "02",
+  1686→        title: "Graph, memory & tools",
+  1687→        desc: "We build the LangGraph state machine, wire tools with retries and validation, and add short-term and long-term memory.",
+  1688→      },
+  1689→      {
+  1690→        num: "03",
+  1691→        title: "Eval set & guardrails",
+  1692→        desc: "We build a labelled task eval set, add guardrails (PII, topic, output schema) and run regression tests on every change.",
+  1693→      },
+  1694→      {
+  1695→        num: "04",
+  1696→        title: "Production & monitoring",
+  1697→        desc: "We ship with LangSmith/Langfuse tracing, cost monitoring, human-in-loop checkpoints, and a runbook for agent failures.",
+  1698→      },
+  1699→    ],
+  1700→    faqs: [
+  1701→      {
+  1702→        q: "LangGraph, AutoGen or CrewAI?",
+  1703→        a: "LangGraph for stateful, production-grade orchestration with clear control flow. AutoGen or CrewAI for multi-agent experimentation. We default to LangGraph for production because the state machine is auditable.",
+  1704→      },
+  1705→      {
+  1706→        q: "How do you stop the agent going off the rails?",
+  1707→        a: "Guardrails on input and output, schema-validated tool calls, human-in-loop checkpoints on high-stakes actions, and an eval suite that runs on every change. The agent can't take actions you haven't authorised.",
+  1708→      },
+  1709→      {
+  1710→        q: "Can the agent use our internal tools?",
+  1711→        a: "Yes — we expose your APIs, databases and SaaS tools as agent tools with scoped auth. The agent only sees tools you've explicitly authorised, with audit logging on every call.",
+  1712→      },
+  1713→      {
+  1714→        q: "How do you measure agent quality?",
+  1715→        a: "Task success rate, tool-call accuracy, cost per task and human-edit rate — measured against a labelled eval set on every release, and on a sample of production runs.",
+  1716→      },
+  1717→    ],
+  1718→  },
+  1719→
+  1720→  // ===== Creative & Brand =====
+  1721→  "graphic-design": {
+  1722→    slug: "graphic-design",
+  1723→    primaryKeyword: "graphic design services",
+  1724→    secondaryKeywords: [
+  1725→      "brand identity design",
+  1726→      "logo design services",
+  1727→      "marketing collateral design",
+  1728→      "social media creatives",
+  1729→      "brand guidelines",
+  1730→    ],
+  1731→    shortTermKeywords: [
+  1732→      "graphic design services UK",
+  1733→      "brand identity design London",
+  1734→      "logo design services Birmingham",
+  1735→      "affordable graphic design for small business",
+  1736→      "social media creatives UK",
+  1737→    ],
+  1738→    longTermKeywords: [
+  1739→      "best graphic design agency UK",
+  1740→      "top brand identity company",
+  1741→      "enterprise brand design services",
+  1742→    ],
+  1743→    metaTitle: "Graphic Design Services | ClickTake",
+  1744→    metaDescription:
+  1745→      "Graphic design services: brand identity, logos, marketing collateral and social creatives. Free brand audit — book today.",
+  1746→    overview:
+  1747→      "We design brand identities that hold up across every touchpoint — logos, type, colour, marketing collateral, social creatives and enforceable guidelines. Not a logo on a slide; a system that scales from billboard to favicon. You get formats your team can actually use.",
+  1748→    benefits: [
+  1749→      {
+  1750→        title: "Brand identity system",
+  1751→        desc: "Logo, type scale, colour palette, iconography and motion principles — designed as a system, not a one-off logo.",
+  1752→      },
+  1753→      {
+  1754→        title: "Logo with variations",
+  1755→        desc: "Primary, secondary, monochrome, favicon and responsive lockups — your logo works in every context, not just the hero.",
+  1756→      },
+  1757→      {
+  1758→        title: "Marketing collateral",
+  1759→        desc: "Pitch decks, sales one-pagers, business cards, signage and ad creatives — designed on-brand and ready to print or post.",
+  1760→      },
+  1761→      {
+  1762→        title: "Social media creatives",
+  1763→        desc: "Static, carousel, story and reel templates your marketing team can adapt weekly without a designer on call.",
+  1764→      },
+  1765→      {
+  1766→        title: "Brand guidelines document",
+  1767→        desc: "A Figma-published guidelines doc your team can enforce — usage rules, do/don'ts, and downloadable assets.",
+  1768→      },
+  1769→      {
+  1770→        title: "Developer-ready handoff",
+  1771→        desc: "Design tokens (colours, type, spacing) exported as CSS variables and Tailwind config — your engineers implement, not reverse-engineer.",
+  1772→      },
+  1773→    ],
+  1774→    process: [
+  1775→      {
+  1776→        num: "01",
+  1777→        title: "Discovery & brand strategy",
+  1778→        desc: "We map your audience, positioning, competitors and brand attributes — a brief that drives every design decision downstream.",
+  1779→      },
+  1780→      {
+  1781→        num: "02",
+  1782→        title: "Identity exploration",
+  1783→        desc: "We present 2-3 distinct identity directions with rationale — you choose, we refine. No endless iterations on a single direction.",
+  1784→      },
+  1785→      {
+  1786→        num: "03",
+  1787→        title: "System & collateral build",
+  1788→        desc: "We extend the chosen identity into a full system — type, colour, icons, templates, collateral and the guidelines doc.",
+  1789→      },
+  1790→      {
+  1791→        num: "04",
+  1792→        title: "Handoff & enablement",
+  1793→        desc: "We hand over design tokens, Figma libraries, templates and the guidelines doc — with a walkthrough so your team can use them.",
+  1794→      },
+  1795→    ],
+  1796→    faqs: [
+  1797→      {
+  1798→        q: "How many logo concepts do we get?",
+  1799→        a: "Two to three distinct directions, each with rationale — not ten variations of the same idea. We'd rather you choose between real options than iterate on one forever.",
+  1800→      },
+  1801→      {
+  1802→        q: "Do you do brand strategy or just design?",
+  1803→        a: "Both. Design without strategy is decoration. We start with positioning, audience and competitors, then design — but we can also work from your existing strategy if you have one.",
+  1804→      },
+  1805→      {
+  1806→        q: "What files do we get?",
+  1807→        a: "Source Figma files, exported SVG/PNG/PDF, design tokens as CSS/Tailwind, and a published brand guidelines doc. You own everything.",
+  1808→      },
+  1809→      {
+  1810→        q: "Can you redesign our existing brand?",
+  1811→        a: "Yes — we audit your current brand, recommend what to keep and what to evolve, and phase the rollout so you don't lose brand equity overnight.",
+  1812→      },
+  1813→    ],
+  1814→  },
+  1815→
+  1816→  "professional-web-design-services": {
+  1817→    slug: "professional-web-design-services",
+  1818→    primaryKeyword: "professional web design services",
+  1819→    secondaryKeywords: [
+  1820→      "UX research services",
+  1821→      "wireframe design",
+  1822→      "Figma design systems",
+  1823→      "high-fidelity prototypes",
+  1824→      "user experience design",
+  1825→    ],
+  1826→    shortTermKeywords: [
+  1827→      "professional web design services UK",
+  1828→      "UX research services London",
+  1829→      "Figma design systems Birmingham",
+  1830→      "wireframe design for SaaS UK",
+  1831→      "hi-fi prototype services",
+  1832→    ],
+  1833→    longTermKeywords: [
+  1834→      "best professional web design agency UK",
+  1835→      "top UX design company",
+  1836→      "enterprise web design services",
+  1837→    ],
+  1838→    metaTitle: "Professional Web Design Services | ClickTake",
+  1839→    metaDescription:
+  1840→      "Professional web design services: UX research, wireframes, Figma design systems and hi-fi prototypes. Free UX audit — book today.",
+  1841→    overview:
+  1842→      "We design websites the way senior product teams do — UX research, user flows, wireframes, Figma design systems and hi-fi prototypes user-tested before code. No design by committee. You get a design system your developers can implement and marketers can extend.",
+  1843→    benefits: [
+  1844→      {
+  1845→        title: "UX research first",
+  1846→        desc: "User interviews, card sorts and analytics review before any pixel is pushed — design decisions grounded in evidence, not opinion.",
+  1847→      },
+  1848→      {
+  1849→        title: "Information architecture",
+  1850→        desc: "Sitemaps, user flows and content hierarchy designed around commercial intent — visitors reach the page that converts them.",
+  1851→      },
+  1852→      {
+  1853→        title: "Wireframes before pixels",
+  1854→        desc: "Low-fidelity wireframes for every key page, reviewed and approved before hi-fi design — so feedback happens on structure, not colour.",
+  1855→      },
+  1856→      {
+  1857→        title: "Figma design system",
+  1858→        desc: "Component library with tokens, variants and documentation — your developers implement once, your marketers reuse forever.",
+  1859→      },
+  1860→      {
+  1861→        title: "Hi-fi prototypes tested",
+  1862→        desc: "Clickable prototypes tested with 5-8 real users before development — usability issues caught at 1/100th the cost of fixing post-launch.",
+  1863→      },
+  1864→      {
+  1865→        title: "Dev-ready handoff",
+  1866→        desc: "Figma file with inspect mode, design tokens and a component library matching the codebase — your engineers build, not guess.",
+  1867→      },
+  1868→    ],
+  1869→    process: [
+  1870→      {
+  1871→        num: "01",
+  1872→        title: "Research & IA",
+  1873→        desc: "We run user interviews, audit analytics and competitors, and design sitemaps and user flows around commercial intent.",
+  1874→      },
+  1875→      {
+  1876→        num: "02",
+  1877→        title: "Wireframes & flows",
+  1878→        desc: "We design low-fidelity wireframes for every key page and flow — reviewed and approved before any visual design starts.",
+  1879→      },
+  1880→      {
+  1881→        num: "03",
+  1882→        title: "Design system & hi-fi",
+  1883→        desc: "We build a Figma design system and high-fidelity designs for every page — consistent, accessible and on-brand.",
+  1884→      },
+  1885→      {
+  1886→        num: "04",
+  1887→        title: "Prototype, test, handoff",
+  1888→        desc: "We build clickable prototypes, test with real users, refine, and hand off to engineering with full component documentation.",
+  1889→      },
+  1890→    ],
+  1891→    faqs: [
+  1892→      {
+  1893→        q: "Do you do design only or design + development?",
+  1894→        a: "Both. We can hand off a Figma design system to your engineers, or design and build the site end-to-end. We'll scope either way — but we strongly recommend the same team designs and builds to avoid handoff drift.",
+  1895→      },
+  1896→      {
+  1897→        q: "How many rounds of revisions?",
+  1898→        a: "Two structured rounds on wireframes, two on hi-fi — not 'unlimited revisions', which leads to design by committee. We scope additional rounds if needed.",
+  1899→      },
+  1900→      {
+  1901→        q: "Do you do user testing?",
+  1902→        a: "Yes — we run moderated tests with 5-8 users on clickable prototypes before development. The cost is a fraction of fixing usability issues post-launch.",
+  1903→      },
+  1904→      {
+  1905→        q: "Will you work with our existing brand?",
+  1906→        a: "Yes — we work within your existing brand guidelines and extend them into a Figma design system. If your brand needs refreshing, we'll flag that as a separate workstream.",
+  1907→      },
+  1908→    ],
+  1909→  },
+  1910→
+  1911→  "b2b-video-production": {
+  1912→    slug: "b2b-video-production",
+  1913→    primaryKeyword: "B2B video production services",
+  1914→    secondaryKeywords: [
+  1915→      "explainer video production",
+  1916→      "product demo videos",
+  1917→      "ad creative video",
+  1918→      "motion graphics",
+  1919→      "corporate video production",
+  1920→    ],
+  1921→    shortTermKeywords: [
+  1922→      "B2B video production UK",
+  1923→      "explainer video production London",
+  1924→      "product demo videos Birmingham",
+  1925→      "ad creative video for SaaS UK",
+  1926→      "corporate video production for startups",
+  1927→    ],
+  1928→    longTermKeywords: [
+  1929→      "best B2B video production agency UK",
+  1930→      "top explainer video company",
+  1931→      "enterprise video production services",
+  1932→    ],
+  1933→    metaTitle: "B2B Video Production Services | ClickTake",
+  1934→    metaDescription:
+  1935→      "B2B video production: explainer videos, product demos, ad creatives and motion graphics. Free creative scoping — book today.",
+  1936→    overview:
+  1937→      "We produce B2B videos that earn their place in your funnel — explainers that shorten sales cycles, demos that drive trials, ad creatives that lower CPA, motion graphics that simplify. Scripted, shot and edited in every aspect ratio each platform needs. Every video has a job.",
+  1938→    benefits: [
+  1939→      {
+  1940→        title: "Script-first production",
+  1941→        desc: "Every video starts with a script written against a commercial goal — not a 'cool concept' that wins awards but doesn't convert.",
+  1942→      },
+  1943→      {
+  1944→        title: "Explainer videos",
+  1945→        desc: "60-90 second explainers that turn 'what does your product actually do?' into a clear answer — your sales team stops repeating themselves.",
+  1946→      },
+  1947→      {
+  1948→        title: "Product demo videos",
+  1949→        desc: "Feature demos and walkthroughs that drive free trial signups and reduce onboarding support tickets — for site, email and sales decks.",
+  1950→      },
+  1951→      {
+  1952→        title: "Ad creative video",
+  1953→        desc: "Performance-focused ad creatives for Meta, TikTok, YouTube and LinkedIn — tested across hooks, formats and offers with your paid team.",
+  1954→      },
+  1955→      {
+  1956→        title: "Motion graphics",
+  1957→        desc: "Animated explainers, data visualisations and logo stings — complex ideas made simple without a film shoot or talent budget.",
+  1958→      },
+  1959→      {
+  1960→        title: "Multi-format delivery",
+  1961→        desc: "Every video delivered in 16:9, 9:16 and 1:1 with captions baked in — ready for site, YouTube, Reels, TikTok and LinkedIn.",
+  1962→      },
+  1963→    ],
+  1964→    process: [
+  1965→      {
+  1966→        num: "01",
+  1967→        title: "Brief & script",
+  1968→        desc: "We map the audience, funnel stage, commercial goal and distribution channel — then write a script that hits the goal.",
+  1969→      },
+  1970→      {
+  1971→        num: "02",
+  1972→        title: "Storyboard & style",
+  1973→        desc: "We storyboard the script, define visual style and motion language, and align with your brand — before any production starts.",
+  1974→      },
+  1975→      {
+  1976→        num: "03",
+  1977→        title: "Production & edit",
+  1978→        desc: "We shoot, animate, edit and sound-design — with two structured review rounds on the rough cut and the final cut.",
+  1979→      },
+  1980→      {
+  1981→        num: "04",
+  1982→        title: "Delivery & variants",
+  1983→        desc: "We deliver master files plus platform-specific variants (16:9, 9:16, 1:1) with captions — ready to publish.",
+  1984→      },
+  1985→    ],
+  1986→    faqs: [
+  1987→      {
+  1988→        q: "Do you shoot on location or just motion graphics?",
+  1989→        a: "Both. We have an in-house team for motion graphics and partner videographers for live-action shoots in the UK, US and UAE. We'll recommend based on budget and message.",
+  1990→      },
+  1991→      {
+  1992→        q: "How long should our video be?",
+  1993→        a: "Depends on the goal — 30-60s for ads, 60-90s for explainers, 2-3 minutes for product demos, 5+ minutes only for onboarding. We'll scope the length against the funnel stage.",
+  1994→      },
+  1995→      {
+  1996→        q: "Do you write the script or do we?",
+  1997→        a: "We write the first draft from a structured brief with you, then iterate. We don't take your 200-word paragraph and 'make it a video' — scripts drive everything downstream.",
+  1998→      },
+  1999→      {
+  2000→        q: "What about captions and accessibility?",
+
+[showing lines 1-2000 of 2295; use offset=2001 with limit to continue reading]

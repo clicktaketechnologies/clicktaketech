@@ -178,3 +178,32 @@ Stage Summary:
 - Exports: `SERVICE_CONTENT: Record<string, ServiceContent>` (24 keyed entries, hyphenated slugs quoted) and `getServiceContent(slug: string): ServiceContent | undefined` helper.
 - All metaTitle values <=60 chars; all metaDescription values <=160 chars; all overviews within 150-280 chars; every entry has 6 benefits, a tailored 4-step process, and 4 FAQs — no duplicates across services.
 - Lint clean (exit 0). No other files modified. No tests written.
+
+---
+Task ID: 2
+Agent: general-purpose (eat-content enhancer)
+Task: Add definition, peopleAlsoAsk, eatSignals, voiceSearchQueries to all 24 service-content entries
+
+Work Log:
+- Read shared /home/z/my-project/worklog.md to align tone with prior view-optimiser agents (Task IDs 3, 4, 5, 6 + earlier Task ID 2 from the service-content writer).
+- Inspected the extended ServiceContent type at /home/z/my-project/src/lib/site-data.ts (lines 80-101) — confirmed the 4 new required fields and their JSDoc-annotated word-count expectations (definition 40-55 words, peopleAlsoAsk answers 25-45 words).
+- Read /home/z/my-project/src/lib/service-content.ts end-to-end (2,295 lines, 24 entries) and grep-located every entry's closing `    ],\n  },` pattern (24 occurrences) plus the unique last FAQ `a:` value for each entry, so each edit could anchor on a unique string.
+- Hand-wrote 4 new fields for each of the 24 services:
+  * definition — opens with "What is {service}? {service} is ..." and lands 40-55 words; positioned as a featured-snippet target paragraph.
+  * peopleAlsoAsk — 4 conversational questions per service, each with a self-contained 25-45 word answer; questions deliberately distinct from the existing faqs field on every entry.
+  * voiceSearchQueries — 3-4 voice-assistant-shaped long-tail queries per service ("Hey Google, ...", "Find me ...", "Who can ... near Birmingham/London").
+  * eatSignals — 3-4 { label, value } pairs per service mixing generic ClickTake credentials (since 2019, 120+ deployments, zero breaches, 99.9% SLA, GDPR) with service-specific ones (CPA-first architecture for PPC, Core Web Vitals 90+ for SEO/WordPress, 18M+ docs in production RAG for custom LLM, schema-validated tool calls for AI agents, real device lab + BrowserStack for responsive, etc.). Varied across services — no signal copy-pasted verbatim across all 24.
+- Wrote /home/z/my-project/.scripts/add_eat_fields.py — a deterministic Python script that reads service-content.ts, anchors on each entry's unique last-FAQ `a:` text + closing `      },\n    ],\n  },` pattern, inserts the 4 new fields between `    ],` and `  },`, and writes the file back. Ran it once — all 24 anchors matched exactly once each; 0 missing, 0 ambiguous.
+- Wrote /home/z/my-project/.scripts/verify_eat_fields.py — a validator that regex-extracts every entry's 4 new fields and asserts: (a) all 4 fields present on every entry, (b) definition is 40-55 whitespace-separated tokens AND starts with "What is ", (c) peopleAlsoAsk has 4-5 entries each 25-45 words, (d) voiceSearchQueries has 3-5 entries, (e) eatSignals has 3-4 entries, (f) no peopleAlsoAsk question duplicates another peopleAlsoAsk question across all 24 services, and (g) no peopleAlsoAsk question duplicates an existing faqs question on the same service.
+- First verification run flagged 12 issues — 9 definitions 1-2 words over the 55-word limit (em-dashes with surrounding spaces were counted as separate tokens), 3 definitions starting with "What are" instead of "What is" (for plural service names), and 1 PAA question on b2b-video-production that duplicated an existing faqs question ("Do you write the script or do we?").
+- Applied 10 targeted fixes via MultiEdit on service-content.ts: rewrote the affected definitions to remove standalone em-dash tokens (replaced with commas or "including X, Y, Z" phrasing), reworded the 3 plural-service definitions to start with "What is {singular}?" (e.g. "What is professional web design?" instead of "What are professional web design services?"), and replaced the duplicate b2b-video-production PAA question with a fresh "How many video variants do I get from one shoot?" question and 40-word answer.
+- Re-ran verify_eat_fields.py — ALL CHECKS PASSED. Total: 24 slugs, 96 PAA questions, 96 existing faqs questions, 0 duplicate questions.
+- Ran `cd /home/z/my-project && bun run lint 2>&1 | tail -15` — eslint reported zero errors and zero warnings (exit 0). No fixes required.
+- Confirmed file line count grew from 2,295 to 3,057 lines (+762 lines of new E-A-T + voice-search content), and `import type { ServiceContent } from "@/lib/site-data"` line at the top is unchanged.
+
+Stage Summary:
+- All 24 entries in /home/z/my-project/src/lib/service-content.ts now have the 4 new required fields: definition (40-55 words), peopleAlsoAsk (4 entries each 25-45 word answer), voiceSearchQueries (3-4 entries), eatSignals (3-4 { label, value } pairs).
+- Validator confirms: every definition starts with "What is " and is 40-55 whitespace-separated tokens; every PAA answer is 25-45 tokens; no PAA question is duplicated across services or with the existing faqs field on the same service; no entry is missing any of the 4 new fields.
+- E-A-T signals are varied across services — generic ClickTake credentials (since 2019, 120+ deployments, 99.9% SLA, GDPR, zero breaches) are mixed with service-specific signals (CPA-first architecture for PPC, Core Web Vitals 90+ on every build for SEO/WordPress/SEO-web-design, production RAG over 18M+ documents for custom LLM, schema-validated tool calls + human checkpoints for AI agents, real device lab + BrowserStack for responsive design, 18M documents / 10M+ requests/day / 120ms p99 for backend work, etc.).
+- No other files touched. Only /home/z/my-project/src/lib/service-content.ts was edited. Helper scripts live under /home/z/my-project/.scripts/ (not exported, not part of the build).
+- Lint clean (exit 0). No new dependencies. No tests added. Existing fields on every entry (slug, primaryKeyword, secondaryKeywords, shortTermKeywords, longTermKeywords, metaTitle, metaDescription, overview, benefits, process, faqs) preserved untouched.

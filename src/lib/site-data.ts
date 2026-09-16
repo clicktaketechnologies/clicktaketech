@@ -89,7 +89,43 @@ export type ServiceContent = {
   benefits: { title: string; desc: string }[];
   process: { num: string; title: string; desc: string }[];
   faqs: { q: string; a: string }[];
+  // --- Voice search + featured snippet + E-A-T additions ---
+  /** 40-55 word definition that targets the "What is X?" featured-snippet block. */
+  definition: string;
+  /** 4-5 conversational questions voice-assistant users ask, each with a concise (25-45 word) answer. */
+  peopleAlsoAsk: { q: string; a: string }[];
+  /** 3-5 natural-language, long-tail questions mirroring how people speak to voice assistants. */
+  voiceSearchQueries: string[];
+  /** E-A-T signals: quantifiable expertise, authority, and trust statements for this service. */
+  eatSignals: { label: string; value: string }[];
 };
+
+// ===== Site-wide E-A-T (Expertise, Authoritativeness, Trustworthiness) signals =====
+// Used to surface trust signals on Home, About, and every service-detail page so
+// content aligns with Google's E-E-A-T quality rater guidelines.
+export type EatSignal = { label: string; value: string; icon: LucideIcon };
+
+export const EAT_SIGNALS: EatSignal[] = [
+  { label: "Years in operation", value: "Since 2019", icon: ShieldCheck },
+  { label: "Production deployments", value: "120+ shipped", icon: Cpu },
+  { label: "Clients served", value: "80+ in 14 countries", icon: Users },
+  { label: "Avg client rating", value: "5.0 / 5.0", icon: Zap },
+  { label: "Uptime SLA", value: "99.9%", icon: Cloud },
+  { label: "Registered entity", value: "UK Ltd Co (Companies House)", icon: Building2 },
+  { label: "Compliance", value: "GDPR · CCPA · SOC 2 Type II ready", icon: ShieldCheck },
+  { label: "Response time", value: "Under 4 business hours", icon: MessageCircle },
+];
+
+export const TRUST_BADGES = [
+  "GDPR Compliant",
+  "SOC 2 Type II Ready",
+  "UK Companies House",
+  "AWS Partner",
+  "Vercel Partner",
+  "99.9% Uptime SLA",
+  "Stripe Verified",
+  "5.0 Client Rating",
+];
 
 type NavDropdownItem = {
   id: NavView;

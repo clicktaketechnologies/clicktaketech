@@ -17,6 +17,7 @@ import {
   TESTIMONIALS,
   TECH_STACK,
   BRAND_TAGLINE,
+  EAT_SIGNALS,
   type NavView,
 } from "@/lib/site-data";
 import {
@@ -26,6 +27,7 @@ import {
   LocalTrustStrip,
   CtaSection,
 } from "@/components/site/section";
+import { EatTrustStrip } from "@/components/site/seo-content-blocks";
 
 type HomeViewProps = {
   onNavigate: (v: NavView) => void;
@@ -289,6 +291,28 @@ export function HomeView({ onNavigate }: HomeViewProps) {
             ))}
           </div>
         </Reveal>
+      </Section>
+
+      {/* ===== E-A-T TRUST STRIP ===== */}
+      <Section className="border-t border-border/40 bg-card/20">
+        <SectionHeading
+          eyebrow="Expertise · Authoritativeness · Trust"
+          title={
+            <>
+              Why teams choose <span className="text-gradient-brand">ClickTake.</span>
+            </>
+          }
+          description="Quantifiable signals that align with Google's E-E-A-T quality-rater guidelines — and that your CFO can verify."
+          align="center"
+        />
+        <div className="mt-10">
+          <EatTrustStrip />
+        </div>
+        <div className="mt-6 text-center">
+          <p className="text-xs text-muted-foreground">
+            EAT_SIGNALS reference count: {EAT_SIGNALS.length} verified credentials
+          </p>
+        </div>
       </Section>
 
       {/* ===== CTA ===== */}

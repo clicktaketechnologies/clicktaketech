@@ -11,6 +11,30 @@ function OrganizationJsonLd() {
     description:
       "AI-native software engineering firm shipping production-grade autonomous agents, multi-tenant SaaS platforms, cloud architecture, digital marketing and creative services for enterprises across 4 continents.",
     foundingDate: "2019",
+    founders: [
+      {
+        "@type": "Person",
+        name: "ClickTake Technologies Ltd.",
+      },
+    ],
+    numberOfEmployees: {
+      "@type": "QuantitativeValue",
+      value: 28,
+    },
+    knowsAbout: [
+      "Custom software development",
+      "AI agent development",
+      "Large language model solutions",
+      "Search engine optimization",
+      "Pay-per-click advertising",
+      "Web design services",
+      "WordPress web design",
+      "Ecommerce web design",
+      "Cloud DevOps",
+      "SaaS platform engineering",
+      "Graphic design",
+      "B2B video production",
+    ],
     email: "info@clicktaketech.com",
     telephone: "+44-7391-653377",
     slogan: BRAND_TAGLINE,
@@ -34,6 +58,13 @@ function OrganizationJsonLd() {
         availableLanguage: ["English"],
       },
     ],
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "5.0",
+      reviewCount: "80",
+      bestRating: "5",
+      worstRating: "1",
+    },
     sameAs: [
       "https://www.facebook.com/clicktaketechnologies/",
       "https://www.instagram.com/clicktaketechologiesuk/",

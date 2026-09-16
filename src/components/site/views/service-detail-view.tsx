@@ -14,6 +14,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ServiceSeoJsonLd } from "@/components/site/service-seo-jsonld";
+import {
+  SnippetDefinition,
+  PeopleAlsoAsk,
+  VoiceSearchBlock,
+  EatTrustStrip,
+} from "@/components/site/seo-content-blocks";
 
 type ServiceDetailViewProps = {
   slug: string;
@@ -157,6 +164,16 @@ export function ServiceDetailView({
         </div>
       </section>
 
+      {/* SEO structured data — FAQPage + HowTo + Service JSON-LD */}
+      <ServiceSeoJsonLd slug={slug} />
+
+      {/* Featured-snippet definition block */}
+      <Section className="pt-4 pb-0">
+        <div className="mx-auto max-w-4xl">
+          <SnippetDefinition slug={slug} serviceName={service.title} />
+        </div>
+      </Section>
+
       {/* What you get (benefits) */}
       <Section className="border-y border-border/40 bg-card/20">
         <SectionHeading
@@ -268,6 +285,17 @@ export function ServiceDetailView({
           </Reveal>
         </Section>
       )}
+
+      {/* People Also Ask + Voice search + E-A-T trust strip */}
+      <Section className="border-t border-border/40 bg-card/20">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <PeopleAlsoAsk slug={slug} />
+          <VoiceSearchBlock slug={slug} />
+        </div>
+        <div className="mt-8">
+          <EatTrustStrip serviceSignals={content?.eatSignals} />
+        </div>
+      </Section>
 
       {/* Related case studies */}
       <Section className="border-t border-border/40 bg-card/20">
