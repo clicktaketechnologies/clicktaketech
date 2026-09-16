@@ -22,6 +22,15 @@ import {
   ArrowLeft,
   Menu,
   ExternalLink,
+  Image as ImageIcon,
+  Link2,
+  Settings as SettingsIcon,
+  Briefcase,
+  Activity,
+  Users,
+  Save,
+  Upload,
+  Copy,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -31,15 +40,33 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import type { NavView } from "@/lib/site-data";
 
-type Tab = "overview" | "pages" | "blog" | "pricing" | "queries" | "seo";
+type Tab =
+  | "overview"
+  | "pages"
+  | "blog"
+  | "pricing"
+  | "queries"
+  | "applications"
+  | "media"
+  | "redirects"
+  | "settings"
+  | "users"
+  | "activity"
+  | "seo";
 
-const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "pages", label: "Pages", icon: FileText },
-  { id: "blog", label: "Blog", icon: BookOpen },
-  { id: "pricing", label: "Pricing", icon: Tag },
-  { id: "queries", label: "Contact Queries", icon: Inbox },
-  { id: "seo", label: "SEO Audit", icon: Search },
+const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "content" | "people" | "system" }[] = [
+  { id: "overview", label: "Overview", icon: LayoutDashboard, group: "content" },
+  { id: "pages", label: "Pages", icon: FileText, group: "content" },
+  { id: "blog", label: "Blog", icon: BookOpen, group: "content" },
+  { id: "pricing", label: "Pricing", icon: Tag, group: "content" },
+  { id: "media", label: "Media Library", icon: ImageIcon, group: "content" },
+  { id: "queries", label: "Contact Queries", icon: Inbox, group: "people" },
+  { id: "applications", label: "Job Applications", icon: Briefcase, group: "people" },
+  { id: "users", label: "Users & Roles", icon: Users, group: "people" },
+  { id: "redirects", label: "Redirects", icon: Link2, group: "system" },
+  { id: "settings", label: "Site Settings", icon: SettingsIcon, group: "system" },
+  { id: "activity", label: "Activity Log", icon: Activity, group: "system" },
+  { id: "seo", label: "SEO Audit", icon: Search, group: "system" },
 ];
 
 const TOKEN_KEY = "clicktake_admin_token";
@@ -118,26 +145,44 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           </button>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => {
-                setTab(t.id);
-                setSidebarOpen(false);
-              }}
-              className={cn(
-                "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                tab === t.id
-                  ? "bg-blue-500/12 text-foreground ring-1 ring-blue-500/30"
-                  : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
-              )}
-            >
-              <t.icon className={cn("h-4 w-4", tab === t.id ? "text-blue-400" : "text-muted-foreground")} />
-              {t.label}
-            </button>
-          ))}
+        {/* Nav — grouped */}
+        <nav className="flex-1 space-y-4 overflow-y-auto p-3">
+          {(["content", "people", "system"] as const).map((group) => {
+            const items = TABS.filter((t) => t.group === group);
+            if (items.length === 0) return null;
+            const labels: Record<typeof group, string> = {
+              content: "Content",
+              people: "People & Leads",
+              system: "System",
+            };
+            return (
+              <div key={group}>
+                <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                  {labels[group]}
+                </p>
+                <div className="space-y-1">
+                  {items.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => {
+                        setTab(t.id);
+                        setSidebarOpen(false);
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                        tab === t.id
+                          ? "bg-blue-500/12 text-foreground ring-1 ring-blue-500/30"
+                          : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                      )}
+                    >
+                      <t.icon className={cn("h-4 w-4", tab === t.id ? "text-blue-400" : "text-muted-foreground")} />
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </nav>
 
         {/* Bottom: back to site + logout */}
@@ -199,7 +244,13 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {tab === "pages" && <PagesTab token={token} />}
           {tab === "blog" && <BlogTab token={token} />}
           {tab === "pricing" && <PricingTab token={token} />}
+          {tab === "media" && <MediaTab token={token} />}
           {tab === "queries" && <QueriesTab token={token} />}
+          {tab === "applications" && <ApplicationsTab token={token} />}
+          {tab === "users" && <UsersTab token={token} />}
+          {tab === "redirects" && <RedirectsTab token={token} />}
+          {tab === "settings" && <SettingsTab token={token} />}
+          {tab === "activity" && <ActivityTab token={token} />}
           {tab === "seo" && <SeoTab token={token} />}
         </main>
       </div>
@@ -317,30 +368,37 @@ function useAdminFetch(token: string) {
 
 // ============================ OVERVIEW ============================
 function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
-  const [stats, setStats] = useState<{
-    pages: number;
-    posts: number;
-    tiers: number;
-    queries: number;
-    newQueries: number;
-  }>({ pages: 0, posts: 0, tiers: 0, queries: 0, newQueries: 0 });
+  const [stats, setStats] = useState<Record<string, number>>({});
+  const [recentLogs, setRecentLogs] = useState<{ id: string; action: string; entity: string; summary: string; createdAt: string }[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const [p, b, pr, q] = await Promise.all([
+        const [p, b, pr, q, m, a, u, rd, lg] = await Promise.all([
           fetch("/api/admin/pages").then((r) => r.json()),
           fetch("/api/admin/blog").then((r) => r.json()),
           fetch("/api/admin/pricing").then((r) => r.json()),
           fetch("/api/admin/queries").then((r) => r.json()),
+          fetch("/api/admin/media").then((r) => r.json()),
+          fetch("/api/admin/applications").then((r) => r.json()),
+          fetch("/api/admin/users").then((r) => r.json()),
+          fetch("/api/admin/redirects").then((r) => r.json()),
+          fetch("/api/admin/activity?limit=6").then((r) => r.json()),
         ]);
-        setStats({
+        const next: Record<string, number> = {
           pages: p.pages?.length ?? 0,
           posts: b.posts?.length ?? 0,
           tiers: pr.tiers?.length ?? 0,
           queries: q.queries?.length ?? 0,
           newQueries: q.queries?.filter((x: { status: string }) => x.status === "new").length ?? 0,
-        });
+          media: m.assets?.length ?? 0,
+          applications: a.applications?.length ?? 0,
+          newApplications: a.applications?.filter((x: { status: string }) => x.status === "new").length ?? 0,
+          users: u.users?.length ?? 0,
+          redirects: rd.redirects?.length ?? 0,
+        };
+        setStats(next);
+        setRecentLogs(lg.logs ?? []);
       } catch {
         /* ignore */
       }
@@ -348,10 +406,14 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
   }, []);
 
   const cards = [
-    { label: "Pages", value: stats.pages, icon: FileText, tab: "pages" as Tab, color: "text-blue-400" },
-    { label: "Blog Posts", value: stats.posts, icon: BookOpen, tab: "blog" as Tab, color: "text-pink-400" },
-    { label: "Pricing Tiers", value: stats.tiers, icon: Tag, tab: "pricing" as Tab, color: "text-blue-400" },
-    { label: "Contact Queries", value: stats.queries, icon: Inbox, tab: "queries" as Tab, color: "text-pink-400" },
+    { label: "Pages", value: stats.pages ?? 0, icon: FileText, tab: "pages" as Tab, color: "text-blue-400" },
+    { label: "Blog Posts", value: stats.posts ?? 0, icon: BookOpen, tab: "blog" as Tab, color: "text-pink-400" },
+    { label: "Pricing Tiers", value: stats.tiers ?? 0, icon: Tag, tab: "pricing" as Tab, color: "text-blue-400" },
+    { label: "Media Files", value: stats.media ?? 0, icon: ImageIcon, tab: "media" as Tab, color: "text-pink-400" },
+    { label: "Contact Queries", value: stats.queries ?? 0, icon: Inbox, tab: "queries" as Tab, color: "text-blue-400", badge: stats.newQueries },
+    { label: "Job Applications", value: stats.applications ?? 0, icon: Briefcase, tab: "applications" as Tab, color: "text-pink-400", badge: stats.newApplications },
+    { label: "Users & Roles", value: stats.users ?? 0, icon: Users, tab: "users" as Tab, color: "text-blue-400" },
+    { label: "Redirects", value: stats.redirects ?? 0, icon: Link2, tab: "redirects" as Tab, color: "text-pink-400" },
   ];
 
   return (
@@ -361,31 +423,76 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
           <button
             key={c.label}
             onClick={() => onJump(c.tab)}
-            className="rounded-2xl border border-border/50 bg-card/40 p-6 text-left transition-all hover:-translate-y-1 hover:border-blue-500/40"
+            className="relative rounded-2xl border border-border/50 bg-card/40 p-6 text-left transition-all hover:-translate-y-1 hover:border-blue-500/40"
           >
             <c.icon className={cn("h-7 w-7", c.color)} />
             <div className="mt-3 text-3xl font-bold text-gradient-brand">{c.value}</div>
             <div className="text-sm text-muted-foreground">{c.label}</div>
+            {c.badge && c.badge > 0 ? (
+              <span className="absolute right-3 top-3 rounded-full bg-pink-500/15 px-2 py-0.5 text-[10px] font-bold text-pink-400">
+                {c.badge} new
+              </span>
+            ) : null}
           </button>
         ))}
       </div>
-      {stats.newQueries > 0 && (
+
+      {(stats.newQueries ?? 0) > 0 || (stats.newApplications ?? 0) > 0 ? (
         <div className="mt-5 flex items-center gap-3 rounded-2xl border border-pink-500/30 bg-pink-500/5 p-4">
           <AlertTriangle className="h-5 w-5 text-pink-400" />
           <p className="text-sm">
-            <span className="font-semibold text-pink-400">{stats.newQueries} new</span>{" "}
-            contact {stats.newQueries === 1 ? "query needs" : "queries need"} your attention.
+            {(stats.newQueries ?? 0) > 0 && (
+              <span>
+                <span className="font-semibold text-pink-400">{stats.newQueries} new</span> contact queries
+              </span>
+            )}
+            {(stats.newQueries ?? 0) > 0 && (stats.newApplications ?? 0) > 0 ? " · " : ""}
+            {(stats.newApplications ?? 0) > 0 && (
+              <span>
+                <span className="font-semibold text-pink-400">{stats.newApplications} new</span> applications
+              </span>
+            )}
+            {" need your attention."}
           </p>
-          <Button
-            onClick={() => onJump("queries")}
-            variant="outline"
-            size="sm"
-            className="ml-auto border-pink-500/40 bg-card/40"
-          >
+          <Button onClick={() => onJump("queries")} variant="outline" size="sm" className="ml-auto border-pink-500/40 bg-card/40">
             Review
           </Button>
         </div>
-      )}
+      ) : null}
+
+      {/* Recent activity */}
+      <div className="mt-6 rounded-2xl border border-border/50 bg-card/40 p-5">
+        <div className="flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <Activity className="h-4 w-4 text-blue-400" /> Recent Activity
+          </h3>
+          <button onClick={() => onJump("activity")} className="text-xs font-medium text-blue-400 hover:underline">
+            View all
+          </button>
+        </div>
+        {recentLogs.length === 0 ? (
+          <p className="mt-3 text-sm text-muted-foreground">No activity yet.</p>
+        ) : (
+          <ul className="mt-3 space-y-2">
+            {recentLogs.map((l) => (
+              <li key={l.id} className="flex items-center gap-3 text-sm">
+                <span
+                  className={cn(
+                    "h-2 w-2 shrink-0 rounded-full",
+                    l.action === "create" ? "bg-blue-400" : l.action === "delete" ? "bg-red-400" : "bg-amber-400"
+                  )}
+                />
+                <span className="flex-1 truncate text-muted-foreground">
+                  <span className="font-medium text-foreground">{l.action}</span> · {l.summary}
+                </span>
+                <span className="shrink-0 text-xs text-muted-foreground">
+                  {new Date(l.createdAt).toLocaleString()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
@@ -1270,6 +1377,734 @@ function Metric({ label, value, ok }: { label: string; value: string; ok: boolea
     <div className="flex items-center justify-between rounded-lg bg-background/40 px-3 py-2">
       <span className="text-muted-foreground">{label}</span>
       <span className={cn("font-medium", ok ? "text-blue-400" : "text-amber-400")}>{value}</span>
+    </div>
+  );
+}
+
+// ============================ MEDIA LIBRARY ============================
+type Asset = {
+  id: string;
+  name: string;
+  url: string;
+  mime: string;
+  size: number;
+  alt: string | null;
+  folder: string;
+  createdAt: string;
+};
+
+function MediaTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/media");
+    const data = await res.json().catch(() => ({}));
+    setAssets(data.assets ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const upload = async (file: File) => {
+    setUploading(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("folder", "uploads");
+    try {
+      const res = await fetch("/api/admin/media", {
+        method: "POST",
+        headers: { "x-admin-token": token },
+        body: fd,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (data.ok) {
+        toast({ title: "Uploaded", description: file.name });
+        load();
+      } else {
+        toast({ title: data.error || "Upload failed", variant: "destructive" });
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this media file?")) return;
+    const res = await adminFetch(`/api/admin/media?id=${id}`, { method: "DELETE" });
+    if (res.ok) {
+      toast({ title: "Deleted" });
+      load();
+    }
+  };
+
+  const copyUrl = (url: string) => {
+    try {
+      navigator.clipboard.writeText(window.location.origin + url);
+      setCopied(url);
+      setTimeout(() => setCopied(null), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold">Media Library ({assets.length})</h2>
+        <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-brand-gradient px-4 py-2 text-sm font-semibold text-white">
+          {uploading ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Upload className="mr-1 h-4 w-4" />}
+          {uploading ? "Uploading…" : "Upload"}
+          <input
+            type="file"
+            className="hidden"
+            accept="image/*,application/pdf,video/mp4"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) upload(f);
+              e.target.value = "";
+            }}
+          />
+        </label>
+      </div>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Drag-free upload. Supports PNG, JPG, WEBP, GIF, SVG, PDF, MP4 — up to 12 MB.
+      </p>
+      {loading ? (
+        <div className="py-12 text-center">
+          <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" />
+        </div>
+      ) : assets.length === 0 ? (
+        <div className="mt-4 rounded-2xl border border-dashed border-border/60 bg-card/40 p-12 text-center text-sm text-muted-foreground">
+          No media yet. Click “Upload” to add your first file.
+        </div>
+      ) : (
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {assets.map((a) => (
+            <div key={a.id} className="group overflow-hidden rounded-xl border border-border/50 bg-card/40">
+              <div className="flex aspect-square items-center justify-center bg-background/40">
+                {a.mime.startsWith("image/") ? (
+                  <img src={a.url} alt={a.alt ?? a.name} className="h-full w-full object-cover" />
+                ) : a.mime === "application/pdf" ? (
+                  <FileText className="h-10 w-10 text-pink-400" />
+                ) : (
+                  <FileText className="h-10 w-10 text-muted-foreground" />
+                )}
+              </div>
+              <div className="p-2">
+                <div className="truncate text-xs font-medium" title={a.name}>{a.name}</div>
+                <div className="text-[10px] text-muted-foreground">{(a.size / 1024).toFixed(0)} KB</div>
+                <div className="mt-1.5 flex gap-1">
+                  <button
+                    onClick={() => copyUrl(a.url)}
+                    className="flex-1 rounded bg-blue-500/10 py-1 text-[10px] text-blue-400 hover:bg-blue-500/20"
+                    title="Copy URL"
+                  >
+                    {copied === a.url ? <Check className="mx-auto h-3 w-3" /> : <Copy className="mx-auto h-3 w-3" />}
+                  </button>
+                  <button
+                    onClick={() => del(a.id)}
+                    className="flex-1 rounded bg-red-500/10 py-1 text-[10px] text-red-400 hover:bg-red-500/20"
+                  >
+                    <Trash2 className="mx-auto h-3 w-3" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================ JOB APPLICATIONS ============================
+type AppRow = {
+  id: string;
+  jobId: string;
+  positionType: string | null;
+  fullName: string;
+  email: string;
+  mobile: string | null;
+  filesFolder: string | null;
+  filesManifest: string | null;
+  status: string;
+  createdAt: string;
+};
+
+function ApplicationsTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [rows, setRows] = useState<AppRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/applications");
+    const data = await res.json().catch(() => ({}));
+    setRows(data.applications ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const updateStatus = async (id: string, status: string) => {
+    const res = await adminFetch("/api/admin/applications", { method: "PATCH", body: JSON.stringify({ id, status }) });
+    if (res.ok) {
+      toast({ title: `Marked as ${status}` });
+      load();
+    }
+  };
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this application?")) return;
+    const res = await adminFetch(`/api/admin/applications?id=${id}`, { method: "DELETE" });
+    if (res.ok) {
+      toast({ title: "Deleted" });
+      load();
+    }
+  };
+
+  const shown = filter === "all" ? rows : rows.filter((r) => r.status === filter);
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-bold">Job Applications ({rows.length})</h2>
+        <div className="flex flex-wrap gap-1">
+          {["all", "new", "reviewed", "shortlisted", "rejected"].map((s) => (
+            <button
+              key={s}
+              onClick={() => setFilter(s)}
+              className={cn(
+                "rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors",
+                filter === s ? "bg-brand-gradient text-white" : "border border-border/50 bg-card/40 text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+      {loading ? (
+        <div className="py-12 text-center">
+          <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" />
+        </div>
+      ) : shown.length === 0 ? (
+        <div className="mt-6 rounded-2xl border border-border/50 bg-card/40 p-12 text-center text-sm text-muted-foreground">
+          No applications in this filter.
+        </div>
+      ) : (
+        <div className="mt-4 space-y-3">
+          {shown.map((a) => (
+            <div key={a.id} className="rounded-2xl border border-border/50 bg-card/40 p-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold">{a.fullName}</span>
+                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", a.status === "new" ? "bg-pink-500/15 text-pink-400" : "bg-blue-500/15 text-blue-400")}>
+                      {a.status}
+                    </span>
+                    <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-muted-foreground">{a.jobId}</span>
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    {a.email} {a.mobile ? `· ${a.mobile}` : ""} {a.positionType ? `· ${a.positionType}` : ""}
+                  </div>
+                  {a.filesFolder && (
+                    <div className="mt-2 text-xs text-muted-foreground">
+                      📁 Files: <span className="font-mono">{a.filesFolder}</span>
+                    </div>
+                  )}
+                  {a.filesManifest && (
+                    <details className="mt-1">
+                      <summary className="cursor-pointer text-xs text-blue-400">View uploaded files</summary>
+                      <pre className="mt-1 whitespace-pre-wrap text-[11px] text-muted-foreground">{a.filesManifest}</pre>
+                    </details>
+                  )}
+                  <div className="mt-2 text-[11px] text-muted-foreground">{new Date(a.createdAt).toLocaleString()}</div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <select
+                    value={a.status}
+                    onChange={(e) => updateStatus(a.id, e.target.value)}
+                    className="rounded-lg border border-border/50 bg-background/50 px-2 py-1 text-xs"
+                  >
+                    <option value="new">new</option>
+                    <option value="reviewed">reviewed</option>
+                    <option value="shortlisted">shortlisted</option>
+                    <option value="rejected">rejected</option>
+                  </select>
+                  <button onClick={() => del(a.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================ REDIRECTS ============================
+type RedirectRow = { id: string; from: string; to: string; status: number; active: boolean; createdAt: string };
+
+function RedirectsTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [rows, setRows] = useState<RedirectRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [form, setForm] = useState({ from: "", to: "", status: "301", active: true });
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/redirects");
+    const data = await res.json().catch(() => ({}));
+    setRows(data.redirects ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const create = async () => {
+    if (!form.from || !form.to) return;
+    const res = await adminFetch("/api/admin/redirects", { method: "POST", body: JSON.stringify(form) });
+    const data = await res.json().catch(() => ({}));
+    if (data.ok) {
+      toast({ title: "Redirect created" });
+      setForm({ from: "", to: "", status: "301", active: true });
+      setCreating(false);
+      load();
+    } else {
+      toast({ title: data.error || "Failed", variant: "destructive" });
+    }
+  };
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this redirect?")) return;
+    const res = await adminFetch(`/api/admin/redirects?id=${id}`, { method: "DELETE" });
+    if (res.ok) {
+      toast({ title: "Deleted" });
+      load();
+    }
+  };
+
+  const toggle = async (r: RedirectRow) => {
+    const res = await adminFetch("/api/admin/redirects", { method: "PATCH", body: JSON.stringify({ id: r.id, active: !r.active }) });
+    if (res.ok) load();
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold">Redirects ({rows.length})</h2>
+        <Button onClick={() => setCreating((v) => !v)} className="bg-brand-gradient text-white">
+          <Plus className="mr-1 h-4 w-4" /> New Redirect
+        </Button>
+      </div>
+      {creating && (
+        <div className="mt-4 grid gap-3 rounded-2xl border border-border/50 bg-card/40 p-4 sm:grid-cols-[1fr_1fr_auto_auto_auto]">
+          <Input value={form.from} onChange={(e) => setForm({ ...form, from: e.target.value })} placeholder="/old-path" className="bg-background/50" />
+          <Input value={form.to} onChange={(e) => setForm({ ...form, to: e.target.value })} placeholder="/new-path" className="bg-background/50" />
+          <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="h-10 rounded-lg border border-border/50 bg-background/50 px-3 text-sm">
+            <option value="301">301</option>
+            <option value="302">302</option>
+          </select>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} className="h-4 w-4 accent-blue-500" />
+            Active
+          </label>
+          <Button onClick={create} className="bg-brand-gradient text-white">
+            <Check className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+      {loading ? (
+        <div className="py-12 text-center">
+          <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" />
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="mt-6 rounded-2xl border border-border/50 bg-card/40 p-12 text-center text-sm text-muted-foreground">
+          No redirects yet. Create one above.
+        </div>
+      ) : (
+        <div className="mt-4 overflow-x-auto rounded-2xl border border-border/50">
+          <table className="w-full min-w-[600px] text-sm">
+            <thead className="bg-card/60">
+              <tr>
+                <th className="p-3 text-left font-semibold">From</th>
+                <th className="p-3 text-left font-semibold">To</th>
+                <th className="p-3 text-left font-semibold">Type</th>
+                <th className="p-3 text-left font-semibold">Active</th>
+                <th className="p-3 text-right font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id} className="border-t border-border/40">
+                  <td className="p-3 font-mono text-xs">{r.from}</td>
+                  <td className="p-3 font-mono text-xs text-blue-400">{r.to}</td>
+                  <td className="p-3 text-xs">{r.status}</td>
+                  <td className="p-3">
+                    <button
+                      onClick={() => toggle(r)}
+                      className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", r.active ? "bg-blue-500/15 text-blue-400" : "bg-muted text-muted-foreground")}
+                    >
+                      {r.active ? "on" : "off"}
+                    </button>
+                  </td>
+                  <td className="p-3 text-right">
+                    <button onClick={() => del(r.id)} className="rounded-lg p-2 text-red-400 hover:bg-red-500/10">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================ SITE SETTINGS ============================
+type SettingRow = { id: string; key: string; value: string; category: string };
+
+function SettingsTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [rows, setRows] = useState<SettingRow[]>([]);
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/settings");
+    const data = await res.json().catch(() => ({}));
+    setRows(data.settings ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const setVal = (key: string, value: string) => {
+    setDrafts((d) => ({ ...d, [key]: value }));
+  };
+
+  const val = (s: SettingRow) => (s.key in drafts ? drafts[s.key] : s.value);
+
+  const saveCategory = async (category: string) => {
+    setSaving(true);
+    const updates = rows
+      .filter((r) => r.category === category)
+      .map((r) => ({ key: r.key, value: val(r) }));
+    const res = await adminFetch("/api/admin/settings", { method: "PATCH", body: JSON.stringify(updates) });
+    if (res.ok) {
+      toast({ title: "Settings saved" });
+      setDrafts({});
+      load();
+    } else {
+      toast({ title: "Save failed", variant: "destructive" });
+    }
+    setSaving(false);
+  };
+
+  const categories = Array.from(new Set(rows.map((r) => r.category)));
+  const catLabels: Record<string, string> = {
+    general: "General",
+    seo: "SEO",
+    contact: "Contact",
+    social: "Social",
+    integrations: "Integrations",
+  };
+
+  if (loading) {
+    return (
+      <div className="py-12 text-center">
+        <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-bold">Site Settings</h2>
+        <p className="text-xs text-muted-foreground">Manage global site configuration — contact details, SEO, social links, integrations.</p>
+      </div>
+      {categories.map((cat) => (
+        <div key={cat} className="rounded-2xl border border-border/50 bg-card/40 p-5">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-blue-400">{catLabels[cat] ?? cat}</h3>
+            <Button
+              onClick={() => saveCategory(cat)}
+              disabled={saving}
+              size="sm"
+              className="bg-brand-gradient text-white"
+            >
+              <Save className="mr-1 h-3.5 w-3.5" /> Save
+            </Button>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {rows
+              .filter((r) => r.category === cat)
+              .map((r) => {
+                const isLong = r.key.includes("description") || r.key.includes("address");
+                return (
+                  <div key={r.id} className={isLong ? "sm:col-span-2" : ""}>
+                    <Label className="text-xs font-mono">{r.key}</Label>
+                    {isLong ? (
+                      <Textarea
+                        value={val(r)}
+                        onChange={(e) => setVal(r.key, e.target.value)}
+                        rows={2}
+                        className="mt-1 resize-none bg-background/50"
+                      />
+                    ) : (
+                      <Input value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} className="mt-1 bg-background/50" />
+                    )}
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ============================ USERS & ROLES ============================
+type UserRow = { id: string; email: string; name: string | null; role: string; createdAt: string };
+
+function UsersTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [rows, setRows] = useState<UserRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [form, setForm] = useState({ email: "", name: "", password: "", role: "editor" });
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/users");
+    const data = await res.json().catch(() => ({}));
+    setRows(data.users ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const create = async () => {
+    if (!form.email || !form.password) return;
+    const res = await adminFetch("/api/admin/users", { method: "POST", body: JSON.stringify(form) });
+    const data = await res.json().catch(() => ({}));
+    if (data.ok) {
+      toast({ title: "User created" });
+      setForm({ email: "", name: "", password: "", role: "editor" });
+      setCreating(false);
+      load();
+    } else {
+      toast({ title: data.error || "Failed", variant: "destructive" });
+    }
+  };
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this user?")) return;
+    const res = await adminFetch(`/api/admin/users?id=${id}`, { method: "DELETE" });
+    if (res.ok) {
+      toast({ title: "User deleted" });
+      load();
+    }
+  };
+
+  const setRole = async (u: UserRow, role: string) => {
+    const res = await adminFetch("/api/admin/users", { method: "PATCH", body: JSON.stringify({ id: u.id, role }) });
+    if (res.ok) {
+      toast({ title: "Role updated" });
+      load();
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold">Users &amp; Roles ({rows.length})</h2>
+        <Button onClick={() => setCreating((v) => !v)} className="bg-brand-gradient text-white">
+          <Plus className="mr-1 h-4 w-4" /> New User
+        </Button>
+      </div>
+      {creating && (
+        <div className="mt-4 grid gap-3 rounded-2xl border border-border/50 bg-card/40 p-4 sm:grid-cols-2">
+          <Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" className="bg-background/50" />
+          <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name" className="bg-background/50" />
+          <Input value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Password" type="password" className="bg-background/50" />
+          <select value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="h-10 rounded-lg border border-border/50 bg-background/50 px-3 text-sm">
+            <option value="admin">admin</option>
+            <option value="editor">editor</option>
+            <option value="author">author</option>
+          </select>
+          <div className="sm:col-span-2 flex justify-end">
+            <Button onClick={create} className="bg-brand-gradient text-white">
+              <Check className="mr-1 h-4 w-4" /> Create user
+            </Button>
+          </div>
+        </div>
+      )}
+      {loading ? (
+        <div className="py-12 text-center">
+          <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" />
+        </div>
+      ) : (
+        <div className="mt-4 overflow-x-auto rounded-2xl border border-border/50">
+          <table className="w-full min-w-[600px] text-sm">
+            <thead className="bg-card/60">
+              <tr>
+                <th className="p-3 text-left font-semibold">User</th>
+                <th className="p-3 text-left font-semibold">Role</th>
+                <th className="p-3 text-left font-semibold">Created</th>
+                <th className="p-3 text-right font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((u) => (
+                <tr key={u.id} className="border-t border-border/40">
+                  <td className="p-3">
+                    <div className="font-medium">{u.name || u.email}</div>
+                    <div className="text-xs text-muted-foreground">{u.email}</div>
+                  </td>
+                  <td className="p-3">
+                    <select
+                      value={u.role}
+                      onChange={(e) => setRole(u, e.target.value)}
+                      className="rounded-lg border border-border/50 bg-background/50 px-2 py-1 text-xs"
+                    >
+                      <option value="admin">admin</option>
+                      <option value="editor">editor</option>
+                      <option value="author">author</option>
+                    </select>
+                  </td>
+                  <td className="p-3 text-xs text-muted-foreground">{new Date(u.createdAt).toLocaleDateString()}</td>
+                  <td className="p-3 text-right">
+                    <button onClick={() => del(u.id)} className="rounded-lg p-2 text-red-400 hover:bg-red-500/10">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================ ACTIVITY LOG ============================
+type LogRow = { id: string; action: string; entity: string; entityId: string | null; summary: string; actor: string; createdAt: string };
+
+function ActivityTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const [rows, setRows] = useState<LogRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/activity?limit=200");
+    const data = await res.json().catch(() => ({}));
+    setRows(data.logs ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const entities = Array.from(new Set(rows.map((r) => r.entity)));
+  const shown = filter === "all" ? rows : rows.filter((r) => r.entity === filter);
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-bold">Activity Log ({rows.length})</h2>
+        <div className="flex flex-wrap gap-1">
+          <button
+            onClick={() => setFilter("all")}
+            className={cn("rounded-full px-3 py-1.5 text-xs font-medium", filter === "all" ? "bg-brand-gradient text-white" : "border border-border/50 bg-card/40 text-muted-foreground hover:text-foreground")}
+          >
+            all
+          </button>
+          {entities.map((e) => (
+            <button
+              key={e}
+              onClick={() => setFilter(e)}
+              className={cn("rounded-full px-3 py-1.5 text-xs font-medium capitalize", filter === e ? "bg-brand-gradient text-white" : "border border-border/50 bg-card/40 text-muted-foreground hover:text-foreground")}
+            >
+              {e}
+            </button>
+          ))}
+        </div>
+      </div>
+      {loading ? (
+        <div className="py-12 text-center">
+          <Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" />
+        </div>
+      ) : shown.length === 0 ? (
+        <div className="mt-6 rounded-2xl border border-border/50 bg-card/40 p-12 text-center text-sm text-muted-foreground">
+          No activity recorded yet.
+        </div>
+      ) : (
+        <div className="mt-4 space-y-2">
+          {shown.map((l) => (
+            <div key={l.id} className="flex items-center gap-3 rounded-xl border border-border/50 bg-card/40 p-3">
+              <span
+                className={cn(
+                  "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-[10px] font-bold uppercase",
+                  l.action === "create" ? "bg-blue-500/15 text-blue-400" : l.action === "delete" ? "bg-red-500/15 text-red-400" : l.action === "login" ? "bg-green-500/15 text-green-400" : "bg-amber-500/15 text-amber-400"
+                )}
+              >
+                {l.action.slice(0, 4)}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm">
+                  <span className="font-medium">{l.summary}</span>
+                </div>
+                <div className="text-[11px] text-muted-foreground">
+                  <span className="capitalize">{l.entity}</span> · by {l.actor}
+                </div>
+              </div>
+              <span className="shrink-0 text-[11px] text-muted-foreground">
+                {new Date(l.createdAt).toLocaleString()}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

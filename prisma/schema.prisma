@@ -137,3 +137,50 @@ model SeoAudit {
   notes       String?
   createdAt   DateTime @default(now())
 }
+
+model MediaAsset {
+  id        String   @id @default(cuid())
+  name      String
+  url       String
+  mime      String
+  size      Int      @default(0)
+  alt       String?
+  folder    String   @default("uploads")
+  createdAt DateTime @default(now())
+
+  @@index([folder])
+  @@index([mime])
+}
+
+model Redirect {
+  id        String   @id @default(cuid())
+  from      String   @unique
+  to        String
+  status    Int      @default(301) // 301 | 302
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  category    String   @default("general") // general | seo | contact | social | integrations
+  updatedAt   DateTime @updatedAt
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String   // create | update | delete | login | logout | publish | draft
+  entity    String   // page | blog | pricing | query | media | redirect | setting | user | application
+  entityId  String?
+  summary   String
+  actor     String   @default("admin")
+  createdAt DateTime @default(now())
+
+  @@index([entity])
+  @@index([action])
+  @@index([createdAt])
+}
+
