@@ -306,7 +306,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
 
         {/* Content */}
         <main className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
-          {tab === "overview" && <OverviewTab onJump={setTab} />}
+          {tab === "overview" && <OverviewTab onJump={setTab} token={token} />}
           {/* CMS */}
           {tab === "pages" && <PagesTab token={token} />}
           {tab === "blog" && <BlogTab token={token} />}
@@ -445,25 +445,27 @@ function useAdminFetch(token: string) {
 }
 
 // ============================ OVERVIEW ============================
-function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
+function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: string }) {
   const [stats, setStats] = useState<Record<string, number>>({});
   const [recentLogs, setRecentLogs] = useState<{ id: string; action: string; entity: string; summary: string; createdAt: string }[]>([]);
+
+  const adminHeaders = { "x-admin-token": token };
 
   useEffect(() => {
     (async () => {
       try {
         const [p, b, pr, q, m, a, u, rd, lg, ld, sh] = await Promise.all([
-          fetch("/api/admin/pages").then((r) => r.json()),
-          fetch("/api/admin/blog").then((r) => r.json()),
-          fetch("/api/admin/pricing").then((r) => r.json()),
-          fetch("/api/admin/queries").then((r) => r.json()),
-          fetch("/api/admin/media").then((r) => r.json()),
-          fetch("/api/admin/applications").then((r) => r.json()),
-          fetch("/api/admin/users").then((r) => r.json()),
-          fetch("/api/admin/redirects").then((r) => r.json()),
-          fetch("/api/admin/activity?limit=6").then((r) => r.json()),
-          fetch("/api/admin/leads").then((r) => r.json()),
-          fetch("/api/admin/seo-history?limit=100").then((r) => r.json()),
+          fetch("/api/admin/pages", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/blog", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/pricing", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/queries", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/media", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/applications", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/users", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/redirects", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/activity?limit=6", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/leads", { headers: adminHeaders }).then((r) => r.json()),
+          fetch("/api/admin/seo-history?limit=100", { headers: adminHeaders }).then((r) => r.json()),
         ]);
         const next: Record<string, number> = {
           pages: p.pages?.length ?? 0,
@@ -479,20 +481,33 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
           leads: ld.leads?.length ?? 0,
           newLeads: ld.leads?.filter((x: { stage: string }) => x.stage === "new").length ?? 0,
           seoAudits: sh.audits?.length ?? 0,
+          teamMembers: 0,
+          jobs: 0,
         };
+        // Also fetch team + jobs counts
+        try {
+          const [tm, jb] = await Promise.all([
+            fetch("/api/admin/team", { headers: adminHeaders }).then((r) => r.json()),
+            fetch("/api/admin/jobs", { headers: adminHeaders }).then((r) => r.json()),
+          ]);
+          next.teamMembers = tm.members?.length ?? 0;
+          next.jobs = jb.jobs?.length ?? 0;
+        } catch { /* ignore */ }
         setStats(next);
         setRecentLogs(lg.logs ?? []);
       } catch {
         /* ignore */
       }
     })();
-  }, []);
+  }, [token]);
 
   const cards = [
     { label: "Pages", value: stats.pages ?? 0, icon: FileText, tab: "pages" as Tab, color: "text-blue-400" },
     { label: "Blog Posts", value: stats.posts ?? 0, icon: BookOpen, tab: "blog" as Tab, color: "text-pink-400" },
     { label: "Pricing Tiers", value: stats.tiers ?? 0, icon: Tag, tab: "pricing" as Tab, color: "text-blue-400" },
     { label: "Media Files", value: stats.media ?? 0, icon: ImageIcon, tab: "media" as Tab, color: "text-pink-400" },
+    { label: "Team Members", value: stats.teamMembers ?? 0, icon: Users, tab: "team-careers" as Tab, color: "text-blue-400" },
+    { label: "Open Jobs", value: stats.jobs ?? 0, icon: Briefcase, tab: "team-careers" as Tab, color: "text-pink-400" },
     { label: "Leads (CRM)", value: stats.leads ?? 0, icon: TrendingUp, tab: "leads" as Tab, color: "text-blue-400", badge: stats.newLeads },
     { label: "Contact Queries", value: stats.queries ?? 0, icon: Inbox, tab: "queries" as Tab, color: "text-pink-400", badge: stats.newQueries },
     { label: "Job Applications", value: stats.applications ?? 0, icon: Briefcase, tab: "applications" as Tab, color: "text-blue-400", badge: stats.newApplications },
