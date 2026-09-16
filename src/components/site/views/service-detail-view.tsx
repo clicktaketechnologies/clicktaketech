@@ -183,7 +183,7 @@ export function ServiceDetailView({
         </div>
       </Section>
 
-      {/* Tech stack + deliverables */}
+      {/* Tech stack + process */}
       <Section>
         <div className="grid gap-6 lg:grid-cols-2">
           <Reveal>
@@ -193,7 +193,7 @@ export function ServiceDetailView({
                 The production stack we ship for {service.title.toLowerCase()}.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
-                {service.stack.map((s) => (
+                {service.features.map((s) => (
                   <span
                     key={s}
                     className="rounded-lg border border-border/50 bg-white/5 px-3 py-1.5 text-sm font-medium text-muted-foreground"
@@ -202,17 +202,10 @@ export function ServiceDetailView({
                   </span>
                 ))}
               </div>
-              <h3 className="mt-7 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Deliverables
-              </h3>
-              <ul className="mt-3 space-y-2">
-                {service.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-blue-400" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-6 border-t border-border/40 pt-4 text-xs leading-relaxed text-muted-foreground">
+                Senior engineers (8+ yrs avg) own every engagement. CI/CD from day one,
+                observability baked in, and a p99 120ms performance budget enforced in CI.
+              </p>
             </div>
           </Reveal>
 
