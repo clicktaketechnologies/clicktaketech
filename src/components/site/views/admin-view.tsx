@@ -55,6 +55,12 @@ import {
   StorageProvidersTab,
   SecurityLogsTab,
 } from "@/components/site/admin-advanced-tabs";
+import {
+  BlogImportPanel,
+  QuickActions,
+  TrafficWidget,
+  SeoAnalyzer,
+} from "@/components/site/admin-pro-features";
 
 type Tab =
   | "overview"
@@ -296,7 +302,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {tab === "experiments" && <ExperimentsTab token={token} />}
           {/* System */}
           {tab === "storage" && <StorageProvidersTab token={token} />}
-          {tab === "seo" && <SeoTab token={token} />}
+          {tab === "seo" && <SeoAnalyzer token={token} />}
           {tab === "settings" && <SettingsTab token={token} />}
           {tab === "redirects" && <RedirectsTab token={token} />}
           {tab === "security" && <SecurityLogsTab token={token} />}
@@ -485,6 +491,12 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
             ) : null}
           </button>
         ))}
+      </div>
+
+      {/* Quick Actions + Traffic */}
+      <div className="mt-5 grid gap-5 lg:grid-cols-2">
+        <QuickActions onJump={(t) => onJump(t as Tab)} />
+        <TrafficWidget token={typeof window !== "undefined" ? localStorage.getItem("clicktake_admin_token") || "" : ""} />
       </div>
 
       {(stats.newQueries ?? 0) > 0 || (stats.newApplications ?? 0) > 0 ? (
@@ -836,9 +848,15 @@ function BlogTab({ token }: { token: string }) {
     <div>
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold">Blog Posts ({rows.length})</h2>
-        <Button onClick={() => setCreating(true)} className="bg-brand-gradient text-white">
-          <Plus className="mr-1 h-4 w-4" /> New Post
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setCreating(true)} className="bg-brand-gradient text-white">
+            <Plus className="mr-1 h-4 w-4" /> New Post
+          </Button>
+        </div>
+      </div>
+      {/* Blog Import Panel */}
+      <div className="mt-4">
+        <BlogImportPanel token={token} onDone={load} />
       </div>
       {loading ? (
         <div className="py-12 text-center">

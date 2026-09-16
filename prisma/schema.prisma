@@ -274,4 +274,19 @@ model SecurityLog {
   @@index([createdAt])
 }
 
+model SiteVisit {
+  id        String   @id @default(cuid())
+  path      String
+  referrer  String?
+  country   String?
+  device    String   @default("desktop") // desktop | mobile | tablet
+  browser   String?
+  sessionId String?
+  createdAt DateTime @default(now())
+
+  @@index([path])
+  @@index([createdAt])
+  @@index([sessionId])
+}
+
 
