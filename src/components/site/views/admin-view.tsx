@@ -949,13 +949,13 @@ function BlogTab({ token }: { token: string }) {
                   <td className="p-3 text-muted-foreground">{r.category}</td>
                   <td className="p-3 text-xs text-muted-foreground">{r.readTime}</td>
                   <td className="p-3">
-                    <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", r.status === "published" ? "bg-blue-500/15 text-blue-400" : "bg-amber-500/15 text-amber-400")}>
+                    <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-medium", r.status === "published" ? "bg-green-500/15 text-green-400" : "bg-amber-500/15 text-amber-400")}>
                       {r.status}
                     </span>
                   </td>
                   <td className="p-3 text-right">
                     <div className="inline-flex gap-1">
-                      <button onClick={() => setEditing(r)} className="rounded-lg p-2 hover:bg-blue-500/10 hover:text-blue-400">
+                      <button onClick={() => setEditing(r)} className="rounded-lg bg-green-500/10 p-2 text-green-400 hover:bg-green-500/20">
                         <Pencil className="h-4 w-4" />
                       </button>
                       <button onClick={() => del(r.id)} className="rounded-lg p-2 hover:bg-red-500/10 hover:text-red-400">
@@ -1363,7 +1363,7 @@ function QueriesTab({ token }: { token: string }) {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold">{q.name}</span>
-                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", q.status === "new" ? "bg-pink-500/15 text-pink-400" : "bg-blue-500/15 text-blue-400")}>
+                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", q.status === "new" ? "bg-pink-500/15 text-pink-400" : "bg-green-500/15 text-green-400")}>
                       {q.status}
                     </span>
                     <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-muted-foreground">{q.source}</span>
@@ -1749,7 +1749,7 @@ function ApplicationsTab({ token }: { token: string }) {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold">{a.fullName}</span>
-                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", a.status === "new" ? "bg-pink-500/15 text-pink-400" : "bg-blue-500/15 text-blue-400")}>
+                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", a.status === "new" ? "bg-pink-500/15 text-pink-400" : "bg-green-500/15 text-green-400")}>
                       {a.status}
                     </span>
                     <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] text-muted-foreground">{a.jobId}</span>
@@ -1900,13 +1900,13 @@ function RedirectsTab({ token }: { token: string }) {
                   <td className="p-3">
                     <button
                       onClick={() => toggle(r)}
-                      className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", r.active ? "bg-blue-500/15 text-blue-400" : "bg-muted text-muted-foreground")}
+                      className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", r.active ? "bg-green-500/15 text-green-400" : "bg-muted text-muted-foreground")}
                     >
                       {r.active ? "on" : "off"}
                     </button>
                   </td>
                   <td className="p-3 text-right">
-                    <button onClick={() => del(r.id)} className="rounded-lg p-2 text-red-400 hover:bg-red-500/10">
+                    <button onClick={() => del(r.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20">
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </td>
@@ -1966,14 +1966,34 @@ function SettingsTab({ token }: { token: string }) {
     setSaving(false);
   };
 
-  const categories = Array.from(new Set(rows.map((r) => r.category)));
+  // Define category display order + labels
+  const categoryOrder = ["identity", "contact", "hours", "target", "seo", "social", "integrations"];
   const catLabels: Record<string, string> = {
-    general: "General",
-    seo: "SEO",
-    contact: "Contact",
-    social: "Social",
-    integrations: "Integrations",
+    identity: "🏷️ Brand Identity & Logo",
+    contact: "📞 Contact & Location",
+    hours: "🕐 Opening Hours",
+    target: "🎯 Target Areas",
+    seo: "🔍 SEO",
+    social: "📱 Social Media",
+    integrations: "🔌 Integrations",
   };
+  const catDesc: Record<string, string> = {
+    identity: "Logo, favicon, brand colors, dashboard colors, business name",
+    contact: "Email, phone, WhatsApp, full address with GPS coordinates",
+    hours: "Business operating hours for each day of the week",
+    target: "Cities and areas you serve + service radius",
+    seo: "Default meta tags, Google Analytics, site verification",
+    social: "All social media profile URLs",
+    integrations: "Stripe, reCAPTCHA, and other third-party keys",
+  };
+
+  const categories = categoryOrder.filter((c) => rows.some((r) => r.category === c));
+
+  const isColorKey = (key: string) => key.includes("color") || key.includes("_bg") || key.includes("_accent");
+  const isImageKey = (key: string) => key.includes("logo") || key.includes("favicon");
+  const isLongKey = (key: string) => key.includes("description") || key.includes("address") || key.includes("target_areas");
+  const isSecretKey = (key: string) => key.includes("secret") || key.includes("password") || key.includes("key");
+  const isHoursKey = (key: string) => key.startsWith("hours_");
 
   if (loading) {
     return (
@@ -1986,13 +2006,16 @@ function SettingsTab({ token }: { token: string }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-bold">Site Settings</h2>
-        <p className="text-xs text-muted-foreground">Manage global site configuration — contact details, SEO, social links, integrations.</p>
+        <h2 className="text-lg font-bold">Config Settings</h2>
+        <p className="text-xs text-muted-foreground">Full branding control — logo, colors, identity, hours, location, and integrations.</p>
       </div>
       {categories.map((cat) => (
         <div key={cat} className="rounded-2xl border border-border/50 bg-card/40 p-5">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-blue-400">{catLabels[cat] ?? cat}</h3>
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-blue-400">{catLabels[cat] ?? cat}</h3>
+              <p className="mt-0.5 text-[11px] text-muted-foreground">{catDesc[cat] ?? ""}</p>
+            </div>
             <Button
               onClick={() => saveCategory(cat)}
               disabled={saving}
@@ -2002,28 +2025,103 @@ function SettingsTab({ token }: { token: string }) {
               <Save className="mr-1 h-3.5 w-3.5" /> Save
             </Button>
           </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {rows
-              .filter((r) => r.category === cat)
-              .map((r) => {
-                const isLong = r.key.includes("description") || r.key.includes("address");
+
+          {/* Opening Hours: render as a 7-day grid */}
+          {cat === "hours" ? (
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {rows.filter((r) => r.category === "hours").map((r) => {
+                const day = r.key.replace("hours_", "");
+                const isClosed = val(r).toLowerCase() === "closed";
                 return (
-                  <div key={r.id} className={isLong ? "sm:col-span-2" : ""}>
+                  <div key={r.id} className="rounded-xl border border-border/40 bg-background/40 p-3">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs font-semibold capitalize">{day}</Label>
+                      <button
+                        onClick={() => setVal(r.key, isClosed ? "9:00 AM - 5:00 PM" : "Closed")}
+                        className={cn("rounded-full px-2 py-0.5 text-[9px] font-bold", isClosed ? "bg-red-500/15 text-red-400" : "bg-green-500/15 text-green-400")}
+                      >
+                        {isClosed ? "Closed" : "Open"}
+                      </button>
+                    </div>
+                    <Input
+                      value={val(r)}
+                      onChange={(e) => setVal(r.key, e.target.value)}
+                      disabled={isClosed}
+                      className="mt-1.5 bg-background/50 text-sm disabled:opacity-40"
+                      placeholder="9:00 AM - 5:00 PM"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ) : cat === "identity" ? (
+            /* Identity: color pickers + image previews */
+            <div className="mt-4 space-y-4">
+              {/* Logo + Favicon previews */}
+              <div className="grid gap-3 sm:grid-cols-3">
+                {rows.filter((r) => r.category === "identity" && isImageKey(r.key)).map((r) => (
+                  <div key={r.id} className="rounded-xl border border-border/40 bg-background/40 p-3">
                     <Label className="text-xs font-mono">{r.key}</Label>
-                    {isLong ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-white/5">
+                        {val(r) && <img src={val(r)} alt={r.key} className="h-full w-full object-contain" />}
+                      </div>
+                      <Input value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} className="flex-1 bg-background/50 text-xs" placeholder="/uploads/logo.png" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Brand colors with color pickers */}
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {rows.filter((r) => r.category === "identity" && isColorKey(r.key)).map((r) => (
+                  <div key={r.id} className="flex items-center gap-2 rounded-xl border border-border/40 bg-background/40 p-3">
+                    <input
+                      type="color"
+                      value={val(r)}
+                      onChange={(e) => setVal(r.key, e.target.value)}
+                      className="h-10 w-12 shrink-0 cursor-pointer rounded-lg border border-border/50 bg-transparent"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <Label className="text-xs font-mono">{r.key}</Label>
+                      <Input value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} className="mt-0.5 bg-background/50 text-xs" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Other identity fields */}
+              <div className="grid gap-3 sm:grid-cols-2">
+                {rows.filter((r) => r.category === "identity" && !isImageKey(r.key) && !isColorKey(r.key)).map((r) => (
+                  <div key={r.id} className={isLongKey(r.key) ? "sm:col-span-2" : ""}>
+                    <Label className="text-xs font-mono">{r.key}</Label>
+                    <Input value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} className="mt-1 bg-background/50" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            /* Default rendering for other categories */
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {rows.filter((r) => r.category === cat).map((r) => {
+                return (
+                  <div key={r.id} className={isLongKey(r.key) ? "sm:col-span-2" : ""}>
+                    <Label className="text-xs font-mono">{r.key}</Label>
+                    {isLongKey(r.key) ? (
                       <Textarea
                         value={val(r)}
                         onChange={(e) => setVal(r.key, e.target.value)}
                         rows={2}
                         className="mt-1 resize-none bg-background/50"
                       />
+                    ) : isSecretKey(r.key) ? (
+                      <Input type="password" value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} placeholder="Not configured" className="mt-1 bg-background/50" />
                     ) : (
                       <Input value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} className="mt-1 bg-background/50" />
                     )}
                   </div>
                 );
               })}
-          </div>
+            </div>
+          )}
         </div>
       ))}
     </div>
@@ -2147,10 +2245,10 @@ function UsersTab({ token }: { token: string }) {
                   <td className="p-3 text-xs text-muted-foreground">{new Date(u.createdAt).toLocaleDateString()}</td>
                   <td className="p-3 text-right">
                     <div className="inline-flex gap-1">
-                      <button onClick={() => setEditingPerms(u)} className="rounded-lg bg-blue-500/10 p-2 text-blue-400 hover:bg-blue-500/20" title="Manage permissions">
+                      <button onClick={() => setEditingPerms(u)} className="rounded-lg bg-green-500/10 p-2 text-green-400 hover:bg-green-500/20" title="Manage permissions">
                         <ShieldCheck className="h-4 w-4" />
                       </button>
-                      <button onClick={() => del(u.id)} className="rounded-lg p-2 text-red-400 hover:bg-red-500/10">
+                      <button onClick={() => del(u.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>

@@ -197,8 +197,8 @@ export function EmailCenterTab({ token }: { token: string }) {
                 <tr key={r.id} className="border-t border-border/40">
                   <td className="p-3"><div className="font-medium">{r.name}</div><div className="text-xs text-muted-foreground">{r.subject}</div></td>
                   <td className="p-3 text-muted-foreground">{r.category}</td>
-                  <td className="p-3"><span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", r.status === "active" ? "bg-blue-500/15 text-blue-400" : "bg-amber-500/15 text-amber-400")}>{r.status}</span></td>
-                  <td className="p-3 text-right"><div className="inline-flex gap-1"><button onClick={() => setEditing(r)} className="rounded-lg p-2 hover:bg-blue-500/10 hover:text-blue-400"><Pencil className="h-4 w-4" /></button><button onClick={() => del(r.id)} className="rounded-lg p-2 hover:bg-red-500/10 hover:text-red-400"><Trash2 className="h-4 w-4" /></button></div></td>
+                  <td className="p-3"><span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", r.status === "active" ? "bg-green-500/15 text-green-400" : "bg-amber-500/15 text-amber-400")}>{r.status}</span></td>
+                  <td className="p-3 text-right"><div className="inline-flex gap-1"><button onClick={() => setEditing(r)} className="rounded-lg bg-green-500/10 p-2 text-green-400 hover:bg-green-500/20"><Pencil className="h-4 w-4" /></button><button onClick={() => del(r.id)} className="rounded-lg p-2 hover:bg-red-500/10 hover:text-red-400"><Trash2 className="h-4 w-4" /></button></div></td>
                 </tr>
               ))}
             </tbody>
@@ -309,7 +309,7 @@ export function ExperimentsTab({ token }: { token: string }) {
                   <div className="flex flex-wrap items-center gap-2">
                     <FlaskConical className="h-4 w-4 text-blue-400" />
                     <span className="font-semibold">{e.name}</span>
-                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", e.status === "running" ? "bg-blue-500/15 text-blue-400" : e.status === "completed" ? "bg-green-500/15 text-green-400" : "bg-amber-500/15 text-amber-400")}>{e.status}</span>
+                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", e.status === "running" ? "bg-green-500/15 text-green-400" : e.status === "completed" ? "bg-blue-500/15 text-blue-400" : "bg-amber-500/15 text-amber-400")}>{e.status}</span>
                     {e.winner && <span className="rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] font-bold text-blue-400">Winner: {e.winner}</span>}
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">{e.page} · {e.metric}</div>
@@ -320,7 +320,7 @@ export function ExperimentsTab({ token }: { token: string }) {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1">
-                  {e.status === "draft" && <button onClick={() => setStatus(e, "running")} className="rounded-lg bg-blue-500/10 p-2 text-blue-400 hover:bg-blue-500/20" title="Start"><Play className="h-4 w-4" /></button>}
+                  {e.status === "draft" && <button onClick={() => setStatus(e, "running")} className="rounded-lg bg-green-500/10 p-2 text-green-400 hover:bg-green-500/20" title="Start"><Play className="h-4 w-4" /></button>}
                   {e.status === "running" && <button onClick={() => setStatus(e, "paused")} className="rounded-lg bg-amber-500/10 p-2 text-amber-400 hover:bg-amber-500/20" title="Pause"><Pause className="h-4 w-4" /></button>}
                   <button onClick={() => del(e.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20"><Trash2 className="h-4 w-4" /></button>
                 </div>
@@ -745,14 +745,14 @@ function JobsManager({ token }: { token: string }) {
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-semibold">{j.title}</span>
-                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", j.active ? "bg-blue-500/15 text-blue-400" : "bg-muted text-muted-foreground")}>{j.active ? "Live" : "Hidden"}</span>
+                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", j.active ? "bg-green-500/15 text-green-400" : "bg-muted text-muted-foreground")}>{j.active ? "Live" : "Hidden"}</span>
                     <span className="rounded-full bg-pink-500/10 px-2 py-0.5 text-[10px] text-pink-400">{j.department}</span>
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">{j.location} · {j.type}{j.salary ? ` · ${j.salary}` : ""}</div>
                   <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{j.description}</p>
                 </div>
                 <div className="flex gap-1">
-                  <button onClick={() => setEditing(j)} className="rounded-lg bg-blue-500/10 p-2 text-blue-400 hover:bg-blue-500/20"><Pencil className="h-4 w-4" /></button>
+                  <button onClick={() => setEditing(j)} className="rounded-lg bg-green-500/10 p-2 text-green-400 hover:bg-green-500/20"><Pencil className="h-4 w-4" /></button>
                   <button onClick={() => toggleActive(j)} className={cn("rounded-lg p-2", j.active ? "bg-green-500/10 text-green-400" : "bg-muted text-muted-foreground")} title="Toggle visibility">{j.active ? "●" : "○"}</button>
                   <button onClick={() => del(j.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20"><Trash2 className="h-4 w-4" /></button>
                 </div>

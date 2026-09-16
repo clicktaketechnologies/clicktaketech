@@ -96,7 +96,7 @@ export function BlogImportPanel({ token, onDone }: { token: string; onDone: () =
             {file ? file.name : "Choose file..."}
           </button>
           {file && (
-            <button onClick={() => setFile(null)} className="rounded-lg p-2 text-red-400 hover:bg-red-500/10">
+            <button onClick={() => setFile(null)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20">
               <X className="h-4 w-4" />
             </button>
           )}
