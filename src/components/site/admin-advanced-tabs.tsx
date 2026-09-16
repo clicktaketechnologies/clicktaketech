@@ -575,3 +575,226 @@ export function SecurityLogsTab({ token }: { token: string }) {
     </div>
   );
 }
+
+// ============================ TEAM & CAREERS ============================
+type Member = { id: string; name: string; role: string; department: string; bio: string | null; photo: string | null; linkedin: string | null; twitter: string | null; order: number; active: boolean };
+type Job = { id: string; slug: string; title: string; department: string; location: string; type: string; description: string; salary: string | null; active: boolean };
+
+export function TeamCareersTab({ token }: { token: string }) {
+  const [subTab, setSubTab] = useState<"team" | "jobs">("team");
+  return (
+    <div>
+      <div className="flex items-center gap-2">
+        <button onClick={() => setSubTab("team")} className={cn("rounded-xl px-4 py-2 text-sm font-medium", subTab === "team" ? "bg-brand-gradient text-white" : "border border-border/50 bg-card/40 text-muted-foreground hover:text-foreground")}>Team Members</button>
+        <button onClick={() => setSubTab("jobs")} className={cn("rounded-xl px-4 py-2 text-sm font-medium", subTab === "jobs" ? "bg-brand-gradient text-white" : "border border-border/50 bg-card/40 text-muted-foreground hover:text-foreground")}>Open Jobs</button>
+      </div>
+      <div className="mt-4">
+        {subTab === "team" ? <TeamManager token={token} /> : <JobsManager token={token} />}
+      </div>
+    </div>
+  );
+}
+
+function TeamManager({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<Member | null>(null);
+  const [creating, setCreating] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/team");
+    const data = await res.json().catch(() => ({}));
+    setMembers(data.members ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this team member?")) return;
+    const res = await adminFetch(`/api/admin/team?id=${id}`, { method: "DELETE" });
+    if (res.ok) { toast({ title: "Deleted" }); load(); }
+  };
+
+  const toggleActive = async (m: Member) => {
+    const res = await adminFetch("/api/admin/team", { method: "PATCH", body: JSON.stringify({ id: m.id, active: !m.active }) });
+    if (res.ok) load();
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold">Team Members ({members.length})</h3>
+        <Button onClick={() => setCreating(true)} size="sm" className="bg-brand-gradient text-white"><Plus className="mr-1 h-3.5 w-3.5" /> Add Member</Button>
+      </div>
+      {loading ? (
+        <div className="py-8 text-center"><Loader2 className="mx-auto h-5 w-5 animate-spin text-blue-400" /></div>
+      ) : (
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {members.map((m) => (
+            <div key={m.id} className={cn("rounded-xl border p-4", m.active ? "border-border/50 bg-card/40" : "border-border/30 bg-card/20 opacity-60")}>
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-gradient text-sm font-bold text-white">
+                  {m.photo ? <img src={m.photo} alt={m.name} className="h-full w-full object-cover" /> : m.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-semibold">{m.name}</div>
+                  <div className="truncate text-xs text-muted-foreground">{m.role}</div>
+                  <div className="text-[10px] text-blue-400">{m.department}</div>
+                </div>
+              </div>
+              {m.bio && <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{m.bio}</p>}
+              <div className="mt-3 flex gap-1">
+                <button onClick={() => setEditing(m)} className="flex-1 rounded-lg bg-blue-500/10 py-1.5 text-xs text-blue-400 hover:bg-blue-500/20"><Pencil className="mx-auto h-3.5 w-3.5" /></button>
+                <button onClick={() => toggleActive(m)} className={cn("flex-1 rounded-lg py-1.5 text-xs", m.active ? "bg-green-500/10 text-green-400" : "bg-muted text-muted-foreground")}>{m.active ? "Active" : "Hidden"}</button>
+                <button onClick={() => del(m.id)} className="flex-1 rounded-lg bg-red-500/10 py-1.5 text-xs text-red-400 hover:bg-red-500/20"><Trash2 className="mx-auto h-3.5 w-3.5" /></button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {(editing || creating) && (
+        <MemberEditor initial={editing} onClose={() => { setEditing(null); setCreating(false); }} onSave={async (data) => {
+          if (editing) { const res = await adminFetch("/api/admin/team", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...data }) }); if (res.ok) { toast({ title: "Updated" }); setEditing(null); load(); } }
+          else { const res = await adminFetch("/api/admin/team", { method: "POST", body: JSON.stringify(data) }); if (res.ok) { toast({ title: "Created" }); setCreating(false); load(); } }
+        }} />
+      )}
+    </div>
+  );
+}
+
+function MemberEditor({ initial, onClose, onSave }: { initial: Member | null; onClose: () => void; onSave: (d: Record<string, unknown>) => void }) {
+  const [f, setF] = useState<Record<string, string>>({
+    name: initial?.name ?? "", role: initial?.role ?? "", department: initial?.department ?? "Development",
+    bio: initial?.bio ?? "", photo: initial?.photo ?? "", linkedin: initial?.linkedin ?? "", twitter: initial?.twitter ?? "",
+    order: String(initial?.order ?? 0),
+  });
+  const set = (k: string, v: string) => setF((p) => ({ ...p, [k]: v }));
+  return (
+    <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-black/60 p-4 pt-16 backdrop-blur-sm">
+      <div className="relative w-full max-w-xl rounded-3xl border border-border/50 bg-card/95 p-6 shadow-deep sm:p-8">
+        <button onClick={onClose} className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-white/10"><X className="h-5 w-5" /></button>
+        <h2 className="text-lg font-bold">{initial ? "Edit Member" : "New Member"}</h2>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <div><Label className="text-sm">Name</Label><Input value={f.name} onChange={(e) => set("name", e.target.value)} className="mt-1.5 bg-background/50" /></div>
+          <div><Label className="text-sm">Role</Label><Input value={f.role} onChange={(e) => set("role", e.target.value)} className="mt-1.5 bg-background/50" /></div>
+          <div><Label className="text-sm">Department</Label><select value={f.department} onChange={(e) => set("department", e.target.value)} className="mt-1.5 h-10 w-full rounded-lg border border-border/50 bg-background/50 px-3 text-sm"><option>Leadership</option><option>Development</option><option>Marketing</option><option>Creative</option><option>Operations</option></select></div>
+          <div><Label className="text-sm">Order</Label><Input type="number" value={f.order} onChange={(e) => set("order", e.target.value)} className="mt-1.5 bg-background/50" /></div>
+          <div className="sm:col-span-2"><Label className="text-sm">Photo URL</Label><Input value={f.photo} onChange={(e) => set("photo", e.target.value)} placeholder="/uploads/photo.jpg" className="mt-1.5 bg-background/50" /></div>
+          <div className="sm:col-span-2"><Label className="text-sm">Bio</Label><Textarea value={f.bio} onChange={(e) => set("bio", e.target.value)} rows={3} className="mt-1.5 resize-none bg-background/50" /></div>
+          <div><Label className="text-sm">LinkedIn URL</Label><Input value={f.linkedin} onChange={(e) => set("linkedin", e.target.value)} className="mt-1.5 bg-background/50" /></div>
+          <div><Label className="text-sm">Twitter URL</Label><Input value={f.twitter} onChange={(e) => set("twitter", e.target.value)} className="mt-1.5 bg-background/50" /></div>
+        </div>
+        <div className="mt-6 flex justify-end gap-2"><Button onClick={onClose} variant="outline" className="border-border/60 bg-card/40">Cancel</Button><Button onClick={() => onSave({ ...f, order: Number(f.order) || 0 })} className="bg-brand-gradient text-white"><Check className="mr-1 h-4 w-4" /> Save</Button></div>
+      </div>
+    </div>
+  );
+}
+
+function JobsManager({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<Job | null>(null);
+  const [creating, setCreating] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/jobs");
+    const data = await res.json().catch(() => ({}));
+    setJobs(data.jobs ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this job posting?")) return;
+    const res = await adminFetch(`/api/admin/jobs?id=${id}`, { method: "DELETE" });
+    if (res.ok) { toast({ title: "Deleted" }); load(); }
+  };
+
+  const toggleActive = async (j: Job) => {
+    const res = await adminFetch("/api/admin/jobs", { method: "PATCH", body: JSON.stringify({ id: j.id, active: !j.active }) });
+    if (res.ok) load();
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold">Open Jobs ({jobs.length})</h3>
+        <Button onClick={() => setCreating(true)} size="sm" className="bg-brand-gradient text-white"><Plus className="mr-1 h-3.5 w-3.5" /> Add Job</Button>
+      </div>
+      {loading ? (
+        <div className="py-8 text-center"><Loader2 className="mx-auto h-5 w-5 animate-spin text-blue-400" /></div>
+      ) : (
+        <div className="mt-3 space-y-2">
+          {jobs.map((j) => (
+            <div key={j.id} className={cn("rounded-xl border p-4", j.active ? "border-border/50 bg-card/40" : "border-border/30 bg-card/20 opacity-60")}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold">{j.title}</span>
+                    <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", j.active ? "bg-blue-500/15 text-blue-400" : "bg-muted text-muted-foreground")}>{j.active ? "Live" : "Hidden"}</span>
+                    <span className="rounded-full bg-pink-500/10 px-2 py-0.5 text-[10px] text-pink-400">{j.department}</span>
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground">{j.location} · {j.type}{j.salary ? ` · ${j.salary}` : ""}</div>
+                  <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{j.description}</p>
+                </div>
+                <div className="flex gap-1">
+                  <button onClick={() => setEditing(j)} className="rounded-lg bg-blue-500/10 p-2 text-blue-400 hover:bg-blue-500/20"><Pencil className="h-4 w-4" /></button>
+                  <button onClick={() => toggleActive(j)} className={cn("rounded-lg p-2", j.active ? "bg-green-500/10 text-green-400" : "bg-muted text-muted-foreground")} title="Toggle visibility">{j.active ? "●" : "○"}</button>
+                  <button onClick={() => del(j.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20"><Trash2 className="h-4 w-4" /></button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {(editing || creating) && (
+        <JobEditor initial={editing} onClose={() => { setEditing(null); setCreating(false); }} onSave={async (data) => {
+          if (editing) { const res = await adminFetch("/api/admin/jobs", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...data }) }); if (res.ok) { toast({ title: "Updated" }); setEditing(null); load(); } }
+          else { const res = await adminFetch("/api/admin/jobs", { method: "POST", body: JSON.stringify(data) }); if (res.ok) { toast({ title: "Created" }); setCreating(false); load(); } else { const d = await res.json().catch(() => ({})); toast({ title: d.error || "Failed", variant: "destructive" }); } }
+        }} />
+      )}
+    </div>
+  );
+}
+
+function JobEditor({ initial, onClose, onSave }: { initial: Job | null; onClose: () => void; onSave: (d: Record<string, string>) => void }) {
+  const [f, setF] = useState<Record<string, string>>({
+    title: initial?.title ?? "", slug: initial?.slug ?? "", department: initial?.department ?? "Development",
+    location: initial?.location ?? "Remote", type: initial?.type ?? "Full-time",
+    description: initial?.description ?? "", requirements: initial?.requirements ?? "", salary: initial?.salary ?? "",
+  });
+  const set = (k: string, v: string) => setF((p) => ({ ...p, [k]: v }));
+  return (
+    <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-black/60 p-4 pt-16 backdrop-blur-sm">
+      <div className="relative w-full max-w-xl rounded-3xl border border-border/50 bg-card/95 p-6 shadow-deep sm:p-8">
+        <button onClick={onClose} className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-white/10"><X className="h-5 w-5" /></button>
+        <h2 className="text-lg font-bold">{initial ? "Edit Job" : "New Job"}</h2>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <div><Label className="text-sm">Title</Label><Input value={f.title} onChange={(e) => set("title", e.target.value)} className="mt-1.5 bg-background/50" /></div>
+          <div><Label className="text-sm">Slug</Label><Input value={f.slug} onChange={(e) => set("slug", e.target.value)} placeholder="senior-nextjs-engineer" className="mt-1.5 bg-background/50" /></div>
+          <div><Label className="text-sm">Department</Label><select value={f.department} onChange={(e) => set("department", e.target.value)} className="mt-1.5 h-10 w-full rounded-lg border border-border/50 bg-background/50 px-3 text-sm"><option>Development</option><option>Marketing</option><option>Creative</option><option>Operations</option><option>Leadership</option></select></div>
+          <div><Label className="text-sm">Location</Label><Input value={f.location} onChange={(e) => set("location", e.target.value)} className="mt-1.5 bg-background/50" /></div>
+          <div><Label className="text-sm">Type</Label><select value={f.type} onChange={(e) => set("type", e.target.value)} className="mt-1.5 h-10 w-full rounded-lg border border-border/50 bg-background/50 px-3 text-sm"><option>Full-time</option><option>Part-time</option><option>Internship</option><option>Contract</option></select></div>
+          <div><Label className="text-sm">Salary</Label><Input value={f.salary} onChange={(e) => set("salary", e.target.value)} placeholder="£40-60k" className="mt-1.5 bg-background/50" /></div>
+          <div className="sm:col-span-2"><Label className="text-sm">Description</Label><Textarea value={f.description} onChange={(e) => set("description", e.target.value)} rows={4} className="mt-1.5 resize-none bg-background/50" /></div>
+          <div className="sm:col-span-2"><Label className="text-sm">Requirements (one per line)</Label><Textarea value={f.requirements} onChange={(e) => set("requirements", e.target.value)} rows={4} className="mt-1.5 resize-none bg-background/50" /></div>
+        </div>
+        <div className="mt-6 flex justify-end gap-2"><Button onClick={onClose} variant="outline" className="border-border/60 bg-card/40">Cancel</Button><Button onClick={() => onSave(f)} className="bg-brand-gradient text-white"><Check className="mr-1 h-4 w-4" /> Save</Button></div>
+      </div>
+    </div>
+  );
+}

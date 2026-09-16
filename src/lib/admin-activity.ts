@@ -38,6 +38,8 @@ export const DEFAULT_SETTINGS: { key: string; value: string; category: string }[
   { key: "tagline", value: "Engineering Tomorrow's Intelligence, Today.", category: "general" },
   { key: "brand_color_primary", value: "#136DFF", category: "general" },
   { key: "brand_color_secondary", value: "#FF53A9", category: "general" },
+  { key: "logo_url", value: "/logo-dark.png", category: "general" },
+  { key: "favicon_url", value: "/logo.svg", category: "general" },
   { key: "timezone", value: "Asia/Karachi", category: "general" },
   // contact
   { key: "contact_email", value: "info@clicktaketech.com", category: "contact" },

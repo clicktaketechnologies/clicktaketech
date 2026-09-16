@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   TEAM_STATS,
   DEPARTMENTS,
@@ -15,6 +16,15 @@ import {
   CtaSection,
 } from "@/components/site/section";
 import { Icon3D } from "@/components/site/icon-3d";
+
+type LiveMember = {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  bio: string | null;
+  photo: string | null;
+};
 
 // 3D emoji glyphs for the five departments + four team values.
 const DEPT_EMOJI: Record<string, string> = {
@@ -36,6 +46,21 @@ type TeamViewProps = {
 };
 
 export function TeamView({ onNavigate }: TeamViewProps) {
+  const [members, setMembers] = useState<LiveMember[]>([]);
+
+  useEffect(() => {
+    fetch("/api/team")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok && Array.isArray(data.members)) {
+          setMembers(data.members);
+        }
+      })
+      .catch(() => {
+        /* fallback to department-based display */
+      });
+  }, []);
+
   return (
     <>
       {/* Hero */}
@@ -123,6 +148,32 @@ export function TeamView({ onNavigate }: TeamViewProps) {
           ))}
         </div>
       </Section>
+
+      {/* Meet the Team — live from admin */}
+      {members.length > 0 && (
+        <Section className="border-t border-border/40">
+          <SectionHeading
+            eyebrow="Meet the Team"
+            title={<>The people who <span className="text-gradient-brand">ship the work.</span></>}
+            description="Every engagement is staffed with senior engineers who own outcomes end-to-end."
+          />
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {members.map((m, i) => (
+              <Reveal key={m.id} delay={i * 0.04}>
+                <div className="group rounded-2xl border border-border/50 bg-card/40 p-6 text-center transition-all hover:-translate-y-1 hover:border-blue-500/40">
+                  <div className="mx-auto flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-brand-gradient text-lg font-bold text-white shadow-[0_0_20px_-4px] shadow-blue-500/40">
+                    {m.photo ? <img src={m.photo} alt={m.name} className="h-full w-full object-cover" /> : m.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold">{m.name}</h3>
+                  <p className="text-xs text-blue-400">{m.role}</p>
+                  <p className="mt-1 text-[10px] uppercase tracking-wide text-muted-foreground">{m.department}</p>
+                  {m.bio && <p className="mt-3 text-xs leading-relaxed text-muted-foreground line-clamp-3">{m.bio}</p>}
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Section>
+      )}
 
       {/* Hiring process */}
       <Section>

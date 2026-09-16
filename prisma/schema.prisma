@@ -289,4 +289,40 @@ model SiteVisit {
   @@index([sessionId])
 }
 
+model TeamMember {
+  id          String   @id @default(cuid())
+  name        String
+  role        String
+  department  String
+  bio         String?
+  photo       String?  // URL to photo
+  linkedin    String?
+  twitter     String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active])
+  @@index([department])
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  department  String
+  location    String
+  type        String   @default("Full-time") // Full-time | Part-time | Internship | Contract
+  description String
+  requirements String? // newline separated
+  salary      String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active])
+  @@index([department])
+}
+
 

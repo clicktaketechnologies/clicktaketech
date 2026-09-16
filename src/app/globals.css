@@ -211,6 +211,38 @@
   }
 }
 
+/* ===== Admin light mode overrides ===== */
+/* When .admin-light is applied to the admin root, swap the CSS variables
+   so the entire admin panel renders in light mode while the public site
+   stays dark. */
+.admin-light {
+  --background: oklch(0.98 0.005 265);
+  --foreground: oklch(0.15 0.01 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.01 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.01 265);
+  --primary: oklch(0.57 0.235 264);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0.005 265);
+  --secondary-foreground: oklch(0.2 0.01 265);
+  --muted: oklch(0.96 0.005 265);
+  --muted-foreground: oklch(0.45 0.01 265);
+  --accent: oklch(0.69 0.255 358);
+  --accent-foreground: oklch(0.15 0.01 265);
+  --border: oklch(0.9 0.005 265);
+  --input: oklch(0.92 0.005 265);
+  --ring: oklch(0.57 0.235 264);
+  --sidebar: oklch(0.97 0.005 265);
+  --sidebar-foreground: oklch(0.15 0.01 265);
+  --sidebar-primary: oklch(0.57 0.235 264);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.95 0.005 265);
+  --sidebar-accent-foreground: oklch(0.2 0.01 265);
+  --sidebar-border: oklch(0.9 0.005 265);
+  --sidebar-ring: oklch(0.57 0.235 264);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;

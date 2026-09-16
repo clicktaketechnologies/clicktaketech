@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ArrowRight, MapPin, Briefcase, Clock } from "lucide-react";
 import { JOBS, CAREERS_PERKS, type NavView } from "@/lib/site-data";
 import {
@@ -10,12 +11,47 @@ import {
   CtaSection,
 } from "@/components/site/section";
 
+type LiveJob = {
+  id: string;
+  slug: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  description: string;
+  salary: string | null;
+};
+
 type CareersViewProps = {
   onNavigate: (v: NavView) => void;
   onApply?: (jobSlug: string) => void;
 };
 
 export function CareersView({ onNavigate, onApply }: CareersViewProps) {
+  const [jobs, setJobs] = useState<typeof JOBS>(JOBS);
+
+  useEffect(() => {
+    fetch("/api/jobs")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok && Array.isArray(data.jobs) && data.jobs.length > 0) {
+          setJobs(
+            data.jobs.map((j: LiveJob) => ({
+              slug: j.slug,
+              title: j.title,
+              location: j.location,
+              type: j.type,
+              department: j.department,
+              desc: j.description,
+            }))
+          );
+        }
+      })
+      .catch(() => {
+        /* fallback to static JOBS */
+      });
+  }, []);
+
   return (
     <>
       {/* Hero */}
@@ -74,7 +110,7 @@ export function CareersView({ onNavigate, onApply }: CareersViewProps) {
           description="Senior-first, with a paid intern program for emerging talent. Every role ships to production — no toy projects, no busywork, no &quot;shadowing&quot; for six months."
         />
         <div className="mt-10 space-y-3">
-          {JOBS.map((job, i) => (
+          {jobs.map((job, i) => (
             <Reveal key={job.slug} delay={i * 0.04}>
               <div className="group flex flex-col gap-4 rounded-2xl border border-border/50 bg-card/40 p-6 transition-all hover:border-blue-500/40 hover:bg-card/60 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex-1">

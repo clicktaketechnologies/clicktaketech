@@ -38,6 +38,8 @@ import {
   ShieldAlert,
   TrendingUp,
   Mail,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -54,6 +56,7 @@ import {
   TypographyTab,
   StorageProvidersTab,
   SecurityLogsTab,
+  TeamCareersTab,
 } from "@/components/site/admin-advanced-tabs";
 import {
   BlogImportPanel,
@@ -117,12 +120,15 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   const [tab, setTab] = useState<Tab>("overview");
   const [checking, setChecking] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [lightMode, setLightMode] = useState(false);
 
   useEffect(() => {
     try {
       const t = localStorage.getItem(TOKEN_KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       if (t) setToken(t);
+      const lm = localStorage.getItem("clicktake_admin_light");
+      if (lm === "true") setLightMode(true);
     } catch {
       /* ignore */
     }
@@ -136,6 +142,12 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
       /* ignore */
     }
     setToken(null);
+  };
+
+  const toggleLightMode = () => {
+    const next = !lightMode;
+    setLightMode(next);
+    try { localStorage.setItem("clicktake_admin_light", String(next)); } catch { /* ignore */ }
   };
 
   if (checking) {
@@ -153,7 +165,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   const activeTab = TABS.find((t) => t.id === tab);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className={cn("flex min-h-screen bg-background text-foreground", lightMode && "admin-light")}>
       {/* ===== Sidebar (desktop fixed + mobile drawer) ===== */}
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -266,6 +278,14 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           </div>
           <div className="ml-auto flex items-center gap-3">
             <button
+              onClick={toggleLightMode}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card/40 text-foreground transition-colors hover:border-blue-500/40"
+              aria-label="Toggle light/dark mode"
+              title={lightMode ? "Switch to dark mode" : "Switch to light mode"}
+            >
+              {lightMode ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </button>
+            <button
               onClick={() => onNavigate("home")}
               className="hidden items-center gap-1.5 rounded-lg border border-border/60 bg-card/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-blue-500/40 hover:text-foreground sm:inline-flex"
             >
@@ -291,7 +311,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {tab === "blog" && <BlogTab token={token} />}
           {tab === "pricing" && <PricingTab token={token} />}
           {tab === "media" && <MediaTab token={token} />}
-          {tab === "team-careers" && <ApplicationsTab token={token} />}
+          {tab === "team-careers" && <TeamCareersTab token={token} />}
           {/* Branding */}
           {tab === "typography" && <TypographyTab token={token} />}
           {tab === "theme" && <ThemeEngineTab token={token} />}
