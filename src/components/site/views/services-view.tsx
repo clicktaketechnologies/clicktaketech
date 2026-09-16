@@ -12,6 +12,7 @@ import { Reveal, Section, SectionHeading, LocalTrustStrip, CtaSection } from "@/
 
 type ServicesViewProps = {
   onNavigate: (v: NavView) => void;
+  onNavigateService?: (slug: string) => void;
 };
 
 // Senior-engineer-tone category blurbs that double as SEO copy.
@@ -29,7 +30,7 @@ const CATEGORY_BLURBS: Record<string, string> = {
     "Premium craft, delivered on deadline. Brand identity, professional web design services, B2B video production and creative systems that make your product unmistakable across every touchpoint — from the first impression to the hundredth.",
 };
 
-export function ServicesView({ onNavigate }: ServicesViewProps) {
+export function ServicesView({ onNavigate, onNavigateService }: ServicesViewProps) {
   return (
     <>
       {/* Hero */}
@@ -109,7 +110,14 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {cat.services.map((service, i) => (
               <Reveal key={service.slug} delay={i * 0.04}>
-                <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 transition-all hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-[0_20px_60px_-20px] hover:shadow-blue-500/20">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateService) onNavigateService(service.slug);
+                    else onNavigate("services");
+                  }}
+                  className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 text-left transition-all hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-[0_20px_60px_-20px] hover:shadow-blue-500/20"
+                >
                   <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-500/0 blur-2xl transition-all duration-500 group-hover:bg-blue-500/15" />
                   <div className="flex items-center justify-between">
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20 transition-transform group-hover:scale-110">
@@ -133,13 +141,10 @@ export function ServicesView({ onNavigate }: ServicesViewProps) {
                       </span>
                     ))}
                   </div>
-                  <button
-                    onClick={() => onNavigate("contact")}
-                    className="mt-5 flex items-center gap-1 border-t border-border/40 pt-4 text-sm font-medium text-blue-400 opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    Get a quote <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </article>
+                  <span className="mt-5 flex items-center gap-1 border-t border-border/40 pt-4 text-sm font-medium text-blue-400 opacity-0 transition-opacity group-hover:opacity-100">
+                    View service <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </button>
               </Reveal>
             ))}
           </div>

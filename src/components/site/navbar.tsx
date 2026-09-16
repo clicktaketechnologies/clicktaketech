@@ -14,9 +14,10 @@ import { cn } from "@/lib/utils";
 type NavbarProps = {
   active: NavView;
   onNavigate: (v: NavView) => void;
+  onNavigateService?: (slug: string) => void;
 };
 
-export function Navbar({ active, onNavigate }: NavbarProps) {
+export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -195,7 +196,14 @@ export function Navbar({ active, onNavigate }: NavbarProps) {
                         <ul className="mt-3 space-y-0.5">
                           {cat.services.map((s) => (
                             <li key={s.slug}>
-                              <button onClick={() => handleNav("services")} className="group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] text-muted-foreground transition-colors hover:bg-blue-500/10 hover:text-foreground">
+                              <button
+                                onClick={() => {
+                                  setOpenMenu(null);
+                                  if (onNavigateService) onNavigateService(s.slug);
+                                  else handleNav("services");
+                                }}
+                                className="group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] text-muted-foreground transition-colors hover:bg-blue-500/10 hover:text-foreground"
+                              >
                                 <s.icon className="h-3.5 w-3.5 shrink-0 text-blue-400/70 group-hover:text-blue-400" />
                                 <span className="flex-1">{s.title}</span>
                               </button>
@@ -303,7 +311,14 @@ export function Navbar({ active, onNavigate }: NavbarProps) {
                         </div>
                         <div className="grid grid-cols-2 gap-0.5">
                           {cat.services.map((s) => (
-                            <button key={s.slug} onClick={() => handleNav("services")} className="rounded-md px-2 py-1.5 text-left text-xs text-muted-foreground hover:bg-blue-500/10 hover:text-foreground">
+                            <button
+                              key={s.slug}
+                              onClick={() => {
+                                if (onNavigateService) onNavigateService(s.slug);
+                                else handleNav("services");
+                              }}
+                              className="rounded-md px-2 py-1.5 text-left text-xs text-muted-foreground hover:bg-blue-500/10 hover:text-foreground"
+                            >
                               {s.title}
                             </button>
                           ))}

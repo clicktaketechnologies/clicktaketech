@@ -87,7 +87,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <a href="tel:+447391653377" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
                 <Phone className="h-4 w-4" /> +44 7391 653377
               </a>
-              <a href="https://wa.link/iqz8eg" target="_blank" rel="noreferrer" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
+              <a href="https://wa.me/447391653377" target="_blank" rel="noreferrer" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>

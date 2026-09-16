@@ -157,3 +157,24 @@ Stage Summary:
 - Legal view adds a plain-English human intro overlay above the formal `doc.intro` text while keeping the docId-driven tab switcher and `LegalView({ docId, onNavigate })` signature unchanged.
 - Every view's final CTA block now uses the reusable `<CtaSection>` component from `section.tsx`, each with a unique human-toned title/description, a primary ctaLabel, and (except legal) a secondary button routing to a relevant adjacent view (about→careers, team→about, pricing→services, careers→services, connect→pricing).
 - No new dependencies. No tests added. Mobile-first responsive classes (sm:/lg:) and "use client" directives preserved. Component signatures unchanged: `AboutView`, `TeamView`, `PricingView`, `CareersView`, `ConnectView` keep `{ onNavigate }`, and `LegalView({ docId, onNavigate })` keeps its two-arg signature.
+
+---
+Task ID: 2
+Agent: general-purpose (service-content writer)
+Task: Create keyword-optimized service content for all 24 ClickTake services
+
+Work Log:
+- Read /home/z/my-project/worklog.md (Tasks 3, 4, 5, 6 already logged by other view-optimiser agents).
+- Read the ServiceContent type definition in /home/z/my-project/src/lib/site-data.ts (lines 77-92) to confirm the exact shape: slug, primaryKeyword, secondaryKeywords[], shortTermKeywords[], longTermKeywords[], metaTitle, metaDescription, overview, benefits[], process[], faqs[].
+- Created /home/z/my-project/src/lib/service-content.ts as a single self-contained TypeScript module that imports the ServiceContent type via `import type { ServiceContent } from "@/lib/site-data";` and exports `SERVICE_CONTENT: Record<string, ServiceContent>` plus the `getServiceContent(slug)` helper.
+- Authored 24 hand-written, non-duplicate entries — one per service slug specified in the task brief. Each entry contains a real primaryKeyword (single commercial term), 5 secondaryKeywords (LSI/related), 5 shortTermKeywords (long-tail, often location/segment-modified: UK / Birmingham / London / "for small business" / "for SaaS"), 3 longTermKeywords (aspirational head terms like "best ... UK", "top ... company", "enterprise ..."), metaTitle (<=60 chars, includes primary keyword), metaDescription (<=160 chars, includes primary + soft CTA), overview (150-280 chars), 6 benefits (each desc a single specific sentence), a 4-step tailored process (nums "01".."04" with steps specific to that service — e.g. PPC has "Account audit & CPA modelling", Auth has "Threat model & auth matrix", B2B video has "Brief & script" etc.), and 4 service-specific FAQs (each answer 1-3 sentences with real specifics like platform names, traffic thresholds, pricing ballparks).
+- Verified keyword phrasing is varied across all 24 services — no copy-paste keyword templates; primary keywords are realistic SEO targets a digital agency would actually pursue (e.g. "PPC management services", "custom LLM solutions", "AI chatbot development", "WordPress web design services", "conversion rate optimization services", "responsive web design services").
+- Ran a sanity Node script to validate: (a) entry count is 24 (via metaTitle/metaDescription count), (b) every metaTitle is <=60 chars, (c) every metaDescription is <=160 chars. All passed (0 problems).
+- Ran `cd /home/z/my-project && bun run lint 2>&1 | tail -20` — eslint reported zero errors and zero warnings (exit code 0). No fixes required.
+
+Stage Summary:
+- File created: /home/z/my-project/src/lib/service-content.ts
+- Entry count: 24 (covers all 6 Digital Marketing + 6 Web & Software + 6 AI & Automation + 6 Creative & Brand services).
+- Exports: `SERVICE_CONTENT: Record<string, ServiceContent>` (24 keyed entries, hyphenated slugs quoted) and `getServiceContent(slug: string): ServiceContent | undefined` helper.
+- All metaTitle values <=60 chars; all metaDescription values <=160 chars; all overviews within 150-280 chars; every entry has 6 benefits, a tailored 4-step process, and 4 FAQs — no duplicates across services.
+- Lint clean (exit 0). No other files modified. No tests written.

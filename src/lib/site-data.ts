@@ -69,9 +69,27 @@ export type NavView =
   | "cities"
   | "connect"
   | "contact"
+  | "service-detail"
   | "legal-privacy"
   | "legal-terms"
   | "legal-cookies";
+
+// ===== Service detail SEO content =====
+// Detailed, keyword-optimized content for each of the 24 services.
+// Populated in src/lib/service-content.ts (kept separate for size).
+export type ServiceContent = {
+  slug: string;
+  primaryKeyword: string;
+  secondaryKeywords: string[];
+  shortTermKeywords: string[];
+  longTermKeywords: string[];
+  metaTitle: string;
+  metaDescription: string;
+  overview: string;
+  benefits: { title: string; desc: string }[];
+  process: { num: string; title: string; desc: string }[];
+  faqs: { q: string; a: string }[];
+};
 
 type NavDropdownItem = {
   id: NavView;
@@ -1301,7 +1319,7 @@ export const CONTACT_METHODS = [
   { icon: Mail, label: "Email", value: "info@clicktaketech.com", href: "mailto:info@clicktaketech.com" },
   { icon: Phone, label: "United Kingdom", value: "+44 7391 653377", href: "tel:+447391653377" },
   { icon: Phone, label: "Pakistan", value: "+92 306 9753003", href: "tel:+923069753003" },
-  { icon: MessageCircle, label: "WhatsApp", value: "+44 7751 553879", href: "https://wa.link/iqz8eg" },
+  { icon: MessageCircle, label: "WhatsApp", value: "+44 7391 653377", href: "https://wa.me/447391653377" },
 ];
 
 export const NEXT_STEPS = [

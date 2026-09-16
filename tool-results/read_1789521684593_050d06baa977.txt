@@ -1,0 +1,1864 @@
+     1→import type { LucideIcon } from "lucide-react";
+     2→import {
+     3→  Code2,
+     4→  Bot,
+     5→  Cloud,
+     6→  Smartphone,
+     7→  ShieldCheck,
+     8→  TrendingUp,
+     9→  Rocket,
+    10→  Store,
+    11→  ShoppingCart,
+    12→  Wrench,
+    13→  Flag,
+    14→  Handshake,
+    15→  Cpu,
+    16→  Globe,
+    17→  Users,
+    18→  MapPin,
+    19→  Mail,
+    20→  Phone,
+    21→  MessageCircle,
+    22→  Megaphone,
+    23→  Target,
+    24→  PenTool,
+    25→  Search,
+    26→  Share2,
+    27→  BarChart3,
+    28→  Layers,
+    29→  Server,
+    30→  Lock,
+    31→  Database,
+    32→  Palette,
+    33→  Video,
+    34→  Monitor,
+    35→  Sparkles,
+    36→  Brain,
+    37→  Eye,
+    38→  Workflow,
+    39→  MessageSquare,
+    40→  Zap,
+    41→  BookOpen,
+    42→  Tag,
+    43→  Briefcase,
+    44→  Building2,
+    45→  Scale,
+    46→  FileText,
+    47→  Cookie,
+    48→  Heart,
+    49→  Linkedin,
+    50→  Facebook,
+    51→  Instagram,
+    52→  Twitter,
+    53→  Rss,
+    54→  CheckCircle2,
+    55→  XCircle,
+    56→} from "lucide-react";
+    57→
+    58→export type NavView =
+    59→  | "home"
+    60→  | "services"
+    61→  | "solutions"
+    62→  | "portfolio"
+    63→  | "case-studies"
+    64→  | "blog"
+    65→  | "pricing"
+    66→  | "about"
+    67→  | "team"
+    68→  | "careers"
+    69→  | "cities"
+    70→  | "connect"
+    71→  | "contact"
+    72→  | "service-detail"
+    73→  | "legal-privacy"
+    74→  | "legal-terms"
+    75→  | "legal-cookies";
+    76→
+    77→// ===== Service detail SEO content =====
+    78→// Detailed, keyword-optimized content for each of the 24 services.
+    79→// Populated in src/lib/service-content.ts (kept separate for size).
+    80→export type ServiceContent = {
+    81→  slug: string;
+    82→  primaryKeyword: string;
+    83→  secondaryKeywords: string[];
+    84→  shortTermKeywords: string[];
+    85→  longTermKeywords: string[];
+    86→  metaTitle: string;
+    87→  metaDescription: string;
+    88→  overview: string;
+    89→  benefits: { title: string; desc: string }[];
+    90→  process: { num: string; title: string; desc: string }[];
+    91→  faqs: { q: string; a: string }[];
+    92→};
+    93→
+    94→type NavDropdownItem = {
+    95→  id: NavView;
+    96→  label: string;
+    97→  desc: string;
+    98→  icon: LucideIcon;
+    99→};
+   100→
+   101→type NavItem =
+   102→  | { id: NavView; label: string; kind: "link" }
+   103→  | { id: "services"; label: string; kind: "mega" }
+   104→  | { id: "resources"; label: string; kind: "dropdown"; items: NavDropdownItem[] }
+   105→  | { id: "company"; label: string; kind: "dropdown"; items: NavDropdownItem[] };
+   106→
+   107→export const NAV_ITEMS: NavItem[] = [
+   108→  { id: "home", label: "Home", kind: "link" },
+   109→  { id: "services", label: "Services", kind: "mega" },
+   110→  { id: "solutions", label: "Solutions", kind: "link" },
+   111→  {
+   112→    id: "resources",
+   113→    label: "Resources",
+   114→    kind: "dropdown",
+   115→    items: [
+   116→      { id: "portfolio", label: "Portfolio", desc: "12 live client deployments", icon: Briefcase },
+   117→      { id: "case-studies", label: "Case Studies", desc: "Real metrics from real engagements", icon: BarChart3 },
+   118→      { id: "blog", label: "Blog", desc: "Field notes on SEO, web & AI", icon: BookOpen },
+   119→      { id: "pricing", label: "Pricing", desc: "Starter · Growth · Scale · Custom", icon: Tag },
+   120→    ],
+   121→  },
+   122→  {
+   123→    id: "company",
+   124→    label: "Company",
+   125→    kind: "dropdown",
+   126→    items: [
+   127→      { id: "about", label: "About ClickTake", desc: "AI-native agency since 2019", icon: Building2 },
+   128→      { id: "team", label: "Our Team", desc: "28 people across 4 offices", icon: Users },
+   129→      { id: "careers", label: "Careers", desc: "Open roles across all practices", icon: Briefcase },
+   130→      { id: "connect", label: "Connect", desc: "Direct contact & social", icon: Heart },
+   131→      { id: "cities", label: "Cities We Serve", desc: "13 cities · 4 countries", icon: MapPin },
+   132→      { id: "contact", label: "Contact", desc: "Free 30-min consult", icon: Mail },
+   133→    ],
+   134→  },
+   135→];
+   136→
+   137→export const STATS = [
+   138→  { value: "150+", label: "Teams served" },
+   139→  { value: "4", label: "Continents" },
+   140→  { value: "99.9%", label: "Uptime SLA" },
+   141→  { value: "10M+", label: "API requests / day" },
+   142→];
+   143→
+   144→export const IMPACT_STATS = [
+   145→  { value: "99.9%", label: "Uptime SLA across all production environments" },
+   146→  { value: "120+", label: "Enterprise apps shipped to production since 2019" },
+   147→  { value: "40%", label: "AI workflow efficiency — avg. lift across client base" },
+   148→  { value: "p99 120ms", label: "API response time served at scale" },
+   149→];
+   150→
+   151→export type Capability = {
+   152→  num: string;
+   153→  icon: LucideIcon;
+   154→  title: string;
+   155→  desc: string;
+   156→  tags: string[];
+   157→};
+   158→
+   159→export const CAPABILITIES: Capability[] = [
+   160→  {
+   161→    num: "01",
+   162→    icon: Megaphone,
+   163→    title: "Digital Marketing",
+   164→    desc: "PPC, content strategy, CRO, SEO, and social media. Data-led marketing that compounds qualified pipeline — measured against your analytics.",
+   165→    tags: ["PPC", "SEO", "CRO", "Social"],
+   166→  },
+   167→  {
+   168→    num: "02",
+   169→    icon: Code2,
+   170→    title: "Web & Software",
+   171→    desc: "Full-stack web development, SaaS engineering, auth, Python APIs, WordPress & ecommerce. Production-grade apps with CI/CD from day one.",
+   172→    tags: ["Next.js", "SaaS", "Python", "WordPress"],
+   173→  },
+   174→  {
+   175→    num: "03",
+   176→    icon: Bot,
+   177→    title: "AI & Automation",
+   178→    desc: "Custom LLMs, chatbots, prompt engineering, computer vision & NLP, AI automation, and agent development — from PoC to production in 6 weeks.",
+   179→    tags: ["LLM", "Agents", "RAG", "Automation"],
+   180→  },
+   181→  {
+   182→    num: "04",
+   183→    icon: Palette,
+   184→    title: "Creative & Brand",
+   185→    desc: "Graphic design, professional web design, B2B video production, and responsive web design for small businesses and enterprises alike.",
+   186→    tags: ["Branding", "Video", "UI/UX", "Responsive"],
+   187→  },
+   188→];
+   189→
+   190→// ===== SERVICES (4 categories × 6 services = 24) =====
+   191→export type ServiceItem = {
+   192→  slug: string;
+   193→  icon: LucideIcon;
+   194→  title: string;
+   195→  desc: string;
+   196→  features: string[];
+   197→};
+   198→
+   199→export type ServiceCategory = {
+   200→  id: string;
+   201→  label: string;
+   202→  icon: LucideIcon;
+   203→  tagline: string;
+   204→  blurb: string;
+   205→  services: ServiceItem[];
+   206→};
+   207→
+   208→export const SERVICE_CATEGORIES: ServiceCategory[] = [
+   209→  {
+   210→    id: "digital-marketing",
+   211→    label: "Digital Marketing",
+   212→    icon: Megaphone,
+   213→    tagline: "Data-led growth that compounds pipeline.",
+   214→    blurb:
+   215→      "Performance marketing engineered around measurable revenue — not vanity metrics. Every channel is tracked end-to-end from impression to closed-won.",
+   216→    services: [
+   217→      {
+   218→        slug: "ppc-paid-ads",
+   219→        icon: Target,
+   220→        title: "PPC / Paid Ads",
+   221→        desc: "Google, Meta, LinkedIn & TikTok ad campaigns engineered around profitable CPA, not clicks. Full-funnel tracking from impression to revenue.",
+   222→        features: ["Google Ads", "Meta & LinkedIn", "ROAS optimization", "Conversion tracking"],
+   223→      },
+   224→      {
+   225→        slug: "content-strategy-seo",
+   226→        icon: PenTool,
+   227→        title: "Content Strategy & SEO",
+   228→        desc: "Topical authority maps, content clusters, and editorial calendars that compound organic traffic month over month.",
+   229→        features: ["Topic clusters", "Editorial calendar", "On-page SEO", "Content ops"],
+   230→      },
+   231→      {
+   232→        slug: "conversion-rate-optimization",
+   233→        icon: BarChart3,
+   234→        title: "Conversion Rate Optimization",
+   235→        desc: "A/B testing, heatmaps, and funnel analysis that lift checkout conversion by 25–60% without extra ad spend.",
+   236→        features: ["A/B testing", "Funnel analysis", "Heatmaps", "Landing page CRO"],
+   237→      },
+   238→      {
+   239→        slug: "seo-services",
+   240→        icon: Search,
+   241→        title: "SEO Services",
+   242→        desc: "Technical, on-page, and off-page SEO. We move you into the top 3 of the local pack and keep you there.",
+   243→        features: ["Technical SEO", "Local SEO", "Link building", "Core Web Vitals"],
+   244→      },
+   245→      {
+   246→        slug: "social-media-marketing",
+   247→        icon: Share2,
+   248→        title: "Social Media Marketing",
+   249→        desc: "Organic and paid social strategy that turns followers into a community and views into sales.",
+   250→        features: ["Content calendars", "Community management", "Paid social", "Influencer ops"],
+   251→      },
+   252→      {
+   253→        slug: "seo-web-design-services",
+   254→        icon: Monitor,
+   255→        title: "SEO & Web Design Services",
+   256→        desc: "Sites built SEO-first from the ground up — fast, indexable, and structured for ranking from launch day.",
+   257→        features: ["SEO-first build", "Schema markup", "PageSpeed 90+", "Indexability audit"],
+   258→      },
+   259→    ],
+   260→  },
+   261→  {
+   262→    id: "web-software",
+   263→    label: "Web & Software",
+   264→    icon: Code2,
+   265→    tagline: "Production-grade apps, not prototypes.",
+   266→    blurb:
+   267→      "Full-stack engineering on Next.js, React, Python and Node — shipped with design systems, observability, CI/CD, and E2E test coverage from day one.",
+   268→    services: [
+   269→      {
+   270→        slug: "full-stack-web-development",
+   271→        icon: Layers,
+   272→        title: "Full-Stack Web Development",
+   273→        desc: "Next.js 16 + TypeScript + Prisma + Postgres. Design systems, Storybook, Playwright E2E, and CI/CD from day one.",
+   274→        features: ["Next.js 16", "TypeScript", "Prisma + Postgres", "Playwright E2E"],
+   275→      },
+   276→      {
+   277→        slug: "saas-platform-engineering",
+   278→        icon: Cloud,
+   279→        title: "SaaS Platform Engineering",
+   280→        desc: "Multi-tenant SaaS with billing (Stripe), RBAC, audit logs, and usage metering — architected to scale to 100K tenants.",
+   281→        features: ["Multi-tenancy", "Stripe billing", "RBAC", "Usage metering"],
+   282→      },
+   283→      {
+   284→        slug: "auth-identity",
+   285→        icon: Lock,
+   286→        title: "Auth & Identity",
+   287→        desc: "NextAuth, OAuth, SSO, SAML, and passkey-based authentication with zero-trust session handling.",
+   288→        features: ["NextAuth v4", "OAuth / SSO / SAML", "Passkeys", "Zero-trust sessions"],
+   289→      },
+   290→      {
+   291→        slug: "python-backend-apis",
+   292→        icon: Server,
+   293→        title: "Python Backend & APIs",
+   294→        desc: "FastAPI services, async workers, and typed REST/GraphQL APIs with OpenAPI docs and p99 120ms SLAs.",
+   295→        features: ["FastAPI", "Async workers", "GraphQL", "OpenAPI docs"],
+   296→      },
+   297→      {
+   298→        slug: "wordpress-web-design-services",
+   299→        icon: Monitor,
+   300→        title: "WordPress Web Design Services",
+   301→        desc: "Custom WordPress + WooCommerce builds with headless options, ACF blocks, and Lighthouse 90+ performance.",
+   302→        features: ["WordPress + Woo", "Headless WP", "ACF blocks", "Lighthouse 90+"],
+   303→      },
+   304→      {
+   305→        slug: "ecommerce-web-design-services",
+   306→        icon: ShoppingCart,
+   307→        title: "Ecommerce Web Design Services",
+   308→        desc: "Headless Shopify, Medusa, and custom commerce — sub-second LCP, +25–60% CVR, and infinite scale.",
+   309→        features: ["Headless Shopify", "Medusa", "Stripe checkout", "1.5s LCP"],
+   310→      },
+   311→    ],
+   312→  },
+   313→  {
+   314→    id: "ai-automation",
+   315→    label: "AI & Automation",
+   316→    icon: Bot,
+   317→    tagline: "From PoC to production in 6 weeks.",
+   318→    blurb:
+   319→      "Custom LLMs, autonomous agents, and AI automation with evals, guardrails, and human-in-loop fallbacks — built for real production workloads, not demos.",
+   320→    services: [
+   321→      {
+   322→        slug: "custom-llm-solutions",
+   323→        icon: Brain,
+   324→        title: "Custom LLM Solutions",
+   325→        desc: "Fine-tuned and RAG-grounded LLMs over your private data — with eval harnesses, guardrails, and cost controls.",
+   326→        features: ["RAG pipelines", "Fine-tuning", "Eval harness", "Guardrails"],
+   327→      },
+   328→      {
+   329→        slug: "ai-chatbots-assistants",
+   330→        icon: MessageSquare,
+   331→        title: "AI Chatbots & Assistants",
+   332→        desc: "Production chatbots with tool-use, memory, and human handoff — deployed on your site, WhatsApp, and Slack.",
+   333→        features: ["Tool-use", "Memory", "Human handoff", "Multi-channel"],
+   334→      },
+   335→      {
+   336→        slug: "prompt-engineering",
+   337→        icon: Sparkles,
+   338→        title: "Prompt Engineering",
+   339→        desc: "Systematic prompt design, evaluation, and version control for reliable LLM behaviour at scale.",
+   340→        features: ["Prompt versioning", "Eval suites", "Few-shot design", "Cost optimization"],
+   341→      },
+   342→      {
+   343→        slug: "computer-vision-nlp",
+   344→        icon: Eye,
+   345→        title: "Computer Vision & NLP",
+   346→        desc: "OCR, object detection, document intelligence, and classification models deployed to production endpoints.",
+   347→        features: ["OCR & document AI", "Object detection", "Classification", "Edge deployment"],
+   348→      },
+   349→      {
+   350→        slug: "ai-automation",
+   351→        icon: Workflow,
+   352→        title: "AI Automation",
+   353→        desc: "Workflows that eliminate 30+ hours/week of manual work — connecting your tools with intelligent agents.",
+   354→        features: ["Workflow orchestration", "Tool integrations", "Human-in-loop", "Monitoring"],
+   355→      },
+   356→      {
+   357→        slug: "ai-agent-development",
+   358→        icon: Bot,
+   359→        title: "AI Agent Development",
+   360→        desc: "Autonomous goal-pursuing agents with planning, memory, and multi-agent orchestration via LangGraph.",
+   361→        features: ["LangGraph", "Planning & memory", "Multi-agent", "Production evals"],
+   362→      },
+   363→    ],
+   364→  },
+   365→  {
+   366→    id: "creative-brand",
+   367→    label: "Creative & Brand",
+   368→    icon: Palette,
+   369→    tagline: "Premium craft, delivered on deadline.",
+   370→    blurb:
+   371→      "Brand identity, web design, and video production that make your product unforgettable — executed at an elite level across every touchpoint.",
+   372→    services: [
+   373→      {
+   374→        slug: "graphic-design",
+   375→        icon: PenTool,
+   376→        title: "Graphic Design",
+   377→        desc: "Logos, brand systems, marketing collateral, and social creatives that look premium and convert.",
+   378→        features: ["Brand identity", "Logo systems", "Marketing collateral", "Social creatives"],
+   379→      },
+   380→      {
+   381→        slug: "professional-web-design-services",
+   382→        icon: Monitor,
+   383→        title: "Professional Web Design Services",
+   384→        desc: "Conversion-focused web design with UX research, wireframes, and pixel-perfect Figma handoff.",
+   385→        features: ["UX research", "Wireframes", "Figma design systems", "Hi-fi prototypes"],
+   386→      },
+   387→      {
+   388→        slug: "b2b-video-production",
+   389→        icon: Video,
+   390→        title: "B2B Video Production",
+   391→        desc: "Explainer videos, product demos, and ad creatives — scripted, shot, and edited end-to-end.",
+   392→        features: ["Explainer videos", "Product demos", "Ad creatives", "Motion graphics"],
+   393→      },
+   394→      {
+   395→        slug: "web-design-services",
+   396→        icon: Layers,
+   397→        title: "Web Design Services",
+   398→        desc: "End-to-end web design from concept to launch — design systems, UI kits, and developer handoff.",
+   399→        features: ["Design systems", "UI kits", "Dev handoff", "Design QA"],
+   400→      },
+   401→      {
+   402→        slug: "small-business-web-design-services",
+   403→        icon: Store,
+   404→        title: "Small Business Web Design Services",
+   405→        desc: "Affordable, fast-launch websites for small businesses — local-SEO-ready and conversion-optimized.",
+   406→        features: ["Fast launch", "Local-SEO ready", "Mobile-first", "Easy CMS"],
+   407→      },
+   408→      {
+   409→        slug: "responsive-web-design-services",
+   410→        icon: Smartphone,
+   411→        title: "Responsive Web Design Services",
+   412→        desc: "Flawless experiences across every device — mobile, tablet, desktop, and ultra-wide — with no layout shifts.",
+   413→        features: ["Mobile-first", "Fluid layouts", "No CLS", "WCAG 2.2 AA"],
+   414→      },
+   415→    ],
+   416→  },
+   417→];
+   418→
+   419→export const PROCESS_STEPS = [
+   420→  {
+   421→    num: "01",
+   422→    title: "Discover",
+   423→    desc: "30-min architecture review. We map your roadmap, identify highest-ROI automation, and scope a fixed-price PoC.",
+   424→    duration: "Week 0",
+   425→    deliverable: "Roadmap + PoC scope",
+   426→  },
+   427→  {
+   428→    num: "02",
+   429→    title: "Architect",
+   430→    desc: "Senior engineers (not juniors) design the system — schema, API contracts, infra topology, and observability stack.",
+   431→    duration: "Week 1",
+   432→    deliverable: "Architecture blueprint",
+   433→  },
+   434→  {
+   435→    num: "03",
+   436→    title: "Build",
+   437→    desc: "Sprint-based delivery with weekly demos. CI/CD from day one. E2E Playwright suite + design system in Storybook.",
+   438→    duration: "Weeks 2–5",
+   439→    deliverable: "Working software, weekly",
+   440→  },
+   441→  {
+   442→    num: "04",
+   443→    title: "Deploy",
+   444→    desc: "Production launch with runbooks, on-call rotation, and 30-day post-launch hypercare. Then we hand over the keys.",
+   445→    duration: "Week 6",
+   446→    deliverable: "Live + 30-day hypercare",
+   447→  },
+   448→];
+   449→
+   450→export type Testimonial = {
+   451→  name: string;
+   452→  role: string;
+   453→  quote: string;
+   454→  location: string;
+   455→  initials: string;
+   456→};
+   457→
+   458→export const TESTIMONIALS: Testimonial[] = [
+   459→  {
+   460→    name: "Sarah Mitchell",
+   461→    role: "Founder, Lumen Commerce",
+   462→    quote:
+   463→      "ClickTake rebuilt our entire stack and tripled our online revenue in just four months. They genuinely felt like an extension of our internal team.",
+   464→    location: "E-commerce · London, UK",
+   465→    initials: "SM",
+   466→  },
+   467→  {
+   468→    name: "James O'Connor",
+   469→    role: "CTO, Northwind",
+   470→    quote:
+   471→      "The AI automations they engineered save us over 30 hours every week. Exceptional execution, clean systems and incredible design taste.",
+   472→    location: "SaaS Platform · Manchester, UK",
+   473→    initials: "JO",
+   474→  },
+   475→  {
+   476→    name: "Aisha Khan",
+   477→    role: "Marketing Director, Verve Studio",
+   478→    quote:
+   479→      "The best digital partner we've worked with. Strategy, branding, development and growth — all executed at an elite level.",
+   480→    location: "SaaS Platform · Birmingham, UK",
+   481→    initials: "AK",
+   482→  },
+   483→  {
+   484→    name: "Aisha Al-Mansoori",
+   485→    role: "COO, Hospitality Group",
+   486→    quote:
+   487→      "From brand identity to a fully custom booking platform, ClickTake handled everything end-to-end. Premium craft, delivered on deadline.",
+   488→    location: "Operations · Dubai, UAE",
+   489→    initials: "AA",
+   490→  },
+   491→];
+   492→
+   493→export const TECH_STACK = [
+   494→  "Python",
+   495→  "OpenAI",
+   496→  "Docker",
+   497→  "PostgreSQL",
+   498→  "AWS",
+   499→  "Vercel",
+   500→  "Terraform",
+   501→  "Next.js 16",
+   502→  "LangGraph",
+   503→  "Anthropic",
+   504→  "Kubernetes",
+   505→  "Redis",
+   506→];
+   507→
+   508→// ===== SOLUTIONS =====
+   509→export type Solution = {
+   510→  icon: LucideIcon;
+   511→  audience: string;
+   512→  title: string;
+   513→  desc: string;
+   514→  metrics: { label: string; value: string }[];
+   515→};
+   516→
+   517→export const SOLUTIONS: Solution[] = [
+   518→  {
+   519→    icon: Rocket,
+   520→    audience: "Founders launching a new product or brand",
+   521→    title: "For Startups",
+   522→    desc: "Launch online end-to-end in 90 days — not 9 months. Full brand system, production app, and an AI assistant baked in.",
+   523→    metrics: [
+   524→      { label: "Time to live", value: "≈ 90 days" },
+   525→      { label: "Brand assets", value: "Full system" },
+   526→      { label: "AI assistant", value: "Production" },
+   527→    ],
+   528→  },
+   529→  {
+   530→    icon: Store,
+   531→    audience: "Brick-and-mortar service-area businesses",
+   532→    title: "For Local Businesses",
+   533→    desc: "Win your local pack and turn searches into walk-ins. Local SEO, reviews automation, and a conversion-optimized site.",
+   534→    metrics: [
+   535→      { label: "Local pack", value: "Top 3" },
+   536→      { label: "PageSpeed", value: "90+" },
+   537→      { label: "Reviews / mo", value: "+15–30" },
+   538→    ],
+   539→  },
+   540→  {
+   541→    icon: ShoppingCart,
+   542→    audience: "DTC, multi-channel and marketplace sellers",
+   543→    title: "For E-commerce Brands",
+   544→    desc: "Headless commerce that loads fast, converts better and scales infinitely. Sub-second LCP and AI-assisted merchandising.",
+   545→    metrics: [
+   546→      { label: "LCP", value: "1.5s" },
+   547→      { label: "Conversion", value: "+25–60%" },
+   548→      { label: "AOV", value: "+15%" },
+   549→    ],
+   550→  },
+   551→  {
+   552→    icon: Wrench,
+   553→    audience: "Phone, laptop, auto & appliance repair shops",
+   554→    title: "For Repair Shops",
+   555→    desc: "Repair-shop management software built for the way you actually work — serialized inventory, tickets, and status lookups.",
+   556→    metrics: [
+   557→      { label: "Ticket time", value: "-40%" },
+   558→      { label: "Customer calls", value: "-70%" },
+   559→      { label: "Parts waste", value: "-25%" },
+   560→    ],
+   561→  },
+   562→  {
+   563→    icon: Flag,
+   564→    audience: "UK-registered SMEs and limited companies",
+   565→    title: "For UK Businesses",
+   566→    desc: "A UK-registered partner that understands GDPR, HMRC and local intent. UK Ltd Co, compliant invoicing, and EMEA coverage.",
+   567→    metrics: [
+   568→      { label: "Entity", value: "UK Ltd Co" },
+   569→      { label: "GDPR", value: "Compliant" },
+   570→      { label: "Invoices", value: "UK VAT" },
+   571→    ],
+   572→  },
+   573→  {
+   574→    icon: Handshake,
+   575→    audience: "Marketing, design & dev agencies needing white-label",
+   576→    title: "For Agencies",
+   577→    desc: "White-label engineering, AI and growth — under your brand. Senior teams that plug into your delivery pipeline.",
+   578→    metrics: [
+   579→      { label: "Capacity", value: "+5 engineers" },
+   580→      { label: "Margin", value: "+40–60%" },
+   581→      { label: "Quality", value: "Senior" },
+   582→    ],
+   583→  },
+   584→];
+   585→
+   586→// ===== CASE STUDIES =====
+   587→export type CaseStudy = {
+   588→  emoji: string;
+   589→  sector: string;
+   590→  type: string;
+   591→  period: string;
+   592→  duration: string;
+   593→  title: string;
+   594→  summary: string;
+   595→  stack: string[];
+   596→  metrics: { label: string; before: string; after: string; delta: string; positive: boolean }[];
+   597→};
+   598→
+   599→export const CASE_STUDIES: CaseStudy[] = [
+   600→  {
+   601→    emoji: "🏦",
+   602→    sector: "FinTech · B2B",
+   603→    type: "2024 · 14 weeks",
+   604→    period: "2024",
+   605→    duration: "14 weeks",
+   606→    title: "Real-time Payments API — p99 latency cut 72%",
+   607→    summary:
+   608→      "A Series-C fintech processing $4.2B/yr in B2B payments needed to bring p99 API latency under 200ms to qualify for tier-1 bank partnerships. We rebuilt the request hot-path, replaced synchronous compliance calls with an event-driven sidecar, and migrated to a multi-region active-active Postgres+Redis topology.",
+   609→    stack: ["Next.js 16", "Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "AWS", "Terraform"],
+   610→    metrics: [
+   611→      { label: "P99 Latency", before: "720ms", after: "200ms", delta: "-72%", positive: true },
+   612→      { label: "Throughput", before: "8K rps", after: "22K rps", delta: "+175%", positive: true },
+   613→      { label: "Infra Cost / Mo", before: "$48K", after: "$31K", delta: "-35%", positive: true },
+   614→    ],
+   615→  },
+   616→  {
+   617→    emoji: "🛒",
+   618→    sector: "E-commerce · D2C",
+   619→    type: "2024 · 10 weeks",
+   620→    period: "2024",
+   621→    duration: "10 weeks",
+   622→    title: "AI Shopping Assistant — +38% checkout conversion",
+   623→    summary:
+   624→      "A 9-figure D2C skincare brand deployed a RAG-grounded shopping assistant across PDP pages and cart. We built the retrieval pipeline over 14K SKUs + 280K reviews, integrated a multi-agent orchestrator for product-match + ingredient-safety checks, and A/B-tested against the static chatbot for 8 weeks.",
+   625→    stack: ["Next.js 16", "Python", "OpenAI", "LangGraph", "Pinecone", "PostgreSQL", "Vercel"],
+   626→    metrics: [
+   627→      { label: "Checkout CVR", before: "2.6%", after: "3.6%", delta: "+38%", positive: true },
+   628→      { label: "Avg. Order Value", before: "$42", after: "$54", delta: "+29%", positive: true },
+   629→      { label: "Returns Rate", before: "12.4%", after: "8.1%", delta: "-35%", positive: true },
+   630→    ],
+   631→  },
+   632→  {
+   633→    emoji: "🏥",
+   634→    sector: "Healthcare · HIPAA",
+   635→    type: "2023 · 22 weeks",
+   636→    period: "2023",
+   637→    duration: "22 weeks",
+   638→    title: "Clinical Notes RAG — $1.4M annual cloud savings",
+   639→    summary:
+   640→      "A regional hospital network (1,200 beds, 14 facilities) needed to make 18M anonymized clinical notes searchable for clinical research. We built a hybrid retrieval pipeline with Weaviate + BGE reranking, cutting query latency 6× and eliminating a $1.4M/yr legacy search contract.",
+   641→    stack: ["Python", "FastAPI", "Weaviate", "OpenAI", "BGE-Reranker", "PostgreSQL", "Docker", "GCP"],
+   642→    metrics: [
+   643→      { label: "Query Latency", before: "4.2s", after: "0.7s", delta: "-83%", positive: true },
+   644→      { label: "Annual Cost", before: "$1.7M", after: "$0.3M", delta: "-$1.4M", positive: true },
+   645→      { label: "Recall@10", before: "61%", after: "94%", delta: "+33pts", positive: true },
+   646→    ],
+   647→  },
+   648→  {
+   649→    emoji: "🚚",
+   650→    sector: "Logistics · Fleet",
+   651→    type: "2024 · 12 weeks",
+   652→    period: "2024",
+   653→    duration: "12 weeks",
+   654→    title: "Fleet Orchestration Agents — 31% fewer empty miles",
+   655→    summary:
+   656→      "A mid-market logistics operator deployed multi-agent orchestration across dispatch, routing, and load-matching. Agents negotiate loads, rebalance empty repositioning, and surface exceptions to humans only when SLAs risk breach.",
+   657→    stack: ["Python", "LangGraph", "OpenAI", "PostgreSQL", "Redis", "Kubernetes", "GCP"],
+   658→    metrics: [
+   659→      { label: "Empty Miles", before: "22%", after: "15%", delta: "-31%", positive: true },
+   660→      { label: "Dispatch Time", before: "14m", after: "3m", delta: "-79%", positive: true },
+   661→      { label: "On-time %", before: "88%", after: "96%", delta: "+8pts", positive: true },
+   662→    ],
+   663→  },
+   664→];
+   665→
+   666→// ===== PORTFOLIO =====
+   667→export type PortfolioItem = {
+   668→  name: string;
+   669→  since: string;
+   670→  category: string;
+   671→  desc: string;
+   672→  stack: string[];
+   673→  location: string;
+   674→};
+   675→
+   676→export const PORTFOLIO: PortfolioItem[] = [
+   677→  {
+   678→    name: "DibNow",
+   679→    since: "2024",
+   680→    category: "SaaS Platform",
+   681→    desc: "Cloud-based gadget repair management software with POS, serialized inventory, multi-branch support, and AI-powered customer service.",
+   682→    stack: ["React", "Node.js", "Render", "Stripe"],
+   683→    location: "Global",
+   684→  },
+   685→  {
+   686→    name: "Panel — Employee Management",
+   687→    since: "2025",
+   688→    category: "SaaS Platform",
+   689→    desc: "Modern employee management system with attendance tracking, project management, and team analytics.",
+   690→    stack: ["Next.js", "React", "Firebase"],
+   691→    location: "Global",
+   692→  },
+   693→  {
+   694→    name: "LogiTrack",
+   695→    since: "2025",
+   696→    category: "SaaS Platform",
+   697→    desc: "Logistics and shipment tracking platform with real-time dashboards and carrier integrations.",
+   698→    stack: ["React", "Node.js", "Render"],
+   699→    location: "Global",
+   700→  },
+   701→  {
+   702→    name: "ClickOpticX",
+   703→    since: "2025",
+   704→    category: "SaaS Platform",
+   705→    desc: "Optical retail management platform with prescription tracking, inventory, and customer journey tools.",
+   706→    stack: ["React", "Node.js", "Render"],
+   707→    location: "Global",
+   708→  },
+   709→  {
+   710→    name: "Mearns Gadget Repair",
+   711→    since: "2024",
+   712→    category: "Gadget Repair",
+   713→    desc: "Fast mobile, MacBook, and tablet repair booking site with live WooCommerce checkout and Stripe payments.",
+   714→    stack: ["WordPress", "WooCommerce", "Stripe"],
+   715→    location: "Glasgow, UK",
+   716→  },
+   717→  {
+   718→    name: "Gadget Doctor LS",
+   719→    since: "2024",
+   720→    category: "Gadget Repair",
+   721→    desc: "Same-day device repair shop site with WooCommerce catalog, branch info, and integrated repair-status lookups.",
+   722→    stack: ["WordPress", "WooCommerce", "Stripe"],
+   723→    location: "Leeds, UK",
+   724→  },
+   725→  {
+   726→    name: "PhoneFix Glasgow",
+   727→    since: "2023",
+   728→    category: "Gadget Repair",
+   729→    desc: "Multi-branch repair commerce site with booking, branch routing, and serialized ticket tracking.",
+   730→    stack: ["WordPress", "WooCommerce"],
+   731→    location: "Glasgow, UK",
+   732→  },
+   733→  {
+   734→    name: "Academy Portal",
+   735→    since: "2024",
+   736→    category: "Education",
+   737→    desc: "Learning platform with course catalog, progress tracking, and instructor-led cohorts.",
+   738→    stack: ["Next.js", "Prisma", "PostgreSQL"],
+   739→    location: "Global",
+   740→  },
+   741→  {
+   742→    name: "EduTrack LMS",
+   743→    since: "2023",
+   744→    category: "Education",
+   745→    desc: "Academy management system with enrollments, assessments, and parent portals.",
+   746→    stack: ["React", "Node.js"],
+   747→    location: "Global",
+   748→  },
+   749→  {
+   750→    name: "LearnHub",
+   751→    since: "2025",
+   752→    category: "Education",
+   753→    desc: "Modern learning experience platform with AI-tutor assist and adaptive pathways.",
+   754→    stack: ["Next.js", "OpenAI", "Vercel"],
+   755→    location: "Global",
+   756→  },
+   757→  {
+   758→    name: "RetailFlow POS",
+   759→    since: "2024",
+   760→    category: "SaaS Platform",
+   761→    desc: "Multi-location retail POS with inventory sync, staff management, and reporting dashboards.",
+   762→    stack: ["React", "Node.js", "Render"],
+   763→    location: "Global",
+   764→  },
+   765→  {
+   766→    name: "BookingPro",
+   767→    since: "2025",
+   768→    category: "SaaS Platform",
+   769→    desc: "Appointment booking and scheduling platform with calendar sync and reminders.",
+   770→    stack: ["Next.js", "Prisma", "Stripe"],
+   771→    location: "Global",
+   772→  },
+   773→];
+   774→
+   775→// ===== ABOUT =====
+   776→export const ABOUT_STATS = [
+   777→  { value: "2019", label: "Founded" },
+   778→  { value: "120+", label: "Projects shipped" },
+   779→  { value: "80+", label: "Clients in 14 countries" },
+   780→  { value: "5.0", label: "Avg client rating" },
+   781→];
+   782→
+   783→export const HISTORY_TIMELINE = [
+   784→  {
+   785→    period: "2019–2021",
+   786→    title: "Founding and the Birmingham HQ",
+   787→    desc: "ClickTake is founded in Birmingham as a full-stack web shop serving UK SMEs. First 30 projects ship on Next.js + Postgres.",
+   788→  },
+   789→  {
+   790→    period: "2022–2023",
+   791→    title: "US entry and the AI pivot",
+   792→    desc: "Austin business desk opens. The team pivots into AI-native engineering — LangGraph agents, RAG pipelines, and the first multi-agent production deployments go live.",
+   793→  },
+   794→  {
+   795→    period: "2024–2026",
+   796→    title: "Dubai, the deep-dive rebuild, and today",
+   797→    desc: "Dubai MENA office opens. The platform is rebuilt around six practices sharing one delivery engine. 120+ production deployments shipped across four continents.",
+   798→  },
+   799→];
+   800→
+   801→export const COMPANY_VALUES = [
+   802→  {
+   803→    icon: Cpu,
+   804→    title: "Engineering-first",
+   805→    desc: "Senior engineers (8+ yrs avg) own engagements end-to-end. No juniors learning on your budget.",
+   806→  },
+   807→  {
+   808→    icon: Globe,
+   809→    title: "Multi-region delivery",
+   810→    desc: "Four offices across UK, Pakistan, US and UAE give us 18-hour workday coverage on every engagement.",
+   811→  },
+   812→  {
+   813→    icon: Users,
+   814→    title: "Embedded, not outsourced",
+   815→    desc: "We feel like an extension of your internal team — shared Slack, shared sprints, shared metrics.",
+   816→  },
+   817→];
+   818→
+   819→export const ENGAGEMENT_PHASES = [
+   820→  {
+   821→    num: "01",
+   822→    title: "Discovery & Scope Lock",
+   823→    desc: "Roadmap mapping, ROI prioritization, fixed-price PoC scoping, and a written exit criterion per workstream.",
+   824→  },
+   825→  {
+   826→    num: "02",
+   827→    title: "Architecture & Design",
+   828→    desc: "Schema, API contracts, infra topology, observability stack — signed off before build begins.",
+   829→  },
+   830→  {
+   831→    num: "03",
+   832→    title: "Build Sprints",
+   833→    desc: "Two-week sprints, weekly demos, CI/CD from day one, design system in Storybook, E2E Playwright.",
+   834→  },
+   835→  {
+   836→    num: "04",
+   837→    title: "Launch & Handoff",
+   838→    desc: "Production launch with runbooks and on-call rotation. Then we hand over the keys — no lock-in.",
+   839→  },
+   840→  {
+   841→    num: "05",
+   842→    title: "Operate & Iterate",
+   843→    desc: "Optional hypercare + ongoing iteration. We measure against your analytics, not vanity metrics.",
+   844→  },
+   845→];
+   846→
+   847→export const COMPARE_ROWS = [
+   848→  { feature: "Senior engineers (8+ yrs)", clicktake: true, boutique: true, offshore: false, inhouse: "varies" },
+   849→  { feature: "18-hour workday coverage", clicktake: true, boutique: false, offshore: false, inhouse: false },
+   850→  { feature: "Fixed-price PoC in 6 weeks", clicktake: true, boutique: "sometimes", offshore: false, inhouse: false },
+   851→  { feature: "AI-native (agents, RAG, evals)", clicktake: true, boutique: false, offshore: "rare", inhouse: false },
+   852→  { feature: "Code + keys handed over", clicktake: true, boutique: "varies", offshore: false, inhouse: true },
+   853→  { feature: "UK Ltd Co + GDPR invoicing", clicktake: true, boutique: true, offshore: false, inhouse: "n/a" },
+   854→];
+   855→
+   856→export const FAQS = [
+   857→  {
+   858→    q: "What does ClickTake actually do?",
+   859→    a: "We are a full-stack, AI-native software engineering firm organized across four practice areas: Digital Marketing, Web & Software, AI & Automation, and Creative & Brand. We ship 24 specialized services under one delivery engine.",
+   860→  },
+   861→  {
+   862→    q: "How fast can you ship a working PoC?",
+   863→    a: "Most engagements begin with a fixed-scope, fixed-fee PoC delivered within 6 weeks. The discovery call scopes it and gives you a written exit criterion before any code is written.",
+   864→  },
+   865→  {
+   866→    q: "Do you work with our existing team?",
+   867→    a: "Yes. We embed into your Slack, sprints, and code reviews. Many engagements are hybrid — we own specific workstreams while your team owns others. The architecture is always handed over, never locked in.",
+   868→  },
+   869→  {
+   870→    q: "Where are you based?",
+   871→    a: "Four offices: Birmingham (UK HQ), Multan (engineering hub), Austin (US business desk), and Dubai (MENA office). We serve 12+ cities across the UK, Pakistan, USA and UAE.",
+   872→  },
+   873→  {
+   874→    q: "How is pricing structured?",
+   875→    a: "Discovery is free (30-min call). PoCs are fixed-price and fixed-scope (typically 6 weeks). Ongoing engagements are sprint-based with weekly demos. No long-term contracts are required to start.",
+   876→  },
+   877→  {
+   878→    q: "Do you sign NDAs and comply with GDPR / SOC 2?",
+   879→    a: "Yes. We are a UK-registered Ltd Co, GDPR-compliant, and have taken 20+ clients through SOC 2 Type II audit prep. NDAs are signed before any discovery call.",
+   880→  },
+   881→];
+   882→
+   883→// ===== CAREERS =====
+   884→export type Job = {
+   885→  slug: string;
+   886→  title: string;
+   887→  location: string;
+   888→  type: string;
+   889→  department: string;
+   890→  desc: string;
+   891→};
+   892→
+   893→export const JOBS: Job[] = [
+   894→  {
+   895→    slug: "senior-nextjs-engineer",
+   896→    title: "Senior Next.js Engineer",
+   897→    location: "Remote · UK / Pakistan",
+   898→    type: "Full-time",
+   899→    department: "Web & Software",
+   900→    desc: "Lead production Next.js 16 builds for enterprise clients. Own architecture, CI/CD, and mentor mid-level engineers.",
+   901→  },
+   902→  {
+   903→    slug: "ai-ml-engineer",
+   904→    title: "AI / ML Engineer",
+   905→    location: "Remote · UK / Pakistan",
+   906→    type: "Full-time",
+   907→    department: "AI & Automation",
+   908→    desc: "Design and ship multi-agent systems, RAG pipelines, and custom LLM solutions with evals and guardrails.",
+   909→  },
+   910→  {
+   911→    slug: "seo-specialist",
+   912→    title: "SEO Specialist",
+   913→    location: "Birmingham, UK · Hybrid",
+   914→    type: "Full-time",
+   915→    department: "Digital Marketing",
+   916→    desc: "Drive technical, on-page, and local SEO for clients across 4 continents. Own rankings, Core Web Vitals, and reporting.",
+   917→  },
+   918→  {
+   919→    slug: "graphic-designer",
+   920→    title: "Graphic Designer",
+   921→    location: "Dubai, UAE · Hybrid",
+   922→    type: "Full-time",
+   923→    department: "Creative & Brand",
+   924→    desc: "Craft brand identities, marketing creatives, and web design systems for clients across the UK, US and MENA.",
+   925→  },
+   926→  {
+   927→    slug: "frontend-engineer-intern",
+   928→    title: "Frontend Engineer Intern",
+   929→    location: "Multan, Pakistan · On-site",
+   930→    type: "Internship",
+   931→    department: "Web & Software",
+   932→    desc: "Learn production Next.js, React, and TypeScript alongside senior engineers. Paid, 3-month rotational program.",
+   933→  },
+   934→];
+   935→
+   936→export const CAREERS_PERKS = [
+   937→  { icon: Globe, title: "Remote-first", desc: "Work from any of our 4 office cities or fully remote." },
+   938→  { icon: Cpu, title: "Senior mentorship", desc: "8+ yr engineers review every PR you ship." },
+   939→  { icon: Zap, title: "Real production work", desc: "Ship to 10M+ req/day systems from week one." },
+   940→  { icon: Users, title: "Global team", desc: "Collaborate across UK, Pakistan, US & UAE time zones." },
+   941→];
+   942→
+   943→// ===== CITIES =====
+   944→export type City = {
+   945→  slug: string;
+   946→  name: string;
+   947→  country: string;
+   948→  flag: string;
+   949→  desc: string;
+   950→};
+   951→
+   952→export const CITIES: City[] = [
+   953→  { slug: "birmingham", name: "Birmingham", country: "United Kingdom", flag: "🇬🇧", desc: "Our UK HQ — serving local businesses, repair shops, and SaaS startups across the Midlands." },
+   954→  { slug: "london", name: "London", country: "United Kingdom", flag: "🇬🇧", desc: "Enterprise fintech, ecommerce, and AI engagements for the capital's scale-ups." },
+   955→  { slug: "manchester", name: "Manchester", country: "United Kingdom", flag: "🇬🇧", desc: "SaaS platforms and digital marketing for the North's tech corridor." },
+   956→  { slug: "leeds", name: "Leeds", country: "United Kingdom", flag: "🇬🇧", desc: "Local SEO, web design, and repair-shop commerce across West Yorkshire." },
+   957→  { slug: "austin", name: "Austin, TX", country: "United States", flag: "🇺🇸", desc: "Our US business desk — SaaS growth channels and AI automation for US startups." },
+   958→  { slug: "new-york", name: "New York", country: "United States", flag: "🇺🇸", desc: "Fintech, media, and enterprise AI engagements on the East Coast." },
+   959→  { slug: "san-francisco", name: "San Francisco", country: "United States", flag: "🇺🇸", desc: "Series-A to Series-C SaaS and AI-native product engineering." },
+   960→  { slug: "dubai", name: "Dubai", country: "United Arab Emirates", flag: "🇦🇪", desc: "Our MENA office — market entry, branding, and AI for the GCC region." },
+   961→  { slug: "abu-dhabi", name: "Abu Dhabi", country: "United Arab Emirates", flag: "🇦🇪", desc: "Government, healthcare, and enterprise web platforms." },
+   962→  { slug: "multan", name: "Multan", country: "Pakistan", flag: "🇵🇰", desc: "Our engineering hub — 18-hour workday delivery coverage." },
+   963→  { slug: "lahore", name: "Lahore", country: "Pakistan", flag: "🇵🇰", desc: "Full-stack engineering and AI talent pool." },
+   964→  { slug: "karachi", name: "Karachi", country: "Pakistan", flag: "🇵🇰", desc: "Digital marketing, SEO, and creative production." },
+   965→  { slug: "islamabad", name: "Islamabad", country: "Pakistan", flag: "🇵🇰", desc: "SaaS engineering and cloud DevOps talent." },
+   966→];
+   967→
+   968→// ===== RESOURCES =====
+   969→export type Resource = {
+   970→  slug: string;
+   971→  title: string;
+   972→  category: string;
+   973→  desc: string;
+   974→  readTime: string;
+   975→};
+   976→
+   977→export const RESOURCES: Resource[] = [
+   978→  { slug: "birmingham-seo-guide", title: "Birmingham SEO Guide", category: "SEO", desc: "Rank in the local pack across the Midlands with this step-by-step technical and local SEO playbook.", readTime: "12 min" },
+   979→  { slug: "ai-adoption-playbook-2026", title: "AI Adoption Playbook 2026", category: "AI", desc: "How to identify, scope, and ship the highest-ROI AI automation for your business in 6 weeks.", readTime: "18 min" },
+   980→  { slug: "dubai-market-entry", title: "Dubai Market Entry", category: "Strategy", desc: "Launching a digital presence in the GCC — legal, cultural, and technical considerations.", readTime: "15 min" },
+   981→  { slug: "austin-saas-growth-channels", title: "Austin SaaS Growth Channels", category: "Growth", desc: "The paid, organic, and partnership channels driving SaaS pipeline in the US tech corridor.", readTime: "10 min" },
+   982→  { slug: "headless-shopify-vs-medusa", title: "Headless Shopify vs Medusa", category: "Ecommerce", desc: "A technical comparison of the two leading headless commerce stacks — when to pick each.", readTime: "14 min" },
+   983→  { slug: "pakistan-tech-talent-guide", title: "Pakistan Tech Talent Guide", category: "Hiring", desc: "How to hire and manage senior engineering talent across Pakistan's tech hubs.", readTime: "11 min" },
+   984→  { slug: "next-js-pagespeed-optimisation", title: "Next.js PageSpeed Optimisation", category: "Web", desc: "Hit 90+ Lighthouse scores with these Next.js 16 performance patterns.", readTime: "13 min" },
+   985→  { slug: "seo-audit-checklist-2026", title: "SEO Audit Checklist — 25 Steps to Rank Higher in 2026", category: "SEO", desc: "The exact 25-step technical SEO audit we run on every new engagement.", readTime: "20 min" },
+   986→];
+   987→
+   988→export const RESOURCE_CATEGORIES = [
+   989→  "All",
+   990→  "SEO",
+   991→  "AI",
+   992→  "Growth",
+   993→  "Ecommerce",
+   994→  "Web",
+   995→  "Strategy",
+   996→  "Hiring",
+   997→];
+   998→
+   999→// ===== OFFICES & CONTACT =====
+  1000→export const BRAND_TAGLINE = "Connecting in a better way";
+  1001→
+  1002→export const OFFICES = [
+  1003→  { city: "Birmingham", country: "United Kingdom", flag: "🇬🇧", role: "UK HQ" },
+  1004→  { city: "Multan", country: "Pakistan", flag: "🇵🇰", role: "Engineering hub" },
+  1005→  { city: "Austin, TX", country: "United States", flag: "🇺🇸", role: "US business desk" },
+  1006→  { city: "Dubai", country: "United Arab Emirates", flag: "🇦🇪", role: "MENA office" },
+  1007→];
+  1008→
+  1009→// ===== LOCAL SEO (city-wise optimization for local ranking) =====
+  1010→// Each city carries local-intent keywords and a human-toned SEO paragraph
+  1011→// that helps the page rank for "{service} in {city}" and "{service} near me"
+  1012→// queries in that region.
+  1013→export type CitySeo = {
+  1014→  slug: string;
+  1015→  name: string;
+  1016→  region: string;
+  1017→  keywords: string[];
+  1018→  // Human-toned local paragraph — uses city name + service intent naturally.
+  1019→  localIntro: string;
+  1020→};
+  1021→
+  1022→export const CITY_SEO: Record<string, CitySeo> = {
+  1023→  birmingham: {
+  1024→    slug: "birmingham",
+  1025→    name: "Birmingham",
+  1026→    region: "West Midlands, UK",
+  1027→    keywords: [
+  1028→      "web design Birmingham",
+  1029→      "SEO agency Birmingham",
+  1030→      "AI automation Birmingham",
+  1031→      "software development Birmingham UK",
+  1032→      "digital marketing agency Birmingham",
+  1033→    ],
+  1034→    localIntro:
+  1035→      "Looking for a web design or SEO agency in Birmingham? ClickTake Technologies is headquartered in the West Midlands and has shipped 120+ production websites, SaaS platforms and AI automations for Birmingham businesses — from local service-area companies in Solihull and Sutton Coldfield to fintech startups in the city centre. We combine UK business-hours coverage with an extended Pakistan delivery window, so your Birmingham project moves 18 hours a day.",
+  1036→  },
+  1037→  london: {
+  1038→    slug: "london",
+  1039→    name: "London",
+  1040→    region: "Greater London, UK",
+  1041→    keywords: [
+  1042→      "web development London",
+  1043→      "SEO services London",
+  1044→      "AI agency London",
+  1045→      "SaaS development London",
+  1046→      "digital agency London",
+  1047→    ],
+  1048→    localIntro:
+  1049→      "Need a digital agency in London that actually ships? ClickTake serves London fintech, ecommerce and SaaS scale-ups with production-grade Next.js builds, multi-agent AI systems and paid-media management — all from a UK-registered Ltd Co that understands the London market, GDPR and the speed your investors expect.",
+  1050→  },
+  1051→  manchester: {
+  1052→    slug: "manchester",
+  1053→    name: "Manchester",
+  1054→    region: "Greater Manchester, UK",
+  1055→    keywords: [
+  1056→      "web design Manchester",
+  1057→      "SEO Manchester",
+  1058→      "SaaS agency Manchester",
+  1059→      "digital marketing Manchester",
+  1060→    ],
+  1061→    localIntro:
+  1062→      "Manchester's tech corridor runs on fast, modern web platforms. ClickTake builds SaaS products, runs SEO and paid media, and ships AI automations for Manchester brands — from Spinningfields agencies to Northern Quarter startups. Local intent, senior engineers, UK invoicing.",
+  1063→  },
+  1064→  leeds: {
+  1065→    slug: "leeds",
+  1066→    name: "Leeds",
+  1067→    region: "West Yorkshire, UK",
+  1068→    keywords: [
+  1069→      "web design Leeds",
+  1070→      "local SEO Leeds",
+  1071→      "repair shop software Leeds",
+  1072→      "ecommerce Leeds",
+  1073→    ],
+  1074→    localIntro:
+  1075→      "From local SEO that wins the Leeds pack to WooCommerce repair-shop sites with live checkout, ClickTake helps West Yorkshire businesses turn searches into walk-ins and sales. Senior engineers, fast launch, UK Ltd Co invoicing.",
+  1076→  },
+  1077→  austin: {
+  1078→    slug: "austin",
+  1079→    name: "Austin",
+  1080→    region: "Texas, USA",
+  1081→    keywords: [
+  1082→      "web development Austin",
+  1083→      "SaaS agency Austin TX",
+  1084→      "AI automation Austin",
+  1085→      "SEO Austin Texas",
+  1086→    ],
+  1087→    localIntro:
+  1088→      "Austin's SaaS and AI scene moves fast. ClickTake's US business desk in Austin ships SaaS growth channels, AI automation and full-stack Next.js builds for Texas startups — with UK + Pakistan delivery coverage that keeps your roadmap moving 18 hours a day.",
+  1089→  },
+  1090→  "new-york": {
+  1091→    slug: "new-york",
+  1092→    name: "New York",
+  1093→    region: "New York, USA",
+  1094→    keywords: [
+  1095→      "web development New York",
+  1096→      "AI agency NYC",
+  1097→      "fintech development New York",
+  1098→      "SEO New York",
+  1099→    ],
+  1100→    localIntro:
+  1101→      "New York fintech, media and enterprise clients work with ClickTake for production AI, headless commerce and AI-native product engineering — delivered with SOC 2-aligned practices and the pace the East Coast demands.",
+  1102→  },
+  1103→  "san-francisco": {
+  1104→    slug: "san-francisco",
+  1105→    name: "San Francisco",
+  1106→    region: "California, USA",
+  1107→    keywords: [
+  1108→      "SaaS development San Francisco",
+  1109→      "AI agency San Francisco",
+  1110→      "LLM engineering Bay Area",
+  1111→      "SEO San Francisco",
+  1112→    ],
+  1113→    localIntro:
+  1114→      "Series A to Series C SaaS and AI-native startups in the Bay Area ship with ClickTake for multi-agent orchestration, RAG pipelines and production Next.js — the kind of engineering your investors expect, at a fraction of Bay Area rates.",
+  1115→  },
+  1116→  dubai: {
+  1117→    slug: "dubai",
+  1118→    name: "Dubai",
+  1119→    region: "United Arab Emirates",
+  1120→    keywords: [
+  1121→      "web design Dubai",
+  1122→      "SEO agency Dubai",
+  1123→      "AI agency Dubai UAE",
+  1124→      "digital marketing Dubai",
+  1125→      "software development Dubai",
+  1126→    ],
+  1127→    localIntro:
+  1128→      "Launching in Dubai or the wider GCC? ClickTake's MENA office in Dubai handles market entry, bilingual web design, SEO and AI automation for UAE businesses — with local cultural fluency and an engineering team that ships to 10M+ requests a day.",
+  1129→  },
+  1130→  "abu-dhabi": {
+  1131→    slug: "abu-dhabi",
+  1132→    name: "Abu Dhabi",
+  1133→    region: "United Arab Emirates",
+  1134→    keywords: [
+  1135→      "web development Abu Dhabi",
+  1136→      "government software Abu Dhabi",
+  1137→      "SEO Abu Dhabi",
+  1138→      "AI automation Abu Dhabi",
+  1139→    ],
+  1140→    localIntro:
+  1141→      "Abu Dhabi's government, healthcare and enterprise sectors work with ClickTake for secure, compliant web platforms, AI automation and SEO — engineered to GCC regulatory standards from our Dubai MENA office.",
+  1142→  },
+  1143→  multan: {
+  1144→    slug: "multan",
+  1145→    name: "Multan",
+  1146→    region: "Punjab, Pakistan",
+  1147→    keywords: [
+  1148→      "software house Multan",
+  1149→      "web development Multan",
+  1150→      "AI engineering Multan Pakistan",
+  1151→      "SEO Multan",
+  1152→    ],
+  1153→    localIntro:
+  1154→      "ClickTake's engineering hub in Multan is where 12 senior full-stack and AI engineers ship production Next.js, Python and LangGraph systems for clients across 4 continents — giving every engagement 18-hour workday coverage.",
+  1155→  },
+  1156→  lahore: {
+  1157→    slug: "lahore",
+  1158→    name: "Lahore",
+  1159→    region: "Punjab, Pakistan",
+  1160→    keywords: [
+  1161→      "software house Lahore",
+  1162→      "web development Lahore",
+  1163→      "SaaS development Lahore",
+  1164→      "AI agency Lahore",
+  1165→    ],
+  1166→    localIntro:
+  1167→      "Lahore's full-stack and AI engineering talent powers ClickTake's delivery — from SaaS platforms to multi-agent systems. Senior engineers, English-fluent, working UK business hours.",
+  1168→  },
+  1169→  karachi: {
+  1170→    slug: "karachi",
+  1171→    name: "Karachi",
+  1172→    region: "Sindh, Pakistan",
+  1173→    keywords: [
+  1174→      "digital marketing agency Karachi",
+  1175→      "SEO Karachi",
+  1176→      "creative agency Karachi",
+  1177→      "web design Karachi",
+  1178→    ],
+  1179→    localIntro:
+  1180→      "ClickTake's digital marketing, SEO and creative production teams in Karachi run paid media, content strategy and brand systems for clients across the UK, US and UAE — English-native copy, senior strategists, 18-hour coverage.",
+  1181→  },
+  1182→  islamabad: {
+  1183→    slug: "islamabad",
+  1184→    name: "Islamabad",
+  1185→    region: "Islamabad Capital Territory, Pakistan",
+  1186→    keywords: [
+  1187→      "software house Islamabad",
+  1188→      "SaaS development Islamabad",
+  1189→      "cloud DevOps Islamabad",
+  1190→      "web development Islamabad",
+  1191→    ],
+  1192→    localIntro:
+  1193→      "Islamabad-based SaaS engineering and cloud DevOps talent powers ClickTake's enterprise engagements — Terraform IaC, Kubernetes autoscaling and p99 120ms SLAs delivered from Pakistan's capital.",
+  1194→  },
+  1195→};
+  1196→
+  1197→// Local-intent keyword clusters reused across hero & section copy.
+  1198→export const LOCAL_KEYWORDS = [
+  1199→  "web design services",
+  1200→  "SEO services",
+  1201→  "AI automation agency",
+  1202→  "custom software development",
+  1203→  "digital marketing agency",
+  1204→  "WordPress web design services",
+  1205→  "ecommerce web design services",
+  1206→  "small business web design",
+  1207→  "responsive web design services",
+  1208→  "AI chatbot development",
+  1209→  "SaaS platform engineering",
+  1210→  "PPC paid ads management",
+  1211→  "social media marketing",
+  1212→  "graphic design services",
+  1213→  "B2B video production",
+  1214→];
+  1215→
+  1216→// Human-toned trust strip used under hero sections on every page for local SEO.
+  1217→export const LOCAL_TRUST = [
+  1218→  { label: "UK Ltd Co · GDPR compliant", icon: ShieldCheck },
+  1219→  { label: "4 offices · 13 cities served", icon: MapPin },
+  1220→  { label: "Senior engineers (8+ yrs avg)", icon: Users },
+  1221→  { label: "120+ production deployments", icon: Code2 },
+  1222→];
+  1223→
+  1224→// Per-view SEO meta description + target keywords (used for <meta> + JSON-LD).
+  1225→export const VIEW_SEO: Record<string, { title: string; description: string; keywords: string[] }> = {
+  1226→  home: {
+  1227→    title: "ClickTake Technologies — AI-Native Software Engineering & Digital Agency",
+  1228→    description:
+  1229→      "ClickTake Technologies is an AI-native digital agency engineering custom software, autonomous AI agents, cloud architecture, SEO and creative for businesses across the UK, USA, UAE & Pakistan. 24 services, 4 offices, 120+ deployments. Connecting in a better way.",
+  1230→    keywords: [
+  1231→      "AI agency", "software development agency", "web design services", "SEO services",
+  1232→      "AI automation", "digital agency UK", "SaaS development", "custom software",
+  1233→    ],
+  1234→  },
+  1235→  services: {
+  1236→    title: "Services — 24 Digital, Web, AI & Marketing Services | ClickTake",
+  1237→    description:
+  1238→      "Explore 24 services across 4 practices: Digital Marketing (PPC, SEO, social), Web & Software (full-stack, SaaS, WordPress, ecommerce), AI & Automation (LLMs, chatbots, agents), and Creative & Brand. Senior engineers ship in 6 weeks.",
+  1239→    keywords: [
+  1240→      "web design services", "SEO services", "AI automation", "SaaS development",
+  1241→      "WordPress web design", "ecommerce web design", "AI chatbot development",
+  1242→    ],
+  1243→  },
+  1244→  solutions: {
+  1245→    title: "Solutions by Industry — Startups, E-commerce, Local & UK Businesses",
+  1246→    description:
+  1247→      "Tailored solutions for startups, local businesses, ecommerce brands, repair shops, UK SMEs and agencies. Fixed-scope, fixed-timeline engagements with measurable outcomes — local SEO, web design and AI built for your business type.",
+  1248→    keywords: [
+  1249→      "startup web design", "local business SEO", "ecommerce development",
+  1250→      "repair shop software", "UK digital agency", "white-label agency",
+  1251→    ],
+  1252→  },
+  1253→  "case-studies": {
+  1254→    title: "Case Studies — Real Clients, Real Metrics | ClickTake",
+  1255→    description:
+  1256→      "Four production case studies with verified metrics: -72% API latency, +38% checkout conversion, -$1.4M cloud cost, -31% empty fleet miles. Real engagements from fintech, ecommerce, healthcare and logistics.",
+  1257→    keywords: ["case studies", "AI case study", "SEO results", "web development results"],
+  1258→  },
+  1259→  portfolio: {
+  1260→    title: "Portfolio — 12 Live Client Sites | ClickTake Technologies",
+  1261→    description:
+  1262→      "Twelve live client deployments built and maintained by ClickTake — SaaS platforms, repair-shop commerce sites and education portals across the UK and globally. Every link is a real production site, not a mockup.",
+  1263→    keywords: ["portfolio", "web design portfolio", "SaaS portfolio", "client websites"],
+  1264→  },
+  1265→  blog: {
+  1266→    title: "Blog — SEO, Web Dev, AI & Marketing Field Notes | ClickTake",
+  1267→    description:
+  1268→      "Practical, no-fluff articles on SEO, web development, AI automation, ecommerce and growth marketing — written by the engineers, marketers and designers who ship this work for clients across the UK, USA, UAE & Pakistan.",
+  1269→    keywords: ["SEO blog", "AI automation blog", "web development blog", "digital marketing blog"],
+  1270→  },
+  1271→  pricing: {
+  1272→    title: "Pricing — Starter · Growth · Scale · Custom | ClickTake",
+  1273→    description:
+  1274→      "Transparent pricing across four engagement tiers from £1,500 one-off to custom enterprise retainers. No fake universal packages — every project is scoped in a free 30-min call. UK Ltd Co, GDPR invoicing.",
+  1275→    keywords: ["web design pricing", "SEO pricing", "AI automation cost", "SaaS development pricing"],
+  1276→  },
+  1277→  about: {
+  1278→    title: "About — AI Digital Agency Since 2019 | ClickTake Technologies",
+  1279→    description:
+  1280→      "ClickTake Technologies is a multi-region AI-native digital agency founded in 2019, operating across Birmingham, Multan, Austin and Dubai. 120+ projects, 80+ clients in 14 countries, 5.0 avg rating.",
+  1281→    keywords: ["about digital agency", "AI agency UK", "software company Birmingham", "digital agency Pakistan"],
+  1282→  },
+  1283→  team: {
+  1284→    title: "Our Team — 28 People Across 4 Offices | ClickTake Technologies",
+  1285→    description:
+  1286→      "28 senior engineers, marketers and designers across Birmingham, Multan, Austin and Dubai — coordinated as one engineering organization with 18-hour workday coverage on every engagement.",
+  1287→    keywords: ["agency team", "software engineering team", "AI engineers", "digital marketing team"],
+  1288→  },
+  1289→  careers: {
+  1290→    title: "Careers — Join ClickTake Technologies",
+  1291→    description:
+  1292→      "Remote-first, senior-first engineering roles across web, AI, SEO and creative. Open positions for senior Next.js engineers, AI/ML engineers, SEO specialists and designers. 4 offices, 18-hour workdays.",
+  1293→    keywords: ["digital agency jobs", "software engineer jobs", "AI engineer careers", "SEO jobs"],
+  1294→  },
+  1295→  cities: {
+  1296→    title: "Cities We Serve — 13 Cities, 4 Countries | ClickTake",
+  1297→    description:
+  1298→      "ClickTake serves 13 cities across the UK, USA, UAE and Pakistan — Birmingham, London, Manchester, Leeds, Austin, New York, San Francisco, Dubai, Abu Dhabi, Multan, Lahore, Karachi and Islamabad. Local presence, global delivery.",
+  1299→    keywords: [
+  1300→      "web design Birmingham", "web design London", "web design Dubai",
+  1301→      "SEO Austin", "software house Multan", "digital agency near me",
+  1302→    ],
+  1303→  },
+  1304→  connect: {
+  1305→    title: "Connect — Direct Contact & Social | ClickTake Technologies",
+  1306→    description:
+  1307→      "Reach ClickTake by email, phone, WhatsApp or social. We respond within 4 business hours. info@clicktaketech.com · +44 7391 653377 · 4 offices worldwide.",
+  1308→    keywords: ["contact digital agency", "web design contact", "AI agency contact"],
+  1309→  },
+  1310→  contact: {
+  1311→    title: "Contact — Free 30-min Consult | ClickTake Technologies",
+  1312→    description:
+  1313→      "Book a free 30-minute consultation. A senior engineer (not a salesperson) reviews your brief within 4 hours and brings a draft architecture. 3-step form, no commitment.",
+  1314→    keywords: ["free consultation", "web design quote", "SEO consultation", "AI project quote"],
+  1315→  },
+  1316→};
+  1317→
+  1318→export const CONTACT_METHODS = [
+  1319→  { icon: Mail, label: "Email", value: "info@clicktaketech.com", href: "mailto:info@clicktaketech.com" },
+  1320→  { icon: Phone, label: "United Kingdom", value: "+44 7391 653377", href: "tel:+447391653377" },
+  1321→  { icon: Phone, label: "Pakistan", value: "+92 306 9753003", href: "tel:+923069753003" },
+  1322→  { icon: MessageCircle, label: "WhatsApp", value: "+44 7391 653377", href: "https://wa.me/447391653377" },
+  1323→];
+  1324→
+  1325→export const NEXT_STEPS = [
+  1326→  {
+  1327→    num: "01",
+  1328→    title: "Senior engineer reviews your brief",
+  1329→    desc: "Within 4 hours during business days. Not a salesperson — an engineer who has shipped production systems.",
+  1330→  },
+  1331→  {
+  1332→    num: "02",
+  1333→    title: "30-minute architecture call",
+  1334→    desc: "We bring a draft architecture + ballpark estimate tailored to your use case.",
+  1335→  },
+  1336→  {
+  1337→    num: "03",
+  1338→    title: "Working PoC in 6 weeks",
+  1339→    desc: "Fixed-scope, fixed-fee. No long-term contract required to start.",
+  1340→  },
+  1341→];
+  1342→
+  1343→export const PROJECT_NEEDS = [
+  1344→  "Custom Web/Mobile App",
+  1345→  "Cloud / DevOps",
+  1346→  "AI / ML Pipeline",
+  1347→  "Security Audit",
+  1348→  "Growth / Marketing",
+  1349→  "Something else",
+  1350→];
+  1351→
+  1352→// ===== BLOG =====
+  1353→export type BlogPost = {
+  1354→  slug: string;
+  1355→  title: string;
+  1356→  category: string;
+  1357→  excerpt: string;
+  1358→  date: string;
+  1359→  readTime: string;
+  1360→};
+  1361→
+  1362→export const BLOG_POSTS: BlogPost[] = [
+  1363→  {
+  1364→    slug: "blog-7-best-ai-chatbots-for-capturing-website-leads-2026",
+  1365→    title: "7 Best AI Chatbots for Capturing Website Leads (2026)",
+  1366→    category: "AI Automation",
+  1367→    excerpt:
+  1368→      "If you're asking what is the best AI chatbot for capturing leads on a website, the answer depends on something most buying guides skip entirely: whether the bot actually qualifies prospects or merely collects their contact details.",
+  1369→    date: "5 Aug 2026",
+  1370→    readTime: "14 min",
+  1371→  },
+  1372→  {
+  1373→    slug: "blog-7-social-media-content-types-that-actually-drive-sales",
+  1374→    title: "7 social media content types that actually drive sales",
+  1375→    category: "Digital Marketing",
+  1376→    excerpt:
+  1377→      "Most brands measure social media performance by likes, shares, and follower growth. These metrics feel meaningful; they're easy to report, and they generate the kind of positive momentum that keeps stakeholders happy in a monthly review.",
+  1378→    date: "27 Jul 2026",
+  1379→    readTime: "11 min",
+  1380→  },
+  1381→  {
+  1382→    slug: "blog-ai-automations-that-actually-work-for-small-businesses",
+  1383→    title: "AI Automations That Actually Work for Small Businesses",
+  1384→    category: "AI Automation",
+  1385→    excerpt:
+  1386→      "If you're wondering what AI automations actually work for small businesses, you're not alone — and the answer is more straightforward than most vendors make it sound.",
+  1387→    date: "18 Jul 2026",
+  1388→    readTime: "12 min",
+  1389→  },
+  1390→  {
+  1391→    slug: "blog-ai-business-automation-what-actually-works-for-smes",
+  1392→    title: "AI business automation: what actually works for SMEs",
+  1393→    category: "AI Automation",
+  1394→    excerpt:
+  1395→      "A practical breakdown of the AI automations that deliver real ROI for small and medium enterprises — and the ones that are smoke and mirrors.",
+  1396→    date: "10 Jul 2026",
+  1397→    readTime: "13 min",
+  1398→  },
+  1399→  {
+  1400→    slug: "blog-how-to-build-a-social-media-content-strategy-in-2026",
+  1401→    title: "How to build a social media content strategy in 2026",
+  1402→    category: "Digital Marketing",
+  1403→    excerpt:
+  1404→      "A repeatable framework for building a social media content strategy that compounds — from audience research to editorial calendar to measurement.",
+  1405→    date: "2 Jul 2026",
+  1406→    readTime: "15 min",
+  1407→  },
+  1408→  {
+  1409→    slug: "blog-leading-platforms-for-website-user-behavior-analytics-in-2026",
+  1410→    title: "Leading Platforms for Website User Behavior Analytics in 2026",
+  1411→    category: "Web",
+  1412→    excerpt:
+  1413→      "A technical comparison of the leading user behavior analytics platforms — PostHog, FullStory, Hotjar, Microsoft Clarity — and when to pick each.",
+  1414→    date: "24 Jun 2026",
+  1415→    readTime: "16 min",
+  1416→  },
+  1417→  {
+  1418→    slug: "blog-next-js-pagespeed-optimisation-how-to-hit-90-scores",
+  1419→    title: "Next.js PageSpeed optimisation: how to hit 90+ scores",
+  1420→    category: "Web",
+  1421→    excerpt:
+  1422→      "The exact performance patterns we use to ship Next.js 16 apps that hit 90+ Lighthouse scores — from RSC to image optimization to edge caching.",
+  1423→    date: "16 Jun 2026",
+  1424→    readTime: "13 min",
+  1425→  },
+  1426→  {
+  1427→    slug: "blog-seo-audit-checklist-25-steps-to-rank-higher-in-2026",
+  1428→    title: "SEO Audit Checklist: 25 Steps to Rank Higher in 2026",
+  1429→    category: "SEO",
+  1430→    excerpt:
+  1431→      "The exact 25-step technical SEO audit we run on every new engagement — covering crawlability, indexation, Core Web Vitals, structured data, and content gaps.",
+  1432→    date: "8 Jun 2026",
+  1433→    readTime: "20 min",
+  1434→  },
+  1435→  {
+  1436→    slug: "blog-social-media-for-ecommerce-turning-views-into-sales",
+  1437→    title: "Social media for ecommerce: turning views into sales",
+  1438→    category: "Ecommerce",
+  1439→    excerpt:
+  1440→      "How D2C brands turn social media views into actual sales — the content formats, funnel design, and attribution models that work in 2026.",
+  1441→    date: "1 Jun 2026",
+  1442→    readTime: "12 min",
+  1443→  },
+  1444→];
+  1445→
+  1446→export const BLOG_CATEGORIES = [
+  1447→  "All",
+  1448→  "AI Automation",
+  1449→  "Digital Marketing",
+  1450→  "SEO",
+  1451→  "Web",
+  1452→  "Ecommerce",
+  1453→];
+  1454→
+  1455→// ===== PRICING =====
+  1456→export type PricingTier = {
+  1457→  name: string;
+  1458→  tagline: string;
+  1459→  audience: string;
+  1460→  price: string;
+  1461→  cadence: string;
+  1462→  popular?: boolean;
+  1463→  features: string[];
+  1464→  notIncluded: string[];
+  1465→  cta: string;
+  1466→};
+  1467→
+  1468→export const PRICING_TIERS: PricingTier[] = [
+  1469→  {
+  1470→    name: "Starter",
+  1471→    tagline: "For new founders & local businesses",
+  1472→    audience: "From £1,500",
+  1473→    price: "£1,500",
+  1474→    cadence: "one-off project",
+  1475→    cta: "Start with Starter",
+  1476→    features: [
+  1477→      "Up to 5-page mobile-first Next.js website",
+  1478→      "Google Business Profile setup + optimization",
+  1479→      "Foundational on-page SEO (titles, meta, schema, sitemap)",
+  1480→      "Contact form with spam protection + email notifications",
+  1481→      "SSL, CDN, analytics and Search Console setup",
+  1482→      "Domain + 1 year managed hosting",
+  1483→      "2 rounds of revisions",
+  1484→      "14-day post-launch support",
+  1485→    ],
+  1486→    notIncluded: ["AI chatbot or automation", "Ongoing monthly SEO", "Paid media management"],
+  1487→  },
+  1488→  {
+  1489→    name: "Growth",
+  1490→    tagline: "For scaling brands & e-commerce stores",
+  1491→    audience: "From £6,000",
+  1492→    price: "£6,000",
+  1493→    cadence: "one-off + monthly retainer",
+  1494→    popular: true,
+  1495→    cta: "Start with Growth",
+  1496→    features: [
+  1497→      "Production-ready website or e-commerce rebuild",
+  1498→      "Headless commerce (Shopify / Medusa) with 1.5s LCP",
+  1499→      "AI automation (chatbot, lead scoring, or workflow)",
+  1500→      "Ongoing monthly SEO (technical + content)",
+  1501→      "Paid media management (Google + Meta)",
+  1502→      "Conversion rate optimization (A/B testing)",
+  1503→      "Design system in Storybook + Playwright E2E",
+  1504→      "Weekly demos + 30-day post-launch hypercare",
+  1505→    ],
+  1506→    notIncluded: ["Multi-agent orchestration", "Custom LLM fine-tuning"],
+  1507→  },
+  1508→  {
+  1509→    name: "Scale",
+  1510→    tagline: "For SaaS platforms & enterprises",
+  1511→    audience: "From £18,000",
+  1512→    price: "£18,000",
+  1513→    cadence: "one-off + monthly retainer",
+  1514→    cta: "Start with Scale",
+  1515→    features: [
+  1516→      "Multi-tenant SaaS platform engineering",
+  1517→      "Custom AI / multi-agent orchestration (LangGraph)",
+  1518→      "Cloud DevOps (AWS/GCP/Azure) with Terraform IaC",
+  1519→      "Kubernetes autoscaling + observability stack",
+  1520→      "SOC 2 Type II audit prep + security hardening",
+  1521→      "Dedicated lead engineer + 4-person pod",
+  1522→      "p99 120ms SLA + 99.9% uptime guarantee",
+  1523→      "24/7 on-call runbook + quarterly roadmapping",
+  1524→    ],
+  1525→    notIncluded: [],
+  1526→  },
+  1527→  {
+  1528→    name: "Custom Quote",
+  1529→    tagline: "For something that doesn't fit a box",
+  1530→    audience: "Let's scope it",
+  1531→    price: "Custom",
+  1532→    cadence: "scoped in a free 30-min call",
+  1533→    cta: "Book a discovery call",
+  1534→    features: [
+  1535→      "Fixed-scope, fixed-fee PoC in 6 weeks",
+  1536→      "Senior engineer (not salesperson) on the call",
+  1537→      "Draft architecture + ballpark estimate",
+  1538→      "Pick any mix of the 24 services",
+  1539→      "No long-term contract required to start",
+  1540→      "NDA signed before any discovery call",
+  1541→      "UK Ltd Co + GDPR-compliant invoicing",
+  1542→      "Code + keys handed over, never locked in",
+  1543→    ],
+  1544→    notIncluded: [],
+  1545→  },
+  1546→];
+  1547→
+  1548→export const PRICING_FAQS = [
+  1549→  {
+  1550→    q: "Are these prices fixed?",
+  1551→    a: "These are starting points. Every engagement is scoped in a free 30-minute discovery call to match your specific goals, audience and budget. No fake universal pricing, no hidden fees.",
+  1552→  },
+  1553→  {
+  1554→    q: "What payment methods do you accept?",
+  1555→    a: "Bank transfer (GBP, USD, PKR, AED), Stripe, and Wise. Invoices are due within 14 days of issue. Deposits at project kickoff are non-refundable once work commences.",
+  1556→  },
+  1557→  {
+  1558→    q: "Do you offer monthly retainers?",
+  1559→    a: "Yes. Growth and Scale tiers include monthly retainers for ongoing SEO, paid media, CRO, and hypercare. Retainers are month-to-month with a 30-day notice period — no long-term lock-in.",
+  1560→  },
+  1561→  {
+  1562→    q: "What's never included — and never will be?",
+  1563→    a: "Juniors learning on your budget, vague discovery phases that drag on for months, vendor lock-in, and surprise launch fees. The architecture is always handed over.",
+  1564→  },
+  1565→];
+  1566→
+  1567→// ===== TEAM =====
+  1568→export const TEAM_STATS = [
+  1569→  { value: "28", label: "Team members" },
+  1570→  { value: "4", label: "Offices" },
+  1571→  { value: "5", label: "Departments" },
+  1572→  { value: "2.4 yrs", label: "Avg tenure" },
+  1573→];
+  1574→
+  1575→export type Department = {
+  1576→  num: string;
+  1577→  name: string;
+  1578→  headcount: string;
+  1579→  location: string;
+  1580→  icon: LucideIcon;
+  1581→  desc: string;
+  1582→};
+  1583→
+  1584→export const DEPARTMENTS: Department[] = [
+  1585→  {
+  1586→    num: "01",
+  1587→    name: "Leadership",
+  1588→    headcount: "3 people",
+  1589→    location: "Birmingham + Multan",
+  1590→    icon: Users,
+  1591→    desc: "Founders and practice leads who own P&L, client relationships, and engineering standards across every engagement.",
+  1592→  },
+  1593→  {
+  1594→    num: "02",
+  1595→    name: "Development",
+  1596→    headcount: "12 people",
+  1597→    location: "Multan",
+  1598→    icon: Code2,
+  1599→    desc: "Full-stack engineers, AI/ML engineers, and DevOps specialists shipping production Next.js, Python, and LangGraph systems.",
+  1600→  },
+  1601→  {
+  1602→    num: "03",
+  1603→    name: "Marketing",
+  1604→    headcount: "3 people",
+  1605→    location: "Birmingham + Multan",
+  1606→    icon: Megaphone,
+  1607→    desc: "SEO specialists, paid media managers, and content strategists who compound qualified pipeline month over month.",
+  1608→  },
+  1609→  {
+  1610→    num: "04",
+  1611→    name: "Creative",
+  1612→    headcount: "3 people",
+  1613→    location: "Multan + Birmingham",
+  1614→    icon: Palette,
+  1615→    desc: "Graphic designers, web designers, and video producers who make every client product look premium.",
+  1616→  },
+  1617→  {
+  1618→    num: "05",
+  1619→    name: "Operations",
+  1620→    headcount: "4 people",
+  1621→    location: "Distributed",
+  1622→    icon: Cpu,
+  1623→    desc: "Project managers, finance, and people ops who keep the 4-office, 18-hour workday engine running smoothly.",
+  1624→  },
+  1625→];
+  1626→
+  1627→export const HIRING_STAGES = [
+  1628→  {
+  1629→    num: "01",
+  1630→    title: "Recruiter Screen",
+  1631→    duration: "30 min",
+  1632→    desc: "A conversation about your background, expectations, and whether the role is a mutual fit.",
+  1633→  },
+  1634→  {
+  1635→    num: "02",
+  1636→    title: "Technical Interview",
+  1637→    duration: "60 min",
+  1638→    desc: "A senior engineer walks through your past work and a live system-design or code-review exercise.",
+  1639→  },
+  1640→  {
+  1641→    num: "03",
+  1642→    title: "Take-Home Exercise",
+  1643→    duration: "4–6 hours, paid",
+  1644→    desc: "A realistic, paid exercise relevant to the role — never a LeetCode puzzle or free spec work.",
+  1645→  },
+  1646→  {
+  1647→    num: "04",
+  1648→    title: "Team & Culture Fit",
+  1649→    duration: "45 min",
+  1650→    desc: "Meet 2–3 future teammates to confirm working style and values alignment.",
+  1651→  },
+  1652→];
+  1653→
+  1654→export const TEAM_VALUES = [
+  1655→  { icon: Globe, title: "Hybrid by default", desc: "In-office 2–3 days/week for engineering; fully remote options for senior roles." },
+  1656→  { icon: Cpu, title: "Senior-first", desc: "8+ yr average tenure. No juniors learning on client budgets." },
+  1657→  { icon: Users, title: "Cross-office pods", desc: "Every engagement is staffed with a UK account lead + Pakistan tech lead." },
+  1658→  { icon: Zap, title: "Real production work", desc: "You ship to 10M+ req/day systems from week one — no busywork." },
+  1659→];
+  1660→
+  1661→// ===== CONNECT (social + direct) =====
+  1662→export const SOCIAL_LINKS = [
+  1663→  { icon: Facebook, label: "Facebook", value: "clicktaketechnologies", href: "https://www.facebook.com/clicktaketechnologies/" },
+  1664→  { icon: Instagram, label: "Instagram", value: "clicktaketechologiesuk", href: "https://www.instagram.com/clicktaketechologiesuk/" },
+  1665→  { icon: Linkedin, label: "LinkedIn", value: "clicktake-technologies", href: "#" },
+  1666→  { icon: Twitter, label: "Twitter / X", value: "@clicktaketech", href: "#" },
+  1667→  { icon: Rss, label: "Blog RSS", value: "feed.xml", href: "#" },
+  1668→];
+  1669→
+  1670→// ===== LEGAL =====
+  1671→export type LegalSection = {
+  1672→  num: string;
+  1673→  title: string;
+  1674→  body: string[];
+  1675→};
+  1676→
+  1677→export type LegalDoc = {
+  1678→  id: "legal-privacy" | "legal-terms" | "legal-cookies";
+  1679→  title: string;
+  1680→  updated: string;
+  1681→  badge: string;
+  1682→  intro: string;
+  1683→  sections: LegalSection[];
+  1684→};
+  1685→
+  1686→export const LEGAL_DOCS: Record<LegalDoc["id"], LegalDoc> = {
+  1687→  "legal-privacy": {
+  1688→    id: "legal-privacy",
+  1689→    title: "Privacy Policy",
+  1690→    updated: "May 26, 2026",
+  1691→    badge: "GDPR · UK DPA Compliant",
+  1692→    intro:
+  1693→      "ClickTake Technologies Ltd. (\"we\", \"us\", \"our\") respects your privacy and is committed to protecting your personal data. This privacy policy informs you how we look after your personal data when you visit our website, submit discovery calls, fill out project inquiry forms, or apply for vacancies.",
+  1694→    sections: [
+  1695→      {
+  1696→        num: "01",
+  1697→        title: "Introduction & Scope",
+  1698→        body: [
+  1699→          "This policy applies to all individuals who interact with ClickTake Technologies Ltd. via our website, forms, email, or any of our digital services.",
+  1700→          "We are a UK-registered limited company (Companies House) operating across the United Kingdom, Pakistan, the United States, and the United Arab Emirates. We act as both a data controller (for prospective-client and applicant data) and a data processor (for data processed on behalf of clients under a separate DPA).",
+  1701→        ],
+  1702→      },
+  1703→      {
+  1704→        num: "02",
+  1705→        title: "Personal Data We Collect",
+  1706→        body: [
+  1707→          "Identity Data: First name, last name, username, and job titles.",
+  1708→          "Contact Data: Email address, telephone numbers, billing addresses, and country.",
+  1709→          "Technical Data: IP address, login data, browser types, operating systems, and device specs.",
+  1710→          "Usage Data: Information about how you interact with our website, services, forms, and calculators.",
+  1711→        ],
+  1712→      },
+  1713→      {
+  1714→        num: "03",
+  1715→        title: "How We Use Your Data",
+  1716→        body: [
+  1717→          "We will only use your personal data when the law allows us to. Most commonly, we will use your data to:",
+  1718→          "Register you as a new customer and scope your project requirements.",
+  1719→          "Deliver custom development, search engine optimization campaigns, and automation pipelines.",
+  1720→          "Manage our ongoing partnership relationship (notifying you about milestones, payments, or updates).",
+  1721→          "Screen prospective applicants who submit portfolios via our Careers portal.",
+  1722→        ],
+  1723→      },
+  1724→      {
+  1725→        num: "04",
+  1726→        title: "Data Security",
+  1727→        body: [
+  1728→          "We have put in place appropriate technical and organizational measures to protect your personal data, including TLS encryption in transit, AES-256 encryption at rest, role-based access control, and quarterly security reviews.",
+  1729→          "Access to personal data is restricted to authorized personnel on a need-to-know basis and is logged for audit.",
+  1730→        ],
+  1731→      },
+  1732→      {
+  1733→        num: "05",
+  1734→        title: "Data Retention & Your Rights",
+  1735→        body: [
+  1736→          "We retain personal data only for as long as necessary to fulfill the purposes for which it was collected, including legal, accounting, and reporting requirements.",
+  1737→          "Under the GDPR and UK DPA, you have the right to access, rectify, erase, restrict, or object to the processing of your personal data, and the right to data portability.",
+  1738→          "To exercise any of these rights, email info@clicktaketech.com. We respond within 30 days.",
+  1739→        ],
+  1740→      },
+  1741→    ],
+  1742→  },
+  1743→  "legal-terms": {
+  1744→    id: "legal-terms",
+  1745→    title: "Terms of Service",
+  1746→    updated: "May 26, 2026",
+  1747→    badge: "Service Agreement",
+  1748→    intro:
+  1749→      "By accessing or using the services provided by ClickTake Technologies Ltd. (\"the Company\", \"we\", \"us\"), you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must not engage with our services or use our website.",
+  1750→    sections: [
+  1751→      {
+  1752→        num: "01",
+  1753→        title: "Acceptance of Terms",
+  1754→        body: [
+  1755→          "By engaging with ClickTake Technologies, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service and any Statement of Work (SOW) you sign with us.",
+  1756→        ],
+  1757→      },
+  1758→      {
+  1759→        num: "02",
+  1760→        title: "Services & Engagements",
+  1761→        body: [
+  1762→          "We provide digital services including but not limited to: custom software, web and mobile application development; AI, machine learning and automation solutions; search engine optimization, paid media and digital marketing; and brand identity, design and creative production.",
+  1763→          "Each engagement is governed by a separate Statement of Work (SOW) that specifies deliverables, timeline, price, and acceptance criteria. In the event of a conflict, the SOW prevails over these Terms.",
+  1764→        ],
+  1765→      },
+  1766→      {
+  1767→        num: "03",
+  1768→        title: "Payment Terms",
+  1769→        body: [
+  1770→          "Unless otherwise stated in your SOW, invoices are due within 14 days of issue. We accept bank transfer (GBP, USD, PKR, AED), Stripe, and Wise.",
+  1771→          "Late payments may incur a 1.5% monthly interest charge. Deposits at project kickoff are non-refundable once work commences.",
+  1772→        ],
+  1773→      },
+  1774→      {
+  1775→        num: "04",
+  1776→        title: "Intellectual Property",
+  1777→        body: [
+  1778→          "Upon receipt of full payment, all custom-developed source code, designs, and assets delivered under an SOW are transferred to the client under a worldwide, perpetual, royalty-free license.",
+  1779→          "We retain rights to reusable components, libraries, and frameworks developed prior to or independently of the engagement, which are licensed to the client on a non-exclusive basis.",
+  1780→        ],
+  1781→      },
+  1782→      {
+  1783→        num: "05",
+  1784→        title: "Confidentiality & NDAs",
+  1785→        body: [
+  1786→          "We treat all client information as confidential and will not disclose it to third parties without consent. We are happy to sign mutual NDAs before any discovery call — this is standard practice for us.",
+  1787→        ],
+  1788→      },
+  1789→      {
+  1790→        num: "06",
+  1791→        title: "Limitation of Liability",
+  1792→        body: [
+  1793→          "To the maximum extent permitted by law, ClickTake Technologies shall not be liable for any indirect, incidental, special, or consequential damages, or any loss of profits or revenue, arising from the use of our services.",
+  1794→          "Our total liability under any SOW is limited to the fees paid by the client for the services giving rise to the claim during the 12 months preceding the claim.",
+  1795→        ],
+  1796→      },
+  1797→      {
+  1798→        num: "07",
+  1799→        title: "Governing Law",
+  1800→        body: [
+  1801→          "These Terms and any SOW are governed by the laws of England and Wales. Any disputes shall be subject to the exclusive jurisdiction of the courts of England and Wales, unless otherwise agreed in writing.",
+  1802→        ],
+  1803→      },
+  1804→    ],
+  1805→  },
+  1806→  "legal-cookies": {
+  1807→    id: "legal-cookies",
+  1808→    title: "Cookie Policy",
+  1809→    updated: "May 26, 2026",
+  1810→    badge: "EU ePrivacy · PECR Compliant",
+  1811→    intro:
+  1812→      "This Cookie Policy explains how ClickTake Technologies Ltd. uses cookies and similar technologies on our website. Cookies are small text files placed on your device by the websites you visit.",
+  1813→    sections: [
+  1814→      {
+  1815→        num: "01",
+  1816→        title: "What Are Cookies",
+  1817→        body: [
+  1818→          "Cookies are small text files placed on your device by the websites you visit. They are widely used to make websites work more efficiently and to provide information to site owners.",
+  1819→          "Cookies may be session cookies (deleted when you close your browser) or persistent cookies (remain until they expire or you delete them).",
+  1820→        ],
+  1821→      },
+  1822→      {
+  1823→        num: "02",
+  1824→        title: "How We Use Cookies",
+  1825→        body: [
+  1826→          "Essential: Required for the website to function (e.g. session, theme preference).",
+  1827→          "Analytics: To understand how visitors use our site (e.g. Google Analytics 4, anonymized).",
+  1828→          "Marketing: To measure the effectiveness of our campaigns on Meta, LinkedIn, and Google Ads.",
+  1829→          "Functional: To remember your preferences (e.g. dark mode, language).",
+  1830→        ],
+  1831→      },
+  1832→      {
+  1833→        num: "03",
+  1834→        title: "Third-Party Cookies",
+  1835→        body: [
+  1836→          "We use third-party services that may set their own cookies, including Cloudflare Turnstile (bot protection), Google Analytics (usage analytics), and Meta Pixel (campaign attribution).",
+  1837→          "Each third-party provider manages its own cookies according to its own privacy policy. We encourage you to review their policies.",
+  1838→        ],
+  1839→      },
+  1840→      {
+  1841→        num: "04",
+  1842→        title: "Managing Cookies",
+  1843→        body: [
+  1844→          "You can control or delete cookies through your browser settings. Note that disabling all cookies may affect website functionality — for example, you may not be able to submit the contact form or save your theme preference.",
+  1845→          "Most browsers allow you to: (a) accept all cookies; (b) reject all cookies; (c) delete existing cookies; or (d) block cookies from specific sites.",
+  1846→        ],
+  1847→      },
+  1848→      {
+  1849→        num: "05",
+  1850→        title: "Updates to This Policy",
+  1851→        body: [
+  1852→          "We may update this Cookie Policy from time to time. Any changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically.",
+  1853→        ],
+  1854→      },
+  1855→    ],
+  1856→  },
+  1857→};
+  1858→
+  1859→export const LEGAL_LINKS: { id: NavView; label: string }[] = [
+  1860→  { id: "legal-privacy", label: "Privacy Policy" },
+  1861→  { id: "legal-terms", label: "Terms of Service" },
+  1862→  { id: "legal-cookies", label: "Cookie Policy" },
+  1863→];
+  1864→
