@@ -22,6 +22,7 @@ import { ContactView } from "@/components/site/views/contact-view";
 import { LegalView } from "@/components/site/views/legal-view";
 import { ServiceDetailView } from "@/components/site/views/service-detail-view";
 import { JobApplyView } from "@/components/site/views/job-apply-view";
+import { AdminView } from "@/components/site/views/admin-view";
 import type { NavView } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
 
@@ -56,6 +57,18 @@ export default function Page() {
     }
   };
 
+  // Listen for #admin in the URL so the admin panel is reachable directly.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const checkHash = () => {
+      const h = window.location.hash.replace("#", "").toLowerCase();
+      if (h === "admin") setView("admin");
+    };
+    checkHash();
+    window.addEventListener("hashchange", checkHash);
+    return () => window.removeEventListener("hashchange", checkHash);
+  }, []);
+
   // Keep the document title in sync with the active view.
   useEffect(() => {
     const titles: Record<NavView, string> = {
@@ -77,6 +90,7 @@ export default function Page() {
         "Service | ClickTake Technologies",
       "job-apply":
         "Apply to Join ClickTake — Intern Onboarding & Identity Verification",
+      admin: "Admin Panel — ClickTake Technologies",
       "legal-privacy": "Privacy Policy | ClickTake Technologies",
       "legal-terms": "Terms of Service | ClickTake Technologies",
       "legal-cookies": "Cookie Policy | ClickTake Technologies",
@@ -133,6 +147,7 @@ export default function Page() {
                 onNavigate={navigate}
               />
             )}
+            {view === "admin" && <AdminView />}
             {view === "legal-privacy" && (
               <LegalView docId="legal-privacy" onNavigate={navigate} />
             )}

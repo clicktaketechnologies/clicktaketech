@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { db } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -182,6 +183,24 @@ export async function POST(req: NextRequest) {
   };
 
   console.log("[job-apply] new application", record);
+
+  // Persist a summary row to the CMS so the admin panel can track applications.
+  try {
+    await db.jobApplication.create({
+      data: {
+        jobId,
+        positionType: positionType || null,
+        fullName,
+        email,
+        mobile: mobile || null,
+        filesFolder: folderName,
+        filesManifest: record.files,
+        status: "new",
+      },
+    });
+  } catch (dbErr) {
+    console.error("[job-apply] db write failed", dbErr);
+  }
 
   return NextResponse.json({
     ok: true,

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
 type ContactPayload = {
   fullName?: string;
@@ -49,15 +50,24 @@ export async function POST(req: NextRequest) {
 
     // In a production deployment this would persist to the database and/or
     // dispatch an email/Slack notification. Here we log and return success.
-    console.log("[contact] new inquiry", {
-      fullName,
-      workEmail,
-      phone,
-      company,
-      need,
-      message,
-      at: new Date().toISOString(),
-    });
+    // Persist to the CMS so the admin panel can list/manage it.
+    try {
+      await db.contactQuery.create({
+        data: {
+          name: fullName,
+          email: workEmail,
+          phone: phone || null,
+          company: company || null,
+          need: need || null,
+          message: message || null,
+          source: "contact",
+          status: "new",
+        },
+      });
+    } catch (dbErr) {
+      // Non-fatal — the inquiry still succeeds even if DB write fails.
+      console.error("[contact] db write failed", dbErr);
+    }
 
     return NextResponse.json({
       ok: true,

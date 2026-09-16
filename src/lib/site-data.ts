@@ -71,6 +71,7 @@ export type NavView =
   | "contact"
   | "service-detail"
   | "job-apply"
+  | "admin"
   | "legal-privacy"
   | "legal-terms"
   | "legal-cookies";

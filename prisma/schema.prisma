@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,6 +14,8 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  password  String
+  role      String   @default("admin")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -29,4 +28,112 @@ model Post {
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// ===== CMS models =====
+
+model Page {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  category    String   @default("custom")
+  status      String   @default("published") // published | draft
+  hero        String?
+  overview    String?
+  body        String?  // markdown / rich text
+  metaTitle       String?
+  metaDescription String?
+  keywords    String?  // comma separated
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  category    String   @default("General")
+  excerpt     String
+  body        String?
+  status      String   @default("published") // published | draft
+  readTime   String   @default("5 min")
+  metaTitle       String?
+  metaDescription String?
+  keywords    String?
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([category])
+}
+
+model PricingTier {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  tagline     String
+  audience    String
+  price       String
+  cadence     String
+  popular     Boolean  @default(false)
+  features    String   // newline separated
+  notIncluded String?  // newline separated
+  cta         String
+  status      String   @default("published")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContactQuery {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  need      String?
+  message   String?
+  source    String   @default("contact") // contact | job-apply | chatbot
+  status    String   @default("new") // new | read | replied | archived
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([source])
+}
+
+model JobApplication {
+  id             String   @id @default(cuid())
+  jobId          String
+  positionType   String?
+  fullName       String
+  email          String
+  mobile         String?
+  filesFolder    String?  // upload/applications/<folder>
+  filesManifest  String?  // pipe-separated list of saved files
+  status         String   @default("new") // new | reviewed | shortlisted | rejected
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([status])
+  @@index([jobId])
+}
+
+model SeoAudit {
+  id          String   @id @default(cuid())
+  url         String
+  score       Int      @default(0)
+  titleLen    Int      @default(0)
+  descLen     Int      @default(0)
+  h1Count     Int      @default(0)
+  hasCanonical Boolean @default(false)
+  hasOg       Boolean  @default(false)
+  hasJsonLd   Boolean  @default(false)
+  hasSitemap  Boolean  @default(false)
+  hasRobots   Boolean  @default(false)
+  issues      String?  // newline separated
+  notes       String?
+  createdAt   DateTime @default(now())
 }
