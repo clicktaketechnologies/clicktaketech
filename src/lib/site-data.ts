@@ -70,6 +70,7 @@ export type NavView =
   | "connect"
   | "contact"
   | "service-detail"
+  | "job-apply"
   | "legal-privacy"
   | "legal-terms"
   | "legal-cookies";

@@ -9,6 +9,15 @@ import {
   type NavView,
 } from "@/lib/site-data";
 import { Reveal, Section, SectionHeading, LocalTrustStrip, CtaSection } from "@/components/site/section";
+import { Icon3D } from "@/components/site/icon-3d";
+
+// Category → 3D emoji map for service cards.
+const CATEGORY_EMOJI: Record<string, string> = {
+  "digital-marketing": "📣",
+  "web-software": "💻",
+  "ai-automation": "🤖",
+  "creative-brand": "🎨",
+};
 
 type ServicesViewProps = {
   onNavigate: (v: NavView) => void;
@@ -120,9 +129,7 @@ export function ServicesView({ onNavigate, onNavigateService }: ServicesViewProp
                 >
                   <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-500/0 blur-2xl transition-all duration-500 group-hover:bg-blue-500/15" />
                   <div className="flex items-center justify-between">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20 transition-transform group-hover:scale-110">
-                      <service.icon className="h-5 w-5" />
-                    </span>
+                    <Icon3D emoji={CATEGORY_EMOJI[cat.id] ?? "✨"} size="md" variant={(["brand","blue","pink","neutral"] as const)[catIdx % 4]} />
                     <span className="font-mono text-xs text-muted-foreground/60">
                       0{i + 1}
                     </span>
@@ -216,16 +223,14 @@ export function ServicesView({ onNavigate, onNavigateService }: ServicesViewProp
       <Section>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: GitBranch, title: "CI/CD from day one", desc: "Every commit ships through automated pipelines with SAST, DAST, and E2E gates." },
-            { icon: Clock, title: "Weekly demos", desc: "Two-week sprints with live demos. No surprise launches — you see progress every week." },
-            { icon: ShieldCheck, title: "Observability baked in", desc: "OpenTelemetry traces, Grafana dashboards, and alerting before a single user arrives." },
-            { icon: Zap, title: "p99 120ms SLA", desc: "Performance budgets enforced in CI. Regressions surface before they reach production." },
+            { icon: GitBranch, emoji: "🌿", title: "CI/CD from day one", desc: "Every commit ships through automated pipelines with SAST, DAST, and E2E gates." },
+            { icon: Clock, emoji: "⏱️", title: "Weekly demos", desc: "Two-week sprints with live demos. No surprise launches — you see progress every week." },
+            { icon: ShieldCheck, emoji: "🛡️", title: "Observability baked in", desc: "OpenTelemetry traces, Grafana dashboards, and alerting before a single user arrives." },
+            { icon: Zap, emoji: "⚡", title: "p99 120ms SLA", desc: "Performance budgets enforced in CI. Regressions surface before they reach production." },
           ].map((f, i) => (
             <Reveal key={f.title} delay={i * 0.05}>
               <div className="h-full rounded-2xl border border-border/50 bg-card/40 p-6">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20">
-                  <f.icon className="h-5 w-5" />
-                </span>
+                <Icon3D emoji={f.emoji} size="md" variant={(["brand","blue","pink","neutral"] as const)[i % 4]} />
                 <h3 className="mt-4 text-base font-semibold">{f.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
               </div>

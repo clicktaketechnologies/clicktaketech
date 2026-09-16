@@ -26,6 +26,14 @@ import { Icon3D } from "@/components/site/icon-3d";
 // 3D emoji glyphs cycled across benefit cards — rendered as true-color 3D icons.
 const BENEFIT_EMOJIS = ["✅", "⚡", "🚀", "🎯", "🛡️", "📈", "💡", "🔑"];
 
+// Category → 3D emoji for related-service cards.
+const CATEGORY_EMOJI: Record<string, string> = {
+  "digital-marketing": "📣",
+  "web-software": "💻",
+  "ai-automation": "🤖",
+  "creative-brand": "🎨",
+};
+
 type ServiceDetailViewProps = {
   slug: string;
   onNavigate: (v: NavView) => void;
@@ -355,9 +363,7 @@ export function ServiceDetailView({
                 onClick={() => onNavigateService(s.slug)}
                 className="group flex h-full w-full items-start gap-4 rounded-2xl border border-border/50 bg-card/40 p-5 text-left transition-all hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-[0_20px_60px_-20px] hover:shadow-blue-500/20"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20 transition-transform group-hover:scale-110">
-                  <s.icon className="h-5 w-5" />
-                </span>
+                <Icon3D emoji={CATEGORY_EMOJI[category.id] ?? "✨"} size="md" variant={(["brand","blue","pink","neutral"] as const)[i % 4]} />
                 <div className="min-w-0">
                   <h3 className="text-base font-semibold">{s.title}</h3>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground line-clamp-2">

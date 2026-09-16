@@ -25,6 +25,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Icon3D } from "@/components/site/icon-3d";
+
+// 3D emoji glyphs for the three company values.
+const VALUE_EMOJI: Record<string, string> = {
+  "Engineering-first": "⚙️",
+  "Multi-region delivery": "🌍",
+  "Embedded, not outsourced": "👥",
+};
 
 type AboutViewProps = {
   onNavigate: (v: NavView) => void;
@@ -82,9 +90,7 @@ export function AboutView({ onNavigate }: AboutViewProps) {
           {COMPANY_VALUES.map((v, i) => (
             <Reveal key={v.title} delay={i * 0.06}>
               <div className="h-full rounded-2xl border border-border/50 bg-card/40 p-6">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20">
-                  <v.icon className="h-6 w-6" />
-                </span>
+                <Icon3D emoji={VALUE_EMOJI[v.title] ?? "✨"} size="md" variant={(["brand","blue","pink"] as const)[i % 3]} />
                 <h3 className="mt-5 text-lg font-semibold">{v.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{v.desc}</p>
               </div>

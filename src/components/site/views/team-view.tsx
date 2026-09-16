@@ -14,6 +14,22 @@ import {
   LocalTrustStrip,
   CtaSection,
 } from "@/components/site/section";
+import { Icon3D } from "@/components/site/icon-3d";
+
+// 3D emoji glyphs for the five departments + four team values.
+const DEPT_EMOJI: Record<string, string> = {
+  Leadership: "👔",
+  Development: "💻",
+  Marketing: "📣",
+  Creative: "🎨",
+  Operations: "⚙️",
+};
+const TEAM_VALUE_EMOJI: Record<string, string> = {
+  "Hybrid by default": "🏠",
+  "Senior-first": "🏅",
+  "Cross-office pods": "🔗",
+  "Real production work": "🚀",
+};
 
 type TeamViewProps = {
   onNavigate: (v: NavView) => void;
@@ -66,9 +82,7 @@ export function TeamView({ onNavigate }: TeamViewProps) {
           {TEAM_VALUES.map((v, i) => (
             <Reveal key={v.title} delay={i * 0.05}>
               <div className="h-full rounded-2xl border border-border/50 bg-card/40 p-6">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gradient text-white shadow-[0_0_18px_-4px] shadow-blue-500/50">
-                  <v.icon className="h-5 w-5" />
-                </span>
+                <Icon3D emoji={TEAM_VALUE_EMOJI[v.title] ?? "✨"} size="md" variant={(["brand","blue","pink","neutral"] as const)[i % 4]} />
                 <h3 className="mt-4 text-base font-semibold">{v.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{v.desc}</p>
               </div>
@@ -92,9 +106,7 @@ export function TeamView({ onNavigate }: TeamViewProps) {
           {DEPARTMENTS.map((dept, i) => (
             <Reveal key={dept.num} delay={i * 0.04}>
               <div className="grid gap-4 rounded-2xl border border-border/50 bg-card/40 p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20">
-                  <dept.icon className="h-6 w-6" />
-                </span>
+                <Icon3D emoji={DEPT_EMOJI[dept.name] ?? "🏢"} size="md" variant={(["brand","blue","pink","neutral"] as const)[i % 4]} />
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-mono text-xs text-muted-foreground">{dept.num}</span>

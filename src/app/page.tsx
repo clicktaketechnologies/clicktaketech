@@ -21,12 +21,14 @@ import { ConnectView } from "@/components/site/views/connect-view";
 import { ContactView } from "@/components/site/views/contact-view";
 import { LegalView } from "@/components/site/views/legal-view";
 import { ServiceDetailView } from "@/components/site/views/service-detail-view";
+import { JobApplyView } from "@/components/site/views/job-apply-view";
 import type { NavView } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
 
 export default function Page() {
   const [view, setView] = useState<NavView>("home");
   const [serviceSlug, setServiceSlug] = useState<string>("");
+  const [jobSlug, setJobSlug] = useState<string>("");
 
   // Switch view + scroll to top so each "page" starts at the hero.
   const navigate = (v: NavView) => {
@@ -40,6 +42,15 @@ export default function Page() {
   const navigateService = (slug: string) => {
     setServiceSlug(slug);
     setView("service-detail");
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // Open the job application form, optionally pre-selecting a job slug.
+  const applyJob = (slug: string) => {
+    setJobSlug(slug);
+    setView("job-apply");
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -64,6 +75,8 @@ export default function Page() {
       "service-detail":
         getServiceContent(serviceSlug)?.metaTitle ??
         "Service | ClickTake Technologies",
+      "job-apply":
+        "Apply to Join ClickTake — Intern Onboarding & Identity Verification",
       "legal-privacy": "Privacy Policy | ClickTake Technologies",
       "legal-terms": "Terms of Service | ClickTake Technologies",
       "legal-cookies": "Cookie Policy | ClickTake Technologies",
@@ -78,7 +91,13 @@ export default function Page() {
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div
-            key={view === "service-detail" ? `service-${serviceSlug}` : view}
+            key={
+              view === "service-detail"
+                ? `service-${serviceSlug}`
+                : view === "job-apply"
+                ? `job-${jobSlug}`
+                : view
+            }
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
@@ -95,7 +114,9 @@ export default function Page() {
             {view === "pricing" && <PricingView onNavigate={navigate} />}
             {view === "about" && <AboutView onNavigate={navigate} />}
             {view === "team" && <TeamView onNavigate={navigate} />}
-            {view === "careers" && <CareersView onNavigate={navigate} />}
+            {view === "careers" && (
+              <CareersView onNavigate={navigate} onApply={applyJob} />
+            )}
             {view === "cities" && <CitiesView onNavigate={navigate} />}
             {view === "connect" && <ConnectView onNavigate={navigate} />}
             {view === "contact" && <ContactView />}
@@ -104,6 +125,12 @@ export default function Page() {
                 slug={serviceSlug}
                 onNavigate={navigate}
                 onNavigateService={navigateService}
+              />
+            )}
+            {view === "job-apply" && (
+              <JobApplyView
+                preselectedJobSlug={jobSlug}
+                onNavigate={navigate}
               />
             )}
             {view === "legal-privacy" && (

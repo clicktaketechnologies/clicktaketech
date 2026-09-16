@@ -3,6 +3,17 @@
 import { ArrowRight } from "lucide-react";
 import { SOLUTIONS, type NavView } from "@/lib/site-data";
 import { Reveal, Section, LocalTrustStrip, CtaSection } from "@/components/site/section";
+import { Icon3D } from "@/components/site/icon-3d";
+
+// 3D emoji glyphs for each solution audience.
+const SOLUTION_EMOJI: Record<string, string> = {
+  "For Startups": "🚀",
+  "For Local Businesses": "🏪",
+  "For E-commerce Brands": "🛒",
+  "For Repair Shops": "🔧",
+  "For UK Businesses": "🇬🇧",
+  "For Agencies": "🤝",
+};
 
 type SolutionsViewProps = {
   onNavigate: (v: NavView) => void;
@@ -65,9 +76,7 @@ export function SolutionsView({ onNavigate }: SolutionsViewProps) {
             <Reveal key={sol.title} delay={i * 0.05}>
               <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 transition-all hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-[0_20px_60px_-20px] hover:shadow-blue-500/20">
                 <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-500/0 blur-2xl transition-all duration-500 group-hover:bg-blue-500/15" />
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20 transition-transform group-hover:scale-110">
-                  <sol.icon className="h-6 w-6" />
-                </span>
+                <Icon3D emoji={SOLUTION_EMOJI[sol.title] ?? "✨"} size="md" variant={(["brand","blue","pink"] as const)[i % 3]} />
                 <p className="mt-5 text-xs font-medium uppercase tracking-wider text-blue-400/80">
                   {sol.audience}
                 </p>

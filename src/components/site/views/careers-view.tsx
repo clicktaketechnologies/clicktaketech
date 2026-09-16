@@ -12,9 +12,10 @@ import {
 
 type CareersViewProps = {
   onNavigate: (v: NavView) => void;
+  onApply?: (jobSlug: string) => void;
 };
 
-export function CareersView({ onNavigate }: CareersViewProps) {
+export function CareersView({ onNavigate, onApply }: CareersViewProps) {
   return (
     <>
       {/* Hero */}
@@ -94,7 +95,7 @@ export function CareersView({ onNavigate }: CareersViewProps) {
                   </div>
                 </div>
                 <button
-                  onClick={() => onNavigate("contact")}
+                  onClick={() => (onApply ? onApply(job.slug) : onNavigate("contact"))}
                   className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-[0_0_20px_-4px] hover:shadow-pink-500/60"
                 >
                   Apply
