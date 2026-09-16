@@ -19,6 +19,9 @@ import {
   ShieldCheck,
   AlertTriangle,
   CheckCircle2,
+  ArrowLeft,
+  Menu,
+  ExternalLink,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -26,6 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import type { NavView } from "@/lib/site-data";
 
 type Tab = "overview" | "pages" | "blog" | "pricing" | "queries" | "seo";
 
@@ -40,10 +44,11 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
 
 const TOKEN_KEY = "clicktake_admin_token";
 
-export function AdminView() {
+export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) {
   const [token, setToken] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>("overview");
   const [checking, setChecking] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -67,7 +72,7 @@ export function AdminView() {
 
   if (checking) {
     return (
-      <div className="flex min-h-screen items-center justify-center pt-24">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
       </div>
     );
@@ -77,60 +82,126 @@ export function AdminView() {
     return <LoginGate onLogin={setToken} />;
   }
 
+  const activeTab = TABS.find((t) => t.id === tab);
+
   return (
-    <div className="min-h-screen pt-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/40 pb-4">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gradient text-white">
-              <ShieldCheck className="h-5 w-5" />
-            </span>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight">Admin Panel</h1>
-              <p className="text-xs text-muted-foreground">
-                Manage pages, blog, pricing, queries &amp; SEO
-              </p>
-            </div>
+    <div className="flex min-h-screen bg-background text-foreground">
+      {/* ===== Sidebar (desktop fixed + mobile drawer) ===== */}
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-border/40 bg-sidebar transition-transform duration-300 lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {/* Brand */}
+        <div className="flex h-16 items-center gap-2.5 border-b border-border/40 px-5">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white">
+            <ShieldCheck className="h-5 w-5" />
+          </span>
+          <div className="leading-none">
+            <div className="text-sm font-bold tracking-tight">ClickTake</div>
+            <div className="text-[10px] uppercase tracking-wider text-blue-400">CMS Admin</div>
           </div>
-          <Button
-            onClick={logout}
-            variant="outline"
-            size="sm"
-            className="gap-1.5 border-border/60 bg-card/40"
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-white/10 lg:hidden"
+            aria-label="Close sidebar"
           >
-            <LogOut className="h-4 w-4" /> Logout
-          </Button>
+            <X className="h-4 w-4" />
+          </button>
         </div>
 
-        {/* Tabs */}
-        <div className="mt-5 flex gap-1 overflow-x-auto pb-2">
+        {/* Nav */}
+        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
           {TABS.map((t) => (
             <button
               key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => {
+                setTab(t.id);
+                setSidebarOpen(false);
+              }}
               className={cn(
-                "inline-flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
+                "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
                 tab === t.id
-                  ? "bg-brand-gradient text-white"
-                  : "border border-border/50 bg-card/40 text-muted-foreground hover:border-blue-500/40 hover:text-foreground"
+                  ? "bg-blue-500/12 text-foreground ring-1 ring-blue-500/30"
+                  : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
               )}
             >
-              <t.icon className="h-4 w-4" />
+              <t.icon className={cn("h-4 w-4", tab === t.id ? "text-blue-400" : "text-muted-foreground")} />
               {t.label}
             </button>
           ))}
+        </nav>
+
+        {/* Bottom: back to site + logout */}
+        <div className="border-t border-border/40 p-3">
+          <button
+            onClick={() => onNavigate("home")}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+          >
+            <ExternalLink className="h-4 w-4" />
+            View live site
+          </button>
+          <button
+            onClick={logout}
+            className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/10"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </button>
         </div>
+      </aside>
+
+      {/* ===== Main area ===== */}
+      <div className="flex min-h-screen flex-1 flex-col lg:pl-64">
+        {/* Top bar */}
+        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border/40 bg-background/80 px-4 backdrop-blur-md sm:px-6">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card/40 text-foreground lg:hidden"
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <div className="flex items-center gap-2">
+            {activeTab && <activeTab.icon className="h-5 w-5 text-blue-400" />}
+            <h1 className="text-lg font-bold tracking-tight">{activeTab?.label ?? "Dashboard"}</h1>
+          </div>
+          <div className="ml-auto flex items-center gap-3">
+            <button
+              onClick={() => onNavigate("home")}
+              className="hidden items-center gap-1.5 rounded-lg border border-border/60 bg-card/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:border-blue-500/40 hover:text-foreground sm:inline-flex"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Back to site
+            </button>
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-gradient text-xs font-bold text-white">
+                A
+              </span>
+              <span className="hidden text-xs sm:block">
+                <div className="font-medium">Admin</div>
+                <div className="text-muted-foreground">admin@clicktaketech.com</div>
+              </span>
+            </div>
+          </div>
+        </header>
 
         {/* Content */}
-        <div className="mt-6 pb-24">
+        <main className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
           {tab === "overview" && <OverviewTab onJump={setTab} />}
           {tab === "pages" && <PagesTab token={token} />}
           {tab === "blog" && <BlogTab token={token} />}
           {tab === "pricing" && <PricingTab token={token} />}
           {tab === "queries" && <QueriesTab token={token} />}
           {tab === "seo" && <SeoTab token={token} />}
-        </div>
+        </main>
       </div>
     </div>
   );
@@ -173,7 +244,7 @@ function LoginGate({ onLogin }: { onLogin: (t: string) => void }) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 pt-24">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <form
         onSubmit={submit}
         className="w-full max-w-md rounded-3xl border border-border/50 bg-card/40 p-8 ring-gradient"

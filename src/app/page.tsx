@@ -98,6 +98,16 @@ export default function Page() {
     document.title = titles[view];
   }, [view, serviceSlug]);
 
+  // Admin panel renders as a standalone full-screen dashboard — no site
+  // navbar, footer, background or chatbot. It is a separate CMS app surface.
+  if (view === "admin") {
+    return (
+      <div className="min-h-screen bg-background">
+        <AdminView onNavigate={navigate} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Background />
@@ -147,7 +157,6 @@ export default function Page() {
                 onNavigate={navigate}
               />
             )}
-            {view === "admin" && <AdminView />}
             {view === "legal-privacy" && (
               <LegalView docId="legal-privacy" onNavigate={navigate} />
             )}
