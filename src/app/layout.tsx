@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -50,13 +50,25 @@ export const metadata: Metadata = {
   authors: [{ name: "ClickTake Technologies" }],
   creator: "ClickTake Technologies",
   publisher: "ClickTake Technologies",
+  applicationName: "ClickTake Technologies",
   category: "technology",
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: true,
+  },
   alternates: {
     canonical: BASE_URL,
   },
   icons: {
-    icon: "/logo.svg",
+    icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/logo-dark.png", type: "image/png", sizes: "192x192" },
+      { url: "/logo-dark.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/logo-dark.png", sizes: "180x180" }],
   },
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: "ClickTake — Engineering Tomorrow's Intelligence, Today.",
     description:
@@ -65,12 +77,21 @@ export const metadata: Metadata = {
     siteName: "ClickTake Technologies",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "/logo-white.png",
+        width: 1200,
+        height: 630,
+        alt: "ClickTake Technologies — AI-Native Software Engineering",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "ClickTake — AI-Native Software Engineering",
     description:
       "24 services across Digital Marketing, Web & Software, AI & Automation, and Creative & Brand — one delivery engine. Serving 13 cities in 4 continents.",
+    images: ["/logo-white.png"],
   },
   robots: {
     index: true,
@@ -86,6 +107,13 @@ export const metadata: Metadata = {
   verification: {
     google: "google-site-verification-token",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#136DFF",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

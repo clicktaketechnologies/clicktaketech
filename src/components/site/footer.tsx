@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
+import { Mail, Phone, MessageCircle, MapPin, Heart } from "lucide-react";
 import { OFFICES, TECH_STACK, LEGAL_LINKS, type NavView } from "@/lib/site-data";
 import { Logo } from "@/components/site/logo";
 
@@ -148,7 +148,10 @@ export function Footer({ onNavigate }: FooterProps) {
                 {link.label}
               </button>
             ))}
-            <span className="text-blue-400/70">Built with Next.js</span>
+            <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+              Built with <Heart className="h-3.5 w-3.5 fill-pink-500 text-pink-500" />
+              <span className="text-pink-400">Love</span>
+            </span>
           </div>
         </div>
       </div>
