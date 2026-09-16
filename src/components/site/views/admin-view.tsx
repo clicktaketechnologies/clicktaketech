@@ -48,6 +48,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import type { NavView } from "@/lib/site-data";
+import { ALL_PERMISSIONS, ROLE_PRESETS, parsePermissions, hasPermission } from "@/lib/rbac";
 import {
   LeadCrmTab,
   EmailCenterTab,
@@ -116,8 +117,33 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dash
 
 const TOKEN_KEY = "clicktake_admin_token";
 
+// Maps each tab to the permission key required to view it.
+const TAB_PERMISSIONS: Record<Tab, string> = {
+  overview: "dashboard:view",
+  pages: "pages:view",
+  blog: "blog:view",
+  pricing: "pricing:view",
+  media: "media:view",
+  "team-careers": "team:view",
+  typography: "branding:view",
+  theme: "branding:view",
+  leads: "leads:view",
+  queries: "queries:view",
+  applications: "applications:view",
+  email: "email:view",
+  experiments: "experiments:view",
+  storage: "storage:view",
+  seo: "seo:view",
+  settings: "settings:view",
+  redirects: "redirects:view",
+  security: "security:view",
+  users: "users:view",
+  activity: "activity:view",
+};
+
 export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) {
   const [token, setToken] = useState<string | null>(null);
+  const [userPerms, setUserPerms] = useState<Set<string> | null>(null); // null = super admin
   const [tab, setTab] = useState<Tab>("overview");
   const [checking, setChecking] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -128,6 +154,8 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
       const t = localStorage.getItem(TOKEN_KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       if (t) setToken(t);
+      const perms = localStorage.getItem("clicktake_admin_perms");
+      if (perms) setUserPerms(parsePermissions(perms));
       const lm = localStorage.getItem("clicktake_admin_light");
       if (lm === "true") setLightMode(true);
     } catch {
@@ -139,10 +167,12 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   const logout = () => {
     try {
       localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem("clicktake_admin_perms");
     } catch {
       /* ignore */
     }
     setToken(null);
+    setUserPerms(null);
   };
 
   const toggleLightMode = () => {
@@ -160,7 +190,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   }
 
   if (!token) {
-    return <LoginGate onLogin={setToken} />;
+    return <LoginGate onLogin={(t, perms) => { setToken(t); setUserPerms(perms); }} />;
   }
 
   const activeTab = TABS.find((t) => t.id === tab);
@@ -202,7 +232,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
         {/* Nav — 5 groups */}
         <nav className="flex-1 space-y-4 overflow-y-auto p-3">
           {(["dashboard", "cms", "branding", "leads", "system"] as const).map((group) => {
-            const items = TABS.filter((t) => t.group === group);
+            const items = TABS.filter((t) => t.group === group && hasPermission(userPerms, TAB_PERMISSIONS[t.id]));
             if (items.length === 0) return null;
             const labels: Record<typeof group, string> = {
               dashboard: "",
@@ -337,7 +367,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
 }
 
 // ============================ LOGIN ============================
-function LoginGate({ onLogin }: { onLogin: (t: string) => void }) {
+function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null) => void }) {
   const { toast } = useToast();
   const [email, setEmail] = useState("admin@clicktaketech.com");
   const [password, setPassword] = useState("");
@@ -354,12 +384,14 @@ function LoginGate({ onLogin }: { onLogin: (t: string) => void }) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error(data.error || "Login failed");
+      const perms = parsePermissions(data.user?.permissions ?? null);
       try {
         localStorage.setItem(TOKEN_KEY, data.token);
+        localStorage.setItem("clicktake_admin_perms", data.user?.permissions ?? "null");
       } catch {
         /* ignore */
       }
-      onLogin(data.token);
+      onLogin(data.token, perms);
       toast({ title: "Logged in", description: "Welcome to the admin panel." });
     } catch (err) {
       toast({
@@ -2008,6 +2040,7 @@ function UsersTab({ token }: { token: string }) {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState({ email: "", name: "", password: "", role: "editor" });
+  const [editingPerms, setEditingPerms] = useState<UserRow | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -2113,9 +2146,14 @@ function UsersTab({ token }: { token: string }) {
                   </td>
                   <td className="p-3 text-xs text-muted-foreground">{new Date(u.createdAt).toLocaleDateString()}</td>
                   <td className="p-3 text-right">
-                    <button onClick={() => del(u.id)} className="rounded-lg p-2 text-red-400 hover:bg-red-500/10">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    <div className="inline-flex gap-1">
+                      <button onClick={() => setEditingPerms(u)} className="rounded-lg bg-blue-500/10 p-2 text-blue-400 hover:bg-blue-500/20" title="Manage permissions">
+                        <ShieldCheck className="h-4 w-4" />
+                      </button>
+                      <button onClick={() => del(u.id)} className="rounded-lg p-2 text-red-400 hover:bg-red-500/10">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -2123,6 +2161,176 @@ function UsersTab({ token }: { token: string }) {
           </table>
         </div>
       )}
+      {editingPerms && (
+        <PermissionEditor
+          user={editingPerms}
+          token={token}
+          onClose={() => setEditingPerms(null)}
+          onSaved={() => { setEditingPerms(null); load(); }}
+        />
+      )}
+    </div>
+  );
+}
+
+// ============================ PERMISSION EDITOR ============================
+function PermissionEditor({ user, token, onClose, onSaved }: { user: UserRow; token: string; onClose: () => void; onSaved: () => void }) {
+  const { toast } = useToast();
+  const [perms, setPerms] = useState<Set<string> | null>(null); // null = super admin
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`/api/admin/permissions?userId=${user.id}`, { headers: { "x-admin-token": token } });
+        const data = await res.json();
+        if (data.ok) {
+          setPerms(data.userPermissions === null ? null : new Set(data.userPermissions));
+        }
+      } catch { /* ignore */ }
+      setLoading(false);
+    })();
+  }, [user.id]);
+  const toggle = (key: string) => {
+    setPerms((prev) => {
+      if (prev === null) return new Set([key]); // super admin → switch to custom
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  };
+
+  const applyPreset = (preset: string) => {
+    if (preset === "super_admin") {
+      setPerms(null);
+    } else {
+      const presetData = Object.entries(ROLE_PRESETS).find(([k]) => k === preset)?.[1];
+      if (presetData?.permissions) {
+        setPerms(new Set(presetData.permissions));
+      } else if (presetData?.permissions === null) {
+        setPerms(null);
+      }
+    }
+  };
+
+  const save = async () => {
+    setSaving(true);
+    const permissionsArray = perms === null ? null : Array.from(perms);
+    try {
+      const res = await fetch("/api/admin/permissions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", "x-admin-token": token },
+        body: JSON.stringify({ userId: user.id, permissions: permissionsArray }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        toast({ title: "Permissions updated", description: `${user.email} — ${perms === null ? "all access" : `${perms.size} permissions`}` });
+        onSaved();
+      } else {
+        toast({ title: data.error || "Failed", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Failed to save", variant: "destructive" });
+    }
+    setSaving(false);
+  };
+
+  const groups = Array.from(new Set(ALL_PERMISSIONS.map((p) => p.group)));
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-black/60 p-4 pt-12 backdrop-blur-sm">
+      <div className="relative w-full max-w-3xl rounded-3xl border border-border/50 bg-card/95 p-6 shadow-deep sm:p-8">
+        <button onClick={onClose} className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-white/10">
+          <X className="h-5 w-5" />
+        </button>
+        <div className="flex items-center gap-3">
+          <ShieldCheck className="h-6 w-6 text-blue-400" />
+          <div>
+            <h2 className="text-lg font-bold">Manage Permissions</h2>
+            <p className="text-xs text-muted-foreground">{user.name || user.email} · {user.role}</p>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="py-12 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" /></div>
+        ) : (
+          <>
+            {/* Role presets */}
+            <div className="mt-5">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-400">Quick Assign Role</p>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(ROLE_PRESETS).map(([key, val]) => (
+                  <button
+                    key={key}
+                    onClick={() => applyPreset(key)}
+                    className={cn(
+                      "rounded-xl border px-3 py-2 text-left transition-all",
+                      (perms === null && val.permissions === null) || (perms !== null && val.permissions && perms.size === new Set(val.permissions).size && Array.from(perms).every((p) => val.permissions!.includes(p)))
+                        ? "border-blue-500/50 bg-blue-500/10 ring-1 ring-blue-500/30"
+                        : "border-border/50 bg-background/40 hover:border-blue-500/30"
+                    )}
+                  >
+                    <div className="text-xs font-bold">{val.label}</div>
+                    <div className="text-[10px] text-muted-foreground">{val.description}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Permission matrix */}
+            <div className="mt-5 max-h-[50vh] space-y-4 overflow-y-auto pr-1">
+              {perms === null && (
+                <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-3 text-sm text-blue-300">
+                  ✓ Super Admin — all permissions enabled. Switch to a custom set by toggling permissions below.
+                </div>
+              )}
+              {groups.map((group) => (
+                <div key={group}>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{group}</p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {ALL_PERMISSIONS.filter((p) => p.group === group).map((p) => {
+                      const enabled = hasPermission(perms, p.key);
+                      return (
+                        <button
+                          key={p.key}
+                          onClick={() => toggle(p.key)}
+                          className={cn(
+                            "flex items-start gap-2.5 rounded-xl border p-3 text-left transition-all",
+                            enabled ? "border-blue-500/40 bg-blue-500/5" : "border-border/50 bg-background/40 hover:border-border/70"
+                          )}
+                        >
+                          <span className={cn("mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border", enabled ? "border-blue-500 bg-blue-500 text-white" : "border-border/50")}>
+                            {enabled && <Check className="h-3 w-3" />}
+                          </span>
+                          <div className="min-w-0">
+                            <div className="text-xs font-medium">{p.label}</div>
+                            <div className="text-[10px] text-muted-foreground">{p.description}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div className="mt-5 flex items-center justify-between border-t border-border/40 pt-4">
+              <span className="text-xs text-muted-foreground">
+                {perms === null ? "All permissions (super admin)" : `${perms.size} of ${ALL_PERMISSIONS.length} permissions enabled`}
+              </span>
+              <div className="flex gap-2">
+                <Button onClick={onClose} variant="outline" className="border-border/60 bg-card/40">Cancel</Button>
+                <Button onClick={save} disabled={saving} className="bg-brand-gradient text-white">
+                  {saving ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Check className="mr-1 h-4 w-4" />}
+                  {saving ? "Saving..." : "Save Permissions"}
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

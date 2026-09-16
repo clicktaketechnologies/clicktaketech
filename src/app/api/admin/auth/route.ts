@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
     const user = await db.user.findUnique({ where: { email } });
-    if (!user || user.password !== password || user.role !== "admin") {
+    if (!user || user.password !== password) {
       await logActivity({ action: "login", entity: "user", summary: `Failed login attempt for ${email}` });
       return NextResponse.json(
         { ok: false, error: "Invalid credentials." },
@@ -30,7 +30,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       ok: true,
       token: makeToken(user.email, user.password),
-      user: { email: user.email, name: user.name, role: user.role },
+      user: {
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        permissions: user.permissions, // JSON string or null (super admin)
+      },
     });
   } catch (err) {
     console.error("[admin/auth] error", err);
