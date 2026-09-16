@@ -98,6 +98,8 @@ export type ServiceContent = {
   voiceSearchQueries: string[];
   /** E-A-T signals: quantifiable expertise, authority, and trust statements for this service. */
   eatSignals: { label: string; value: string }[];
+  /** 4 service-specific "at a glance" facts for the detail-page sidebar — tailored per service, never generic. */
+  atAGlance: { label: string; value: string }[];
 };
 
 // ===== Site-wide E-A-T (Expertise, Authoritativeness, Trustworthiness) signals =====

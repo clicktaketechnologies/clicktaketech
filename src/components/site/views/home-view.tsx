@@ -28,6 +28,15 @@ import {
   CtaSection,
 } from "@/components/site/section";
 import { EatTrustStrip } from "@/components/site/seo-content-blocks";
+import { Icon3D } from "@/components/site/icon-3d";
+
+// 3D emoji glyphs for the four capability cards on the homepage.
+const CAPABILITY_EMOJIS: Record<string, string> = {
+  "01": "📣",
+  "02": "💻",
+  "03": "🤖",
+  "04": "🎨",
+};
 
 type HomeViewProps = {
   onNavigate: (v: NavView) => void;
@@ -133,9 +142,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               >
                 <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-blue-500/0 blur-2xl transition-all duration-500 group-hover:bg-blue-500/20" />
                 <div className="flex items-center justify-between">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20 transition-transform group-hover:scale-110">
-                    <cap.icon className="h-6 w-6" />
-                  </span>
+                  <Icon3D emoji={CAPABILITY_EMOJIS[cap.num] ?? "✨"} size="md" variant={(["brand","blue","pink","neutral"] as const)[i % 4]} />
                   <span className="font-mono text-xs text-muted-foreground/60">{cap.num}</span>
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-foreground">{cap.title}</h3>

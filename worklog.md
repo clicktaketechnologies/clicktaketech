@@ -207,3 +207,26 @@ Stage Summary:
 - E-A-T signals are varied across services — generic ClickTake credentials (since 2019, 120+ deployments, 99.9% SLA, GDPR, zero breaches) are mixed with service-specific signals (CPA-first architecture for PPC, Core Web Vitals 90+ on every build for SEO/WordPress/SEO-web-design, production RAG over 18M+ documents for custom LLM, schema-validated tool calls + human checkpoints for AI agents, real device lab + BrowserStack for responsive design, 18M documents / 10M+ requests/day / 120ms p99 for backend work, etc.).
 - No other files touched. Only /home/z/my-project/src/lib/service-content.ts was edited. Helper scripts live under /home/z/my-project/.scripts/ (not exported, not part of the build).
 - Lint clean (exit 0). No new dependencies. No tests added. Existing fields on every entry (slug, primaryKeyword, secondaryKeywords, shortTermKeywords, longTermKeywords, metaTitle, metaDescription, overview, benefits, process, faqs) preserved untouched.
+
+---
+Task ID: 1
+Agent: general-purpose (atAGlance writer)
+Task: Add service-specific atAGlance facts for all 24 services
+
+Work Log:
+- Read /home/z/my-project/worklog.md to align with prior tasks (Task IDs 2, 3, 4, 5, 6). The shared service-content.ts file already has 24 fully-written entries with the earlier-added definition / peopleAlsoAsk / voiceSearchQueries / eatSignals fields (Task ID 2 eat-content enhancer).
+- Inspected the extended ServiceContent type at /home/z/my-project/src/lib/site-data.ts (lines 101-102) — confirmed the single new required field: `atAGlance: { label: string; value: string }[]` with the JSDoc "4 service-specific at a glance facts for the detail-page sidebar — tailored per service, never generic."
+- Read /home/z/my-project/src/lib/service-content.ts end-to-end (3,038 lines, 24 entries). Confirmed every entry ends with the same pattern: an `eatSignals: [...]` array followed by `\n  },` (entry close) — the last entry closes the parent object with `\n};`. This gives a deterministic insertion anchor.
+- Hand-wrote 4 genuinely service-specific `{ label, value }` facts for each of the 24 services (96 facts total). Labels are 1-3 words, values are concise (1-6 words, mostly under 40 chars). Used middle-dot "·" to separate list items. The 4 labels deliberately vary across services (e.g. ppc has Platforms / Min. ad spend / Pricing model / First results; seo has SEO scope / Local pack target / Core Web Vitals / Reporting cadence; chatbots has Channels / Capabilities / Models / Time to live; WordPress has Build type / Page builder / Performance / CMS). Avoided the generic 4-fact set being replaced ("Time to PoC: 6 weeks / Fixed-fee PoC / 99.9% uptime / Practice area") on every page — only service-specific phrasings used where genuinely relevant (e.g. "~4 weeks to production" for chatbots, "~2 weeks" for small-business sites).
+- Wrote /home/z/my-project/.scripts/add_ataglance.py — a deterministic Python script that, for each slug, locates the unique `    slug: "<slug>",` anchor line, finds the FIRST `    ],\n  },` (entry close) after it, and inserts the atAGlance block between the closing `],` of eatSignals and the entry's `},`. Script asserts 24 slugs, 4 facts each, and validates 24 atAGlance occurrences after writing.
+- Ran the script once — applied 24 insertions cleanly. File grew from 3,038 to 3,182 lines. `grep -c "atAGlance:"` returned exactly 24.
+- Ran `cd /home/z/my-project && bun run lint 2>&1 | tail -15` — eslint reported zero errors and zero warnings (exit code 0). No fixes required.
+- Spot-checked the four sample services requested in the task brief (ppc-paid-ads, seo-services, ai-chatbots-assistants, wordpress-web-design-services) — all four match the examples in the task spec verbatim, confirming the data is genuinely service-specific.
+- Existing fields on every entry preserved untouched: slug, primaryKeyword, secondaryKeywords, shortTermKeywords, longTermKeywords, metaTitle, metaDescription, overview, benefits, process, faqs, definition, peopleAlsoAsk, voiceSearchQueries, eatSignals. Only the atAGlance field was added.
+- No other files touched. Only /home/z/my-project/src/lib/service-content.ts was edited. Helper script lives under /home/z/my-project/.scripts/add_ataglance.py (not exported, not part of the build).
+
+Stage Summary:
+- All 24 entries in /home/z/my-project/src/lib/service-content.ts now have a `atAGlance: { label: string; value: string }[]` field with exactly 4 tailored facts each (96 facts total).
+- Labels are varied across services — no two services share the exact same set of 4 labels. Values are concise (typically 1-6 words, under ~40 chars) and use middle-dot "·" separators for list-style values.
+- Lint clean (exit 0). No new dependencies. No tests added. Only the one file edited per the task constraints.
+- Sample verification (per task request): ppc-paid-ads → Platforms / Min. ad spend / Pricing model / First results; seo-services → SEO scope / Local pack target / Core Web Vitals / Reporting cadence; ai-chatbots-assistants → Channels / Capabilities / Models / Time to live; wordpress-web-design-services → Build type / Page builder / Performance / CMS.

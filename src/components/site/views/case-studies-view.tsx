@@ -64,18 +64,29 @@ export function CaseStudiesView({ onNavigate }: CaseStudiesViewProps) {
                   </div>
                   <div>
                     <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">{cs.summary}</p>
+                    {/* Headline outcomes — clean delta, no fabricated exact baselines */}
                     <div className="mt-6 grid gap-3 sm:grid-cols-3">
                       {cs.metrics.map((m) => (
-                        <div key={m.label} className="rounded-2xl border border-border/50 bg-background/40 p-4">
-                          <div className="text-xs text-muted-foreground">{m.label}</div>
-                          <div className="mt-2 flex items-baseline gap-1.5">
-                            <span className="text-sm text-muted-foreground line-through decoration-red-400/60">{m.before}</span>
-                            <span className="text-lg font-bold text-foreground">{m.after}</span>
+                        <div
+                          key={m.label}
+                          className="relative overflow-hidden rounded-2xl border border-border/50 bg-background/40 p-5"
+                        >
+                          <div className="text-xs uppercase tracking-wide text-muted-foreground">
+                            {m.label}
                           </div>
-                          <div className={`mt-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${m.positive ? "bg-blue-500/15 text-blue-400" : "bg-red-500/15 text-red-400"}`}>
-                            {m.positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                          <div
+                            className={`mt-2 inline-flex items-center gap-1.5 text-2xl font-bold ${m.positive ? "text-gradient-brand" : "text-red-400"}`}
+                          >
+                            {m.positive ? (
+                              <TrendingUp className="h-5 w-5 text-blue-400" />
+                            ) : (
+                              <TrendingDown className="h-5 w-5 text-red-400" />
+                            )}
                             {m.delta}
                           </div>
+                          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                            {m.positive ? "Improvement" : "Reduction"} vs. pre-engagement baseline.
+                          </p>
                         </div>
                       ))}
                     </div>

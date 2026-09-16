@@ -129,6 +129,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Avg. CPA improvement", value: "32% in first 90 days" },
       { label: "Tracking stack", value: "Server-side GA4 + CRM imports" },
     ],
+    atAGlance: [
+      { label: "Platforms", value: "Google · Meta · LinkedIn · TikTok" },
+      { label: "Min. ad spend", value: "£5k/mo Google · £3k/mo Meta" },
+      { label: "Pricing model", value: "Fixed monthly retainer" },
+      { label: "First results", value: "~30 days to meaningful CPA" },
+    ],
   },
 
   "content-strategy-seo": {
@@ -254,6 +260,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Content shipped", value: "2,400+ articles across 80 clients" },
       { label: "Editorial process", value: "Brief, draft, SME review, publish" },
       { label: "Tracking stack", value: "GA4 + Looker + CRM pipeline attribution" },
+    ],
+    atAGlance: [
+      { label: "Pillar strategy", value: "Topic clusters + hub pages" },
+      { label: "Editorial cadence", value: "4–8 articles/mo" },
+      { label: "Writer pool", value: "UK-native SME specialists" },
+      { label: "Briefing depth", value: "SERP-led outlines" },
     ],
   },
 
@@ -381,6 +393,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Statistical method", value: "Sequential testing, 95% confidence" },
       { label: "Winning variants shipped", value: "8-15 per client per year" },
     ],
+    atAGlance: [
+      { label: "Test framework", value: "A/B + multivariate" },
+      { label: "Min. sessions", value: "5k/mo per variant" },
+      { label: "Testing cadence", value: "2–4 live tests/mo" },
+      { label: "Lift benchmark", value: "+15% CVR in 90 days" },
+    ],
   },
 
   "seo-services": {
@@ -506,6 +524,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Core Web Vitals baseline", value: "90+ on every build" },
       { label: "Link-building method", value: "Digital PR + HARO only, no PBNs" },
       { label: "Reporting stack", value: "GA4 + Looker + Search Console + Ahrefs" },
+    ],
+    atAGlance: [
+      { label: "SEO scope", value: "Technical · On-page · Off-page" },
+      { label: "Local pack target", value: "Top 3 in your area" },
+      { label: "Core Web Vitals", value: "90+ Lighthouse baseline" },
+      { label: "Reporting cadence", value: "Monthly + live dashboard" },
     ],
   },
 
@@ -633,6 +657,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Production capacity", value: "120+ assets per month" },
       { label: "Reporting stack", value: "Native insights + GA4 + Sprout" },
     ],
+    atAGlance: [
+      { label: "Channels", value: "Instagram · LinkedIn · TikTok · X" },
+      { label: "Content mix", value: "Reels · carousels · text" },
+      { label: "Posting cadence", value: "3–5 posts/week" },
+      { label: "Reporting", value: "Reach · saves · DMs" },
+    ],
   },
 
   "seo-web-design-services": {
@@ -758,6 +788,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Schema validation", value: "Google Rich Results test on every block" },
       { label: "Migration safety net", value: "30-day post-launch rank monitoring" },
       { label: "Tech stack", value: "Next.js, Astro, Webflow, WordPress" },
+    ],
+    atAGlance: [
+      { label: "Build approach", value: "Index-first architecture" },
+      { label: "Page speed", value: "Lighthouse 90+" },
+      { label: "Schema markup", value: "Product · FAQ · LocalBusiness" },
+      { label: "Migration safety", value: "301-mapped, zero traffic loss" },
     ],
   },
 
@@ -886,6 +922,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Delivery cadence", value: "2-week sprints, demo every Friday" },
       { label: "Test coverage", value: "E2E on critical paths, same sprint" },
     ],
+    atAGlance: [
+      { label: "Stack", value: "Next.js · Node · Postgres" },
+      { label: "Delivery", value: "2-week sprints · demos" },
+      { label: "Code ownership", value: "GitHub repo, full access" },
+      { label: "Time to MVP", value: "~6–10 weeks" },
+    ],
   },
 
   "saas-platform-engineering": {
@@ -1011,6 +1053,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Billing integrations", value: "Stripe Billing, Chargebee, Recurly" },
       { label: "Compliance posture", value: "Engineered to SOC 2 controls" },
       { label: "SaaS deployments", value: "32 platforms since 2019" },
+    ],
+    atAGlance: [
+      { label: "Architecture", value: "Multi-tenant · API-first" },
+      { label: "Scaling target", value: "10M+ req/day" },
+      { label: "Infra", value: "AWS · GCP · Vercel" },
+      { label: "CI/CD", value: "Trunk-based · auto-deploy" },
     ],
   },
 
@@ -1138,6 +1186,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Breach history", value: "Zero client auth breaches since 2019" },
       { label: "Compliance alignment", value: "Engineered to OWASP ASVS L2" },
     ],
+    atAGlance: [
+      { label: "Protocols", value: "OAuth 2.0 · OIDC · SAML" },
+      { label: "MFA", value: "TOTP · WebAuthn · SMS" },
+      { label: "Directory sync", value: "SCIM to Okta · Entra" },
+      { label: "Compliance", value: "SOC 2 · GDPR ready" },
+    ],
   },
 
   "python-backend-apis": {
@@ -1263,6 +1317,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Avg. p99 latency shipped", value: "120ms under production load" },
       { label: "Throughput shipped", value: "10M+ requests/day per client" },
       { label: "Reliability tooling", value: "OpenTelemetry + Sentry + Prometheus" },
+    ],
+    atAGlance: [
+      { label: "Framework", value: "FastAPI · Django · Flask" },
+      { label: "API style", value: "REST · GraphQL · gRPC" },
+      { label: "Async", value: "ASGI + asyncio-native" },
+      { label: "Throughput", value: "120ms p99 at scale" },
     ],
   },
 
@@ -1390,6 +1450,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Performance baseline", value: "Lighthouse 90+ mobile on every build" },
       { label: "Hosting partners", value: "Kinsta, WP Engine, Cloudways" },
     ],
+    atAGlance: [
+      { label: "Build type", value: "Custom + headless options" },
+      { label: "Page builder", value: "ACF blocks (no bloat)" },
+      { label: "Performance", value: "Lighthouse 90+" },
+      { label: "CMS", value: "WordPress + WooCommerce" },
+    ],
   },
 
   "ecommerce-web-design-services": {
@@ -1515,6 +1581,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Platforms shipped", value: "Shopify, WooCommerce, BigCommerce, headless" },
       { label: "Conversion lift", value: "15-30% within 90 days of CRO" },
       { label: "Payment integrations", value: "Stripe, Adyen, Klarna, PayPal, Apple/Google Pay" },
+    ],
+    atAGlance: [
+      { label: "Platforms", value: "Shopify · WooCommerce · BigCommerce" },
+      { label: "Conversion focus", value: "PDP · cart · checkout CRO" },
+      { label: "Payments", value: "Stripe · PayPal · Klarna" },
+      { label: "Catalog size", value: "Up to 50k SKUs" },
     ],
   },
 
@@ -1643,6 +1715,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Eval methodology", value: "Labelled eval set on every change" },
       { label: "Data privacy", value: "Zero-retention contracts, VPC and on-prem options" },
     ],
+    atAGlance: [
+      { label: "Models", value: "OpenAI · Anthropic · Llama · Mistral" },
+      { label: "Retrieval", value: "RAG over 18M+ docs" },
+      { label: "Hosting", value: "Private VPC · on-prem option" },
+      { label: "Eval suite", value: "Golden + adversarial sets" },
+    ],
   },
 
   "ai-chatbots-assistants": {
@@ -1768,6 +1846,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Channels shipped", value: "Web, WhatsApp, Slack, Teams, Instagram" },
       { label: "Hallucination prevention", value: "Tool-use + guardrails + labelled evals" },
       { label: "Eval cadence", value: "Every code change, against labelled set" },
+    ],
+    atAGlance: [
+      { label: "Channels", value: "Site · WhatsApp · Slack" },
+      { label: "Capabilities", value: "Tool-use · Memory · Handoff" },
+      { label: "Models", value: "OpenAI · Anthropic · custom" },
+      { label: "Time to live", value: "~4 weeks to production" },
     ],
   },
 
@@ -1895,6 +1979,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Models supported", value: "GPT-4, Claude, Gemini, Llama, Mistral" },
       { label: "Delivery artefact", value: "Versioned prompt library + CI gate" },
     ],
+    atAGlance: [
+      { label: "Target models", value: "GPT · Claude · Gemini · Llama" },
+      { label: "Techniques", value: "Few-shot · CoT · ReAct" },
+      { label: "Testing", value: "Regression + A/B prompts" },
+      { label: "Output", value: "Versioned prompt library" },
+    ],
   },
 
   "computer-vision-nlp": {
@@ -2020,6 +2110,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Edge deployment stack", value: "ONNX, TensorRT, TFLite, WebGPU" },
       { label: "Drift monitoring", value: "Quarterly retraining, monthly for fast domains" },
       { label: "Models shipped", value: "PyTorch, HuggingFace, Tesseract, cloud APIs" },
+    ],
+    atAGlance: [
+      { label: "CV tasks", value: "Detection · OCR · segmentation" },
+      { label: "NLP tasks", value: "NER · sentiment · classification" },
+      { label: "Frameworks", value: "PyTorch · ONNX · OpenCV" },
+      { label: "Edge deploy", value: "Jetson · mobile · browser" },
     ],
   },
 
@@ -2147,6 +2243,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Security model", value: "Scoped OAuth + vaulted secrets + least-privilege" },
       { label: "Reliability target", value: "99.9% SLA, idempotent + retried jobs" },
     ],
+    atAGlance: [
+      { label: "Tools", value: "n8n · Zapier · Make + custom" },
+      { label: "Integrations", value: "HubSpot · Slack · Xero" },
+      { label: "Trigger types", value: "Webhook · cron · event-driven" },
+      { label: "Savings", value: "10–40 hrs/mo reclaimed" },
+    ],
   },
 
   "ai-agent-development": {
@@ -2272,6 +2374,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Eval methodology", value: "Task success + tool accuracy + cost per task" },
       { label: "Frameworks shipped", value: "LangGraph, OpenAI Agents SDK, custom" },
       { label: "Avg. task success rate", value: "85%+ on production agents" },
+    ],
+    atAGlance: [
+      { label: "Patterns", value: "Planner · ReAct · multi-agent" },
+      { label: "Tool calls", value: "Schema-validated · sandboxed" },
+      { label: "Human-in-loop", value: "Approve high-risk actions" },
+      { label: "Observability", value: "Traces · replays · cost logs" },
     ],
   },
 
@@ -2400,6 +2508,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Strategy depth", value: "Positioning + audience + competitor audit" },
       { label: "Avg. delivery time", value: "4-6 weeks for full brand identity" },
     ],
+    atAGlance: [
+      { label: "Assets", value: "Logo · brand · social · print" },
+      { label: "Source files", value: "Figma · AI · PDF" },
+      { label: "Revisions", value: "Unlimited within scope" },
+      { label: "Turnaround", value: "3–5 days per asset" },
+    ],
   },
 
   "professional-web-design-services": {
@@ -2525,6 +2639,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Design tooling", value: "Figma, Maze, Lottie, design tokens" },
       { label: "User testing", value: "5-8 moderated users on clickable prototypes" },
       { label: "Handover quality", value: "Dev-ready Figma + design system + tokens" },
+    ],
+    atAGlance: [
+      { label: "Aesthetic", value: "Conversion-led · brand-true" },
+      { label: "Design tool", value: "Figma to developer handoff" },
+      { label: "Iterations", value: "2 concept rounds included" },
+      { label: "Output", value: "Pixel-perfect, dev-ready" },
     ],
   },
 
@@ -2652,6 +2772,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Accessibility standard", value: "Burned-in captions + SRT on every video" },
       { label: "Production scope", value: "Script, storyboard, shoot, edit, variants" },
     ],
+    atAGlance: [
+      { label: "Deliverables", value: "Brand film · case study · ads" },
+      { label: "Shoot format", value: "4K · multi-cam · drone" },
+      { label: "Variants", value: "16:9 · 9:16 · 1:1 cuts" },
+      { label: "Turnaround", value: "~3 weeks per film" },
+    ],
   },
 
   "web-design-services": {
@@ -2777,6 +2903,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Accessibility baseline", value: "WCAG AA on every build" },
       { label: "Device coverage", value: "Real device lab + BrowserStack" },
       { label: "Design + dev under one roof", value: "Figma to Next.js, WordPress, Webflow" },
+    ],
+    atAGlance: [
+      { label: "Approach", value: "Discovery-led · mobile-first" },
+      { label: "Tech", value: "Next.js · Tailwind · CMS" },
+      { label: "Pages", value: "5–15 typical scope" },
+      { label: "Launch", value: "~6 weeks to live" },
     ],
   },
 
@@ -2904,6 +3036,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "Local SEO included", value: "GBP + schema + 30 UK citations" },
       { label: "Launch commitment", value: "Fixed date in writing, 2-4 weeks" },
     ],
+    atAGlance: [
+      { label: "Built for", value: "SMEs · trades · local services" },
+      { label: "Package", value: "3–5 pages + lead capture" },
+      { label: "Budget range", value: "From £2.5k fixed" },
+      { label: "Time to live", value: "~2 weeks" },
+    ],
   },
 
   "responsive-web-design-services": {
@@ -3029,6 +3167,12 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       { label: "CLS target", value: "Under 0.1, zero regressions" },
       { label: "Device coverage", value: "Real device lab + BrowserStack" },
       { label: "Accessibility standard", value: "WCAG AA, axe + WAVE + screen reader tested" },
+    ],
+    atAGlance: [
+      { label: "Breakpoints", value: "360 · 768 · 1024 · 1440+" },
+      { label: "Testing", value: "Real device lab + BrowserStack" },
+      { label: "Frameworks", value: "Tailwind · CSS Grid · Container queries" },
+      { label: "Audit", value: "Lighthouse 90+ on mobile" },
     ],
   },
 };

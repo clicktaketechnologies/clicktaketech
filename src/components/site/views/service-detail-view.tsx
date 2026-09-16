@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
 import {
   SERVICE_CATEGORIES,
   CASE_STUDIES,
@@ -21,6 +21,10 @@ import {
   VoiceSearchBlock,
   EatTrustStrip,
 } from "@/components/site/seo-content-blocks";
+import { Icon3D } from "@/components/site/icon-3d";
+
+// 3D emoji glyphs cycled across benefit cards — rendered as true-color 3D icons.
+const BENEFIT_EMOJIS = ["✅", "⚡", "🚀", "🎯", "🛡️", "📈", "💡", "🔑"];
 
 type ServiceDetailViewProps = {
   slug: string;
@@ -134,29 +138,22 @@ export function ServiceDetailView({
               </Reveal>
             </div>
 
-            {/* Quick facts card */}
+            {/* Quick facts card — service-specific atAGlance */}
             <Reveal delay={0.15}>
               <div className="rounded-2xl border border-border/50 bg-card/40 p-6 ring-gradient">
                 <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-blue-400">
-                  <Sparkles className="h-4 w-4" /> At a glance
+                  <Icon3D emoji="📊" size="sm" variant="brand" /> At a glance
                 </h2>
-                <dl className="mt-4 space-y-3 text-sm">
-                  <div className="flex justify-between gap-3 border-b border-border/40 pb-3">
-                    <dt className="text-muted-foreground">Practice area</dt>
-                    <dd className="text-right font-medium">{category.label}</dd>
-                  </div>
-                  <div className="flex justify-between gap-3 border-b border-border/40 pb-3">
-                    <dt className="text-muted-foreground">Time to PoC</dt>
-                    <dd className="text-right font-medium">6 weeks</dd>
-                  </div>
-                  <div className="flex justify-between gap-3 border-b border-border/40 pb-3">
-                    <dt className="text-muted-foreground">Engagement</dt>
-                    <dd className="text-right font-medium">Fixed-fee PoC</dd>
-                  </div>
-                  <div className="flex justify-between gap-3">
-                    <dt className="text-muted-foreground">SLA</dt>
-                    <dd className="text-right font-medium text-blue-400">99.9% uptime</dd>
-                  </div>
+                <dl className="mt-5 space-y-3 text-sm">
+                  {(content?.atAGlance ?? defaultAtAGlance(category.label)).map((fact) => (
+                    <div
+                      key={fact.label}
+                      className="flex justify-between gap-3 border-b border-border/40 pb-3 last:border-b-0 last:pb-0"
+                    >
+                      <dt className="text-muted-foreground">{fact.label}</dt>
+                      <dd className="text-right font-medium text-foreground">{fact.value}</dd>
+                    </div>
+                  ))}
                 </dl>
               </div>
             </Reveal>
@@ -189,9 +186,7 @@ export function ServiceDetailView({
           {(content?.benefits ?? defaultBenefits(service.features)).map((b, i) => (
             <Reveal key={b.title} delay={i * 0.04}>
               <div className="h-full rounded-2xl border border-border/50 bg-card/40 p-6">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20">
-                  <Check className="h-5 w-5" />
-                </span>
+                <Icon3D emoji={BENEFIT_EMOJIS[i % BENEFIT_EMOJIS.length]} size="md" variant={(["brand","blue","pink"] as const)[i % 3]} />
                 <h3 className="mt-4 text-base font-semibold">{b.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{b.desc}</p>
               </div>
@@ -315,8 +310,8 @@ export function ServiceDetailView({
                 className="group h-full w-full text-left"
               >
                 <div className="flex h-full flex-col rounded-2xl border border-border/50 bg-card/40 p-6 transition-all hover:-translate-y-1 hover:border-blue-500/40">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{cs.emoji}</span>
+                  <div className="flex items-center gap-3">
+                    <Icon3D emoji={cs.emoji} size="sm" variant="brand" />
                     <span className="text-xs font-semibold uppercase tracking-wider text-blue-400">
                       {cs.sector}
                     </span>
@@ -423,5 +418,13 @@ function defaultProcess() {
     { num: "02", title: "Architect", desc: "Senior engineers design the system before build begins." },
     { num: "03", title: "Build", desc: "Two-week sprints with weekly demos, CI/CD from day one." },
     { num: "04", title: "Deploy", desc: "Production launch plus 30-day post-launch hypercare." },
+  ];
+}
+function defaultAtAGlance(categoryLabel: string) {
+  return [
+    { label: "Practice area", value: categoryLabel },
+    { label: "Engagement", value: "Fixed-scope PoC" },
+    { label: "Time to live", value: "~6 weeks" },
+    { label: "SLA", value: "99.9% uptime" },
   ];
 }
