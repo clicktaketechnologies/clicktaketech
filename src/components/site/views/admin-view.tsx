@@ -63,8 +63,8 @@ import {
   BlogImportPanel,
   QuickActions,
   TrafficWidget,
-  SeoAnalyzer,
 } from "@/components/site/admin-pro-features";
+import { SeoToolDashboard } from "@/components/site/seo-tool-dashboard";
 
 type Tab =
   | "overview"
@@ -107,7 +107,7 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dash
   { id: "experiments", label: "A/B Experiments", icon: FlaskConical, group: "leads" },
   // System
   { id: "storage", label: "Storage & Providers", icon: Cloud, group: "system" },
-  { id: "seo", label: "SEO & Analytics", icon: Search, group: "system" },
+  { id: "seo", label: "Advanced SEO Tool", icon: Search, group: "system" },
   { id: "settings", label: "Config Settings", icon: SettingsIcon, group: "system" },
   { id: "redirects", label: "Redirects", icon: Link2, group: "system" },
   { id: "security", label: "Security & Logs", icon: ShieldAlert, group: "system" },
@@ -354,7 +354,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {tab === "experiments" && <ExperimentsTab token={token} />}
           {/* System */}
           {tab === "storage" && <StorageProvidersTab token={token} />}
-          {tab === "seo" && <SeoAnalyzer token={token} />}
+          {tab === "seo" && <SeoToolDashboard token={token} />}
           {tab === "settings" && <SettingsTab token={token} />}
           {tab === "redirects" && <RedirectsTab token={token} />}
           {tab === "security" && <SecurityLogsTab token={token} />}

@@ -327,3 +327,106 @@ model Job {
 }
 
 
+
+// ===== SEO Tool models =====
+
+model Keyword {
+  id          String   @id @default(cuid())
+  keyword     String
+  type        String   @default("commercial")
+  volume      Int      @default(0)
+  difficulty  Int      @default(0)
+  cpc         String?
+  intent      String?
+  status      String   @default("tracking")
+  currentRank Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([type])
+}
+
+model Ranking {
+  id        String   @id @default(cuid())
+  keyword   String
+  position  Int
+  engine    String   @default("google")
+  serpFeature String?
+  url       String?
+  date      DateTime @default(now())
+
+  @@index([keyword])
+  @@index([date])
+}
+
+model AiMention {
+  id          String   @id @default(cuid())
+  prompt      String
+  platform    String
+  mentioned   Boolean  @default(false)
+  sentiment   String?
+  citation    String?
+  response    String?
+  date        DateTime @default(now())
+
+  @@index([platform])
+  @@index([date])
+}
+
+model Backlink {
+  id            String   @id @default(cuid())
+  sourceUrl     String
+  targetUrl     String
+  anchorText    String?
+  domainRating  Int      @default(0)
+  dofollow      Boolean  @default(true)
+  status        String   @default("active")
+  firstSeen     DateTime @default(now())
+  lastSeen      DateTime @default(now())
+
+  @@index([status])
+}
+
+model ContentBrief {
+  id          String   @id @default(cuid())
+  title       String
+  keyword     String
+  headings    String?
+  faqs        String?
+  entities    String?
+  wordCount   Int      @default(0)
+  seoScore    Int      @default(0)
+  aeoScore    Int      @default(0)
+  geoScore    Int      @default(0)
+  status      String   @default("draft")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+}
+
+model SeoIssue {
+  id        String   @id @default(cuid())
+  type      String
+  severity  String   @default("warning")
+  url       String
+  detail    String
+  fixSuggestion String?
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+
+  @@index([status])
+  @@index([severity])
+}
+
+model SeoReport {
+  id        String   @id @default(cuid())
+  type      String
+  score     Int      @default(0)
+  summary   String?
+  data      String?
+  createdAt DateTime @default(now())
+
+  @@index([type])
+}
