@@ -75,10 +75,10 @@ type Tab =
   | "typography"
   | "theme"
   | "leads"
-  | "email"
-  | "experiments"
   | "queries"
   | "applications"
+  | "email"
+  | "experiments"
   | "redirects"
   | "storage"
   | "seo"
@@ -98,9 +98,10 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dash
   // Branding
   { id: "typography", label: "Typography Engine", icon: Type, group: "branding" },
   { id: "theme", label: "Theme Engine", icon: Palette, group: "branding" },
-  // Leads
+  // Leads & Applications
   { id: "leads", label: "Lead CRM", icon: TrendingUp, group: "leads" },
   { id: "queries", label: "Contact Queries", icon: Inbox, group: "leads" },
+  { id: "applications", label: "Job Applications", icon: Briefcase, group: "leads" },
   { id: "email", label: "Email Center", icon: Mail, group: "leads" },
   { id: "experiments", label: "A/B Experiments", icon: FlaskConical, group: "leads" },
   // System
@@ -318,6 +319,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {/* Leads */}
           {tab === "leads" && <LeadCrmTab token={token} />}
           {tab === "queries" && <QueriesTab token={token} />}
+          {tab === "applications" && <ApplicationsTab token={token} />}
           {tab === "email" && <EmailCenterTab token={token} />}
           {tab === "experiments" && <ExperimentsTab token={token} />}
           {/* System */}
@@ -450,7 +452,7 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
   useEffect(() => {
     (async () => {
       try {
-        const [p, b, pr, q, m, a, u, rd, lg] = await Promise.all([
+        const [p, b, pr, q, m, a, u, rd, lg, ld, sh] = await Promise.all([
           fetch("/api/admin/pages").then((r) => r.json()),
           fetch("/api/admin/blog").then((r) => r.json()),
           fetch("/api/admin/pricing").then((r) => r.json()),
@@ -460,6 +462,8 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
           fetch("/api/admin/users").then((r) => r.json()),
           fetch("/api/admin/redirects").then((r) => r.json()),
           fetch("/api/admin/activity?limit=6").then((r) => r.json()),
+          fetch("/api/admin/leads").then((r) => r.json()),
+          fetch("/api/admin/seo-history?limit=100").then((r) => r.json()),
         ]);
         const next: Record<string, number> = {
           pages: p.pages?.length ?? 0,
@@ -472,6 +476,9 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
           newApplications: a.applications?.filter((x: { status: string }) => x.status === "new").length ?? 0,
           users: u.users?.length ?? 0,
           redirects: rd.redirects?.length ?? 0,
+          leads: ld.leads?.length ?? 0,
+          newLeads: ld.leads?.filter((x: { stage: string }) => x.stage === "new").length ?? 0,
+          seoAudits: sh.audits?.length ?? 0,
         };
         setStats(next);
         setRecentLogs(lg.logs ?? []);
@@ -486,8 +493,10 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
     { label: "Blog Posts", value: stats.posts ?? 0, icon: BookOpen, tab: "blog" as Tab, color: "text-pink-400" },
     { label: "Pricing Tiers", value: stats.tiers ?? 0, icon: Tag, tab: "pricing" as Tab, color: "text-blue-400" },
     { label: "Media Files", value: stats.media ?? 0, icon: ImageIcon, tab: "media" as Tab, color: "text-pink-400" },
-    { label: "Contact Queries", value: stats.queries ?? 0, icon: Inbox, tab: "queries" as Tab, color: "text-blue-400", badge: stats.newQueries },
-    { label: "Job Applications", value: stats.applications ?? 0, icon: Briefcase, tab: "applications" as Tab, color: "text-pink-400", badge: stats.newApplications },
+    { label: "Leads (CRM)", value: stats.leads ?? 0, icon: TrendingUp, tab: "leads" as Tab, color: "text-blue-400", badge: stats.newLeads },
+    { label: "Contact Queries", value: stats.queries ?? 0, icon: Inbox, tab: "queries" as Tab, color: "text-pink-400", badge: stats.newQueries },
+    { label: "Job Applications", value: stats.applications ?? 0, icon: Briefcase, tab: "applications" as Tab, color: "text-blue-400", badge: stats.newApplications },
+    { label: "SEO Audits", value: stats.seoAudits ?? 0, icon: Search, tab: "seo" as Tab, color: "text-pink-400" },
     { label: "Users & Roles", value: stats.users ?? 0, icon: Users, tab: "users" as Tab, color: "text-blue-400" },
     { label: "Redirects", value: stats.redirects ?? 0, icon: Link2, tab: "redirects" as Tab, color: "text-pink-400" },
   ];
@@ -519,24 +528,16 @@ function OverviewTab({ onJump }: { onJump: (t: Tab) => void }) {
         <TrafficWidget token={typeof window !== "undefined" ? localStorage.getItem("clicktake_admin_token") || "" : ""} />
       </div>
 
-      {(stats.newQueries ?? 0) > 0 || (stats.newApplications ?? 0) > 0 ? (
-        <div className="mt-5 flex items-center gap-3 rounded-2xl border border-pink-500/30 bg-pink-500/5 p-4">
+      {(stats.newQueries ?? 0) > 0 || (stats.newApplications ?? 0) > 0 || (stats.newLeads ?? 0) > 0 ? (
+        <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-pink-500/30 bg-pink-500/5 p-4">
           <AlertTriangle className="h-5 w-5 text-pink-400" />
           <p className="text-sm">
-            {(stats.newQueries ?? 0) > 0 && (
-              <span>
-                <span className="font-semibold text-pink-400">{stats.newQueries} new</span> contact queries
-              </span>
-            )}
-            {(stats.newQueries ?? 0) > 0 && (stats.newApplications ?? 0) > 0 ? " · " : ""}
-            {(stats.newApplications ?? 0) > 0 && (
-              <span>
-                <span className="font-semibold text-pink-400">{stats.newApplications} new</span> applications
-              </span>
-            )}
+            {(stats.newLeads ?? 0) > 0 && (<span><span className="font-semibold text-pink-400">{stats.newLeads} new</span> leads · </span>)}
+            {(stats.newQueries ?? 0) > 0 && (<span><span className="font-semibold text-pink-400">{stats.newQueries} new</span> queries · </span>)}
+            {(stats.newApplications ?? 0) > 0 && (<span><span className="font-semibold text-pink-400">{stats.newApplications} new</span> applications</span>)}
             {" need your attention."}
           </p>
-          <Button onClick={() => onJump("queries")} variant="outline" size="sm" className="ml-auto border-pink-500/40 bg-card/40">
+          <Button onClick={() => onJump("leads")} variant="outline" size="sm" className="ml-auto border-pink-500/40 bg-card/40">
             Review
           </Button>
         </div>

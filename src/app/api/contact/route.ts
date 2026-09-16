@@ -48,8 +48,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // In a production deployment this would persist to the database and/or
-    // dispatch an email/Slack notification. Here we log and return success.
     // Persist to the CMS so the admin panel can list/manage it.
     try {
       await db.contactQuery.create({
@@ -67,6 +65,28 @@ export async function POST(req: NextRequest) {
     } catch (dbErr) {
       // Non-fatal — the inquiry still succeeds even if DB write fails.
       console.error("[contact] db write failed", dbErr);
+    }
+
+    // Auto-create a Lead in the CRM pipeline so contact form submissions
+    // appear in the Lead CRM tab automatically.
+    try {
+      await db.lead.create({
+        data: {
+          name: fullName,
+          email: workEmail,
+          phone: phone || null,
+          company: company || null,
+          source: "website",
+          stage: "new",
+          value: null,
+          notes: message ? `${need ? `[${need}] ` : ""}${message}` : need || null,
+          tags: need || null,
+          owner: null,
+        },
+      });
+    } catch (dbErr) {
+      // Non-fatal.
+      console.error("[contact] lead creation failed", dbErr);
     }
 
     return NextResponse.json({

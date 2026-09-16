@@ -481,6 +481,8 @@ export function SeoAnalyzer({ token }: { token: string }) {
           );
         })}
       </div>
+      {/* Audit history */}
+      <SeoHistoryWidget token={token} />
     </div>
   );
 }
@@ -490,6 +492,100 @@ function Metric({ label, value, ok }: { label: string; value: string; ok: boolea
     <div className="flex items-center justify-between rounded-lg bg-background/60 px-2 py-1">
       <span className="text-muted-foreground">{label}</span>
       <span className={cn("font-medium", ok ? "text-blue-400" : "text-amber-400")}>{value}</span>
+    </div>
+  );
+}
+
+// ============================ SEO AUDIT HISTORY ============================
+type AuditHistoryItem = {
+  id: string;
+  url: string;
+  score: number;
+  titleLen: number;
+  descLen: number;
+  h1Count: number;
+  hasCanonical: boolean;
+  hasOg: boolean;
+  hasJsonLd: boolean;
+  issues: string | null;
+  createdAt: string;
+};
+
+export function SeoHistoryWidget({ token }: { token: string }) {
+  const [audits, setAudits] = useState<AuditHistoryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await fetch("/api/admin/seo-history?limit=50", { headers: { "x-admin-token": token } });
+    const data = await res.json().catch(() => ({}));
+    setAudits(data.audits ?? []);
+    setLoading(false);
+  }, [token]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  if (loading) return <div className="py-4 text-center"><Loader2 className="mx-auto h-5 w-5 animate-spin text-blue-400" /></div>;
+
+  if (audits.length === 0) {
+    return <p className="py-4 text-center text-sm text-muted-foreground">No audit history yet. Run an analysis above to start tracking.</p>;
+  }
+
+  // Group by URL and show latest score per page
+  const byUrl = new Map<string, AuditHistoryItem[]>();
+  for (const a of audits) {
+    const arr = byUrl.get(a.url) || [];
+    arr.push(a);
+    byUrl.set(a.url, arr);
+  }
+
+  return (
+    <div className="mt-6 rounded-2xl border border-border/50 bg-card/40 p-5">
+      <h3 className="flex items-center gap-2 text-sm font-semibold">
+        <Activity className="h-4 w-4 text-blue-400" /> Audit History ({audits.length} runs)
+      </h3>
+      <div className="mt-4 space-y-3">
+        {Array.from(byUrl.entries()).map(([url, items]) => {
+          const latest = items[0];
+          const best = Math.max(...items.map((i) => i.score));
+          const trend = items.length > 1 ? latest.score - items[items.length - 1].score : 0;
+          return (
+            <div key={url} className="rounded-xl border border-border/40 bg-background/40 p-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-muted-foreground">{url}</span>
+                  <span className="text-[10px] text-muted-foreground">{items.length} runs</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {trend !== 0 && (
+                    <span className={cn("text-[10px] font-bold", trend > 0 ? "text-blue-400" : "text-red-400")}>
+                      {trend > 0 ? "↑" : "↓"} {Math.abs(trend)}
+                    </span>
+                  )}
+                  <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold", latest.score >= 90 ? "bg-blue-500/15 text-blue-400" : latest.score >= 70 ? "bg-amber-500/15 text-amber-400" : "bg-red-500/15 text-red-400")}>
+                    {latest.score}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">best: {best}</span>
+                </div>
+              </div>
+              {/* Mini sparkline */}
+              <div className="mt-2 flex h-6 items-end gap-0.5">
+                {items.slice(0, 20).reverse().map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 rounded-t bg-gradient-to-t from-blue-500/30 to-blue-500/60"
+                    style={{ height: `${(item.score / 100) * 100}%`, minHeight: "2px" }}
+                    title={`${new Date(item.createdAt).toLocaleDateString()}: ${item.score}`}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
