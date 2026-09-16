@@ -31,6 +31,13 @@ import {
   Save,
   Upload,
   Copy,
+  Type,
+  Palette,
+  FlaskConical,
+  Cloud,
+  ShieldAlert,
+  TrendingUp,
+  Mail,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -39,34 +46,62 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import type { NavView } from "@/lib/site-data";
+import {
+  LeadCrmTab,
+  EmailCenterTab,
+  ExperimentsTab,
+  ThemeEngineTab,
+  TypographyTab,
+  StorageProvidersTab,
+  SecurityLogsTab,
+} from "@/components/site/admin-advanced-tabs";
 
 type Tab =
   | "overview"
   | "pages"
   | "blog"
   | "pricing"
+  | "media"
+  | "team-careers"
+  | "typography"
+  | "theme"
+  | "leads"
+  | "email"
+  | "experiments"
   | "queries"
   | "applications"
-  | "media"
   | "redirects"
+  | "storage"
+  | "seo"
   | "settings"
+  | "security"
   | "users"
-  | "activity"
-  | "seo";
+  | "activity";
 
-const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "content" | "people" | "system" }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard, group: "content" },
-  { id: "pages", label: "Pages", icon: FileText, group: "content" },
-  { id: "blog", label: "Blog", icon: BookOpen, group: "content" },
-  { id: "pricing", label: "Pricing", icon: Tag, group: "content" },
-  { id: "media", label: "Media Library", icon: ImageIcon, group: "content" },
-  { id: "queries", label: "Contact Queries", icon: Inbox, group: "people" },
-  { id: "applications", label: "Job Applications", icon: Briefcase, group: "people" },
-  { id: "users", label: "Users & Roles", icon: Users, group: "people" },
+const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dashboard" | "cms" | "branding" | "leads" | "system" }[] = [
+  { id: "overview", label: "Dashboard", icon: LayoutDashboard, group: "dashboard" },
+  // CMS
+  { id: "pages", label: "Pages", icon: FileText, group: "cms" },
+  { id: "blog", label: "Blog Posts", icon: BookOpen, group: "cms" },
+  { id: "pricing", label: "Services & Packages", icon: Tag, group: "cms" },
+  { id: "media", label: "Media Library", icon: ImageIcon, group: "cms" },
+  { id: "team-careers", label: "Team & Careers", icon: Briefcase, group: "cms" },
+  // Branding
+  { id: "typography", label: "Typography Engine", icon: Type, group: "branding" },
+  { id: "theme", label: "Theme Engine", icon: Palette, group: "branding" },
+  // Leads
+  { id: "leads", label: "Lead CRM", icon: TrendingUp, group: "leads" },
+  { id: "queries", label: "Contact Queries", icon: Inbox, group: "leads" },
+  { id: "email", label: "Email Center", icon: Mail, group: "leads" },
+  { id: "experiments", label: "A/B Experiments", icon: FlaskConical, group: "leads" },
+  // System
+  { id: "storage", label: "Storage & Providers", icon: Cloud, group: "system" },
+  { id: "seo", label: "SEO & Analytics", icon: Search, group: "system" },
+  { id: "settings", label: "Config Settings", icon: SettingsIcon, group: "system" },
   { id: "redirects", label: "Redirects", icon: Link2, group: "system" },
-  { id: "settings", label: "Site Settings", icon: SettingsIcon, group: "system" },
+  { id: "security", label: "Security & Logs", icon: ShieldAlert, group: "system" },
+  { id: "users", label: "User Roles (RBAC)", icon: Users, group: "system" },
   { id: "activity", label: "Activity Log", icon: Activity, group: "system" },
-  { id: "seo", label: "SEO Audit", icon: Search, group: "system" },
 ];
 
 const TOKEN_KEY = "clicktake_admin_token";
@@ -145,21 +180,25 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           </button>
         </div>
 
-        {/* Nav — grouped */}
+        {/* Nav — 5 groups */}
         <nav className="flex-1 space-y-4 overflow-y-auto p-3">
-          {(["content", "people", "system"] as const).map((group) => {
+          {(["dashboard", "cms", "branding", "leads", "system"] as const).map((group) => {
             const items = TABS.filter((t) => t.group === group);
             if (items.length === 0) return null;
             const labels: Record<typeof group, string> = {
-              content: "Content",
-              people: "People & Leads",
+              dashboard: "",
+              cms: "CMS",
+              branding: "Branding",
+              leads: "Leads",
               system: "System",
             };
             return (
               <div key={group}>
-                <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
-                  {labels[group]}
-                </p>
+                {labels[group] && (
+                  <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                    {labels[group]}
+                  </p>
+                )}
                 <div className="space-y-1">
                   {items.map((t) => (
                     <button
@@ -241,17 +280,28 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
         {/* Content */}
         <main className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
           {tab === "overview" && <OverviewTab onJump={setTab} />}
+          {/* CMS */}
           {tab === "pages" && <PagesTab token={token} />}
           {tab === "blog" && <BlogTab token={token} />}
           {tab === "pricing" && <PricingTab token={token} />}
           {tab === "media" && <MediaTab token={token} />}
+          {tab === "team-careers" && <ApplicationsTab token={token} />}
+          {/* Branding */}
+          {tab === "typography" && <TypographyTab token={token} />}
+          {tab === "theme" && <ThemeEngineTab token={token} />}
+          {/* Leads */}
+          {tab === "leads" && <LeadCrmTab token={token} />}
           {tab === "queries" && <QueriesTab token={token} />}
-          {tab === "applications" && <ApplicationsTab token={token} />}
-          {tab === "users" && <UsersTab token={token} />}
-          {tab === "redirects" && <RedirectsTab token={token} />}
-          {tab === "settings" && <SettingsTab token={token} />}
-          {tab === "activity" && <ActivityTab token={token} />}
+          {tab === "email" && <EmailCenterTab token={token} />}
+          {tab === "experiments" && <ExperimentsTab token={token} />}
+          {/* System */}
+          {tab === "storage" && <StorageProvidersTab token={token} />}
           {tab === "seo" && <SeoTab token={token} />}
+          {tab === "settings" && <SettingsTab token={token} />}
+          {tab === "redirects" && <RedirectsTab token={token} />}
+          {tab === "security" && <SecurityLogsTab token={token} />}
+          {tab === "users" && <UsersTab token={token} />}
+          {tab === "activity" && <ActivityTab token={token} />}
         </main>
       </div>
     </div>

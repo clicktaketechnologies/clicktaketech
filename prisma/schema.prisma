@@ -184,3 +184,94 @@ model ActivityLog {
   @@index([createdAt])
 }
 
+// ===== Advanced CMS models =====
+
+model Lead {
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  company    String?
+  source     String   @default("website") // website | chatbot | manual | referral
+  stage      String   @default("new") // new | contacted | qualified | proposal | won | lost
+  value      String?  // estimated deal value
+  notes      String?
+  tags       String?  // comma separated
+  owner      String?  // assigned user email
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([stage])
+  @@index([source])
+  @@index([owner])
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  subject   String
+  body      String   // markdown / html
+  category  String   @default("transactional") // transactional | marketing | autoresponder
+  status    String   @default("draft") // draft | active
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([status])
+}
+
+model Experiment {
+  id          String   @id @default(cuid())
+  name        String
+  hypothesis  String
+  page        String   // which page/element
+  variantA    String
+  variantB    String
+  metric      String   @default("conversion") // conversion | click | scroll
+  status      String   @default("draft") // draft | running | completed | paused
+  visitorsA   Int      @default(0)
+  visitorsB   Int      @default(0)
+  convA       Int      @default(0)
+  convB       Int      @default(0)
+  winner      String?  // A | B | null
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+}
+
+model ThemeVariable {
+  id        String   @id @default(cuid())
+  key       String   @unique // e.g. --color-primary, --font-sans, --radius
+  value     String
+  category  String   @default("color") // color | font | radius | spacing
+  updatedAt DateTime @updatedAt
+}
+
+model TypographyPreset {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  fontFamily String
+  headingScale String  // e.g. "1.25"
+  bodySize   String   // e.g. "16px"
+  lineHeight String   // e.g. "1.6"
+  active     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model SecurityLog {
+  id        String   @id @default(cuid())
+  type      String   // login | failed_login | logout | permission_denied | rate_limit | ip_block
+  ip        String?
+  email     String?
+  detail    String?
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([createdAt])
+}
+
+
