@@ -53,9 +53,12 @@ export const DEFAULT_SETTINGS: { key: string; value: string; category: string }[
   // social
   { key: "facebook_url", value: "https://www.facebook.com/clicktaketechnologies/", category: "social" },
   { key: "instagram_url", value: "https://www.instagram.com/clicktaketechologiesuk/", category: "social" },
-  { key: "linkedin_url", value: "", category: "social" },
-  { key: "twitter_url", value: "", category: "social" },
-  { key: "youtube_url", value: "", category: "social" },
+  { key: "linkedin_url", value: "https://www.linkedin.com/company/click-take-technologies/", category: "social" },
+  { key: "youtube_url", value: "https://www.youtube.com/channel/UCt527M4hxeFOavWdXSRTsdw", category: "social" },
+  { key: "tumblr_url", value: "https://www.tumblr.com/clicktaketechnologies", category: "social" },
+  { key: "tiktok_url", value: "https://www.tiktok.com/@clicktaketechnologiesuk", category: "social" },
+  { key: "pinterest_url", value: "https://uk.pinterest.com/clicktaketechnologies/", category: "social" },
+  { key: "threads_url", value: "https://www.threads.com/@clicktaketech", category: "social" },
   // integrations
   { key: "stripe_publishable_key", value: "", category: "integrations" },
   { key: "recaptcha_site_key", value: "", category: "integrations" },

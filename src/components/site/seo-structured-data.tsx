@@ -68,6 +68,12 @@ function OrganizationJsonLd() {
     sameAs: [
       "https://www.facebook.com/clicktaketechnologies/",
       "https://www.instagram.com/clicktaketechologiesuk/",
+      "https://www.linkedin.com/company/click-take-technologies/",
+      "https://www.youtube.com/channel/UCt527M4hxeFOavWdXSRTsdw",
+      "https://www.tumblr.com/clicktaketechnologies",
+      "https://www.tiktok.com/@clicktaketechnologiesuk",
+      "https://uk.pinterest.com/clicktaketechnologies/",
+      "https://www.threads.com/@clicktaketech",
     ],
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
@@ -137,6 +143,12 @@ function LocalBusinessJsonLd() {
     sameAs: [
       "https://www.facebook.com/clicktaketechnologies/",
       "https://www.instagram.com/clicktaketechologiesuk/",
+      "https://www.linkedin.com/company/click-take-technologies/",
+      "https://www.youtube.com/channel/UCt527M4hxeFOavWdXSRTsdw",
+      "https://www.tumblr.com/clicktaketechnologies",
+      "https://www.tiktok.com/@clicktaketechnologiesuk",
+      "https://uk.pinterest.com/clicktaketechnologies/",
+      "https://www.threads.com/@clicktaketech",
     ],
   };
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;

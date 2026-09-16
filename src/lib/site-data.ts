@@ -50,6 +50,11 @@ import {
   Facebook,
   Instagram,
   Twitter,
+  Youtube,
+  Music2,
+  Bookmark,
+  BookMarked,
+  MessagesSquare,
   Rss,
   CheckCircle2,
   XCircle,
@@ -1702,9 +1707,12 @@ export const TEAM_VALUES = [
 export const SOCIAL_LINKS = [
   { icon: Facebook, label: "Facebook", value: "clicktaketechnologies", href: "https://www.facebook.com/clicktaketechnologies/" },
   { icon: Instagram, label: "Instagram", value: "clicktaketechologiesuk", href: "https://www.instagram.com/clicktaketechologiesuk/" },
-  { icon: Linkedin, label: "LinkedIn", value: "clicktake-technologies", href: "#" },
-  { icon: Twitter, label: "Twitter / X", value: "@clicktaketech", href: "#" },
-  { icon: Rss, label: "Blog RSS", value: "feed.xml", href: "#" },
+  { icon: Linkedin, label: "LinkedIn", value: "click-take-technologies", href: "https://www.linkedin.com/company/click-take-technologies/" },
+  { icon: Youtube, label: "YouTube", value: "ClickTake Technologies", href: "https://www.youtube.com/channel/UCt527M4hxeFOavWdXSRTsdw" },
+  { icon: BookMarked, label: "Tumblr", value: "clicktaketechnologies", href: "https://www.tumblr.com/clicktaketechnologies" },
+  { icon: Music2, label: "TikTok", value: "@clicktaketechnologiesuk", href: "https://www.tiktok.com/@clicktaketechnologiesuk" },
+  { icon: Bookmark, label: "Pinterest", value: "clicktaketechnologies", href: "https://uk.pinterest.com/clicktaketechnologies/" },
+  { icon: MessagesSquare, label: "Threads", value: "@clicktaketech", href: "https://www.threads.com/@clicktaketech" },
 ];
 
 // ===== LEGAL =====
