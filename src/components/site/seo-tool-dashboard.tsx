@@ -132,6 +132,24 @@ function ContentAnalyzer({ token }: { token: string }) {
   const [keyword, setKeyword] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
+  const [pages, setPages] = useState<{ slug: string; title: string }[]>([]);
+
+  // Load published pages from DB for the dropdown
+  useEffect(() => {
+    fetch("/api/admin/pages", { headers: { "x-admin-token": token } })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.pages) {
+          // Map DB pages to URL paths + add service pages
+          const mapped = data.pages.map((p: { slug: string; title: string; category: string }) => ({
+            slug: p.slug === "home" ? "/" : `/${p.slug}`,
+            title: p.title,
+          }));
+          setPages(mapped);
+        }
+      })
+      .catch(() => { /* ignore */ });
+  }, [token]);
 
   const analyze = async () => {
     setAnalyzing(true);
@@ -161,9 +179,18 @@ function ContentAnalyzer({ token }: { token: string }) {
   return (
     <div>
       <h2 className="text-lg font-bold">AI Content Analyzer</h2>
-      <p className="text-xs text-muted-foreground">Deep SEO + AEO + GEO analysis with AI-powered recommendations, FAQ suggestions, and entity extraction.</p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="/services or /blog/post-slug" className="w-48 bg-background/50" />
+      <p className="text-xs text-muted-foreground">Deep SEO + AEO + GEO analysis with AI-powered recommendations, FAQ suggestions, and entity extraction. Picks from published pages.</p>
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <select
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          className="h-10 w-64 rounded-lg border border-border/50 bg-background/50 px-3 text-sm"
+        >
+          <option value="/">Select a published page...</option>
+          {pages.map((p) => (
+            <option key={p.slug} value={p.slug}>{p.title} ({p.slug})</option>
+          ))}
+        </select>
         <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="target keyword (optional)" className="w-48 bg-background/50" />
         <Button onClick={analyze} disabled={analyzing} className="bg-brand-gradient text-white">
           {analyzing ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Zap className="mr-1 h-4 w-4" />}
@@ -465,28 +492,36 @@ function ContentBriefs({ token }: { token: string }) {
 function AiVisibilityTracker({ token }: { token: string }) {
   const { toast } = useToast();
   const [running, setRunning] = useState(false);
-  const [results, setResults] = useState<{ prompt: string; mentioned: boolean; sentiment: string; citation: string | null; response: string }[]>([]);
-  const [summary, setSummary] = useState<{ totalPrompts: number; mentions: number; positiveMentions: number; visibilityScore: number } | null>(null);
+  const [mode, setMode] = useState<"real" | "simulated">("real");
+  const [results, setResults] = useState<{ prompt: string; mentioned: boolean; sentiment: string; citation: string | null; response: string; competitors: string[] }[]>([]);
+  const [summary, setSummary] = useState<{
+    totalPrompts: number; mentions: number; positiveMentions: number; visibilityScore: number;
+    topCompetitors: { name: string; count: number }[];
+    geoRecommendations: { priority: string; issue: string; fix: string }[];
+  } | null>(null);
   const [history, setHistory] = useState<{ id: string; prompt: string; platform: string; mentioned: boolean; sentiment: string | null; citation: string | null; date: string }[]>([]);
 
   const runCheck = async () => {
     setRunning(true);
+    setResults([]);
+    setSummary(null);
     try {
       const res = await fetch("/api/admin/seo-tool/ai-visibility", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-admin-token": token },
+        body: JSON.stringify({ mode }),
       });
       const data = await res.json();
       if (data.ok) {
         setResults(data.results);
         setSummary(data.summary);
-        toast({ title: `AI visibility: ${data.summary.visibilityScore}% — ${data.summary.mentions}/${data.summary.totalPrompts} mentions` });
+        toast({ title: `${mode === "simulated" ? "Simulated" : "Real"} visibility: ${data.summary.visibilityScore}% — ${data.summary.mentions}/${data.summary.totalPrompts} mentions` });
         loadHistory();
       } else {
         toast({ title: data.error || "Failed", variant: "destructive" });
       }
     } catch {
-      toast({ title: "Failed", variant: "destructive" });
+      toast({ title: "Failed to run check", variant: "destructive" });
     }
     setRunning(false);
   };
@@ -498,26 +533,51 @@ function AiVisibilityTracker({ token }: { token: string }) {
   }, [token]);
 
   useEffect(() => {
+    loadHistory();
   }, [loadHistory]);
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-bold">AI Visibility Tracker (GEO)</h2>
-          <p className="text-xs text-muted-foreground">Queries AI models with brand-relevant prompts to check if ClickTake is mentioned, cited, or recommended.</p>
+          <p className="text-xs text-muted-foreground">Queries AI models with brand-relevant prompts. Checks if ClickTake is mentioned, tracks competitors, and generates GEO improvement recommendations.</p>
         </div>
-        <Button onClick={runCheck} disabled={running} className="bg-brand-gradient text-white">
-          {running ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Bot className="mr-1 h-4 w-4" />}
-          {running ? "Checking..." : "Run Visibility Check"}
-        </Button>
+        <div className="flex items-center gap-2">
+          {/* Mode toggle */}
+          <div className="flex rounded-xl border border-border/50 bg-card/40 p-1">
+            <button
+              onClick={() => setMode("real")}
+              className={cn("rounded-lg px-3 py-1.5 text-xs font-medium", mode === "real" ? "bg-brand-gradient text-white" : "text-muted-foreground")}
+              title="Test real-world AI visibility (no brand context injected)"
+            >Real</button>
+            <button
+              onClick={() => setMode("simulated")}
+              className={cn("rounded-lg px-3 py-1.5 text-xs font-medium", mode === "simulated" ? "bg-brand-gradient text-white" : "text-muted-foreground")}
+              title="Test with brand context injected into AI (what it would say if it knew ClickTake)"
+            >Simulated</button>
+          </div>
+          <Button onClick={runCheck} disabled={running} className="bg-brand-gradient text-white">
+            {running ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Bot className="mr-1 h-4 w-4" />}
+            {running ? "Checking..." : "Run Check"}
+          </Button>
+        </div>
       </div>
 
-      {/* Summary */}
+      {/* Mode explanation */}
+      <div className="mt-3 rounded-xl border border-blue-500/20 bg-blue-500/5 p-3 text-xs text-blue-300">
+        {mode === "real" ? (
+          <span>📊 <strong>Real mode:</strong> Tests actual AI visibility — the AI has no knowledge of ClickTake beyond its training data. This shows what real users see when they ask AI assistants about your services.</span>
+        ) : (
+          <span>🧪 <strong>Simulated mode:</strong> Injects ClickTake&apos;s brand context (services, case studies, locations) into the AI prompt — simulating what the AI would say if it had crawled and indexed your website&apos;s content. Use this to validate your content strategy.</span>
+        )}
+      </div>
+
+      {/* Summary cards */}
       {summary && (
         <div className="mt-4 grid gap-3 sm:grid-cols-4">
-          <div className={cn("rounded-xl border p-4 text-center", summary.visibilityScore >= 50 ? "border-green-500/30 bg-green-500/5" : "border-amber-500/30 bg-amber-500/5")}>
-            <div className={cn("text-3xl font-bold", summary.visibilityScore >= 50 ? "text-green-400" : "text-amber-400")}>{summary.visibilityScore}%</div>
+          <div className={cn("rounded-xl border p-4 text-center", summary.visibilityScore >= 50 ? "border-green-500/30 bg-green-500/5" : summary.visibilityScore > 0 ? "border-amber-500/30 bg-amber-500/5" : "border-red-500/30 bg-red-500/5")}>
+            <div className={cn("text-3xl font-bold", summary.visibilityScore >= 50 ? "text-green-400" : summary.visibilityScore > 0 ? "text-amber-400" : "text-red-400")}>{summary.visibilityScore}%</div>
             <div className="text-[10px] text-muted-foreground">Visibility Score</div>
           </div>
           <div className="rounded-xl border border-border/50 bg-card/40 p-4 text-center">
@@ -535,21 +595,66 @@ function AiVisibilityTracker({ token }: { token: string }) {
         </div>
       )}
 
+      {/* Competitor analysis */}
+      {summary && summary.topCompetitors.length > 0 && (
+        <div className="mt-4 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-amber-400">
+            <AlertTriangle className="h-4 w-4" /> Competitor Analysis — Who IS getting mentioned
+          </h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {summary.topCompetitors.map((c) => (
+              <div key={c.name} className="flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-1.5">
+                <span className="text-xs font-medium text-amber-300">{c.name}</span>
+                <span className="rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-bold text-amber-400">{c.count}x</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* GEO improvement recommendations */}
+      {summary && summary.geoRecommendations.length > 0 && (
+        <div className="mt-4 rounded-2xl border border-blue-500/30 bg-blue-500/5 p-4">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-blue-400">
+            <Sparkles className="h-4 w-4" /> GEO Improvement Recommendations
+          </h3>
+          <div className="mt-3 space-y-2">
+            {summary.geoRecommendations.map((rec, i) => (
+              <div key={i} className={cn("rounded-lg p-3 text-xs", rec.priority === "high" ? "bg-red-500/5" : rec.priority === "medium" ? "bg-amber-500/5" : "bg-blue-500/5")}>
+                <div className="flex items-center gap-2">
+                  <span className={cn("rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase", rec.priority === "high" ? "bg-red-500/15 text-red-400" : rec.priority === "medium" ? "bg-amber-500/15 text-amber-400" : "bg-blue-500/15 text-blue-400")}>{rec.priority}</span>
+                </div>
+                <p className="mt-1 font-medium">{rec.issue}</p>
+                <p className="mt-1 text-green-400">→ {rec.fix}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Latest results */}
       {results.length > 0 && (
         <div className="mt-4 space-y-2">
-          <h3 className="text-sm font-semibold">Latest Results</h3>
+          <h3 className="text-sm font-semibold">Latest Results ({mode === "simulated" ? "Simulated" : "Real"})</h3>
           {results.map((r, i) => (
             <div key={i} className={cn("rounded-xl border p-3", r.mentioned ? "border-green-500/30 bg-green-500/5" : "border-border/50 bg-card/40")}>
-              <div className="flex items-center gap-2">
-                <span className={cn("rounded-full px-2 py-0.5 text-[9px] font-bold", r.mentioned ? "bg-green-500/15 text-green-400" : "bg-red-500/15 text-red-400")}>{r.mentioned ? "MENTIONED" : "NOT MENTIONED"}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={cn("rounded-full px-2 py-0.5 text-[9px] font-bold", r.mentioned ? "bg-green-500/15 text-green-400" : "bg-red-500/15 text-red-400")}>{r.mentioned ? "✓ MENTIONED" : "✗ NOT MENTIONED"}</span>
                 {r.sentiment === "positive" && <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[9px] text-green-400">positive</span>}
+                {r.competitors.length > 0 && (
+                  <div className="flex items-center gap-1">
+                    <span className="text-[9px] text-muted-foreground">Competitors:</span>
+                    {r.competitors.map((c) => (
+                      <span key={c} className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[9px] text-amber-400">{c}</span>
+                    ))}
+                  </div>
+                )}
               </div>
               <p className="mt-1 text-xs font-medium text-muted-foreground">"{r.prompt}"</p>
-              {r.citation && <p className="mt-1 text-xs text-green-400">"{r.citation}"</p>}
+              {r.citation && <p className="mt-1 rounded-lg bg-green-500/5 p-2 text-xs text-green-400">"{r.citation}"</p>}
               <details className="mt-1">
-                <summary className="cursor-pointer text-[10px] text-blue-400">View full response</summary>
-                <p className="mt-1 text-xs text-muted-foreground">{r.response}</p>
+                <summary className="cursor-pointer text-[10px] text-blue-400">View full AI response</summary>
+                <p className="mt-1 whitespace-pre-wrap text-xs text-muted-foreground">{r.response}</p>
               </details>
             </div>
           ))}
@@ -565,6 +670,7 @@ function AiVisibilityTracker({ token }: { token: string }) {
               <div key={h.id} className="flex items-center gap-2 rounded-lg border border-border/30 bg-card/20 p-2 text-xs">
                 <span className={cn("h-2 w-2 shrink-0 rounded-full", h.mentioned ? "bg-green-400" : "bg-red-400")} />
                 <span className="flex-1 truncate text-muted-foreground">{h.prompt}</span>
+                <span className="shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[9px] text-muted-foreground">{h.platform.includes("simulated") ? "🧪 sim" : "📊 real"}</span>
                 <span className="shrink-0 text-[10px] text-muted-foreground">{new Date(h.date).toLocaleDateString()}</span>
               </div>
             ))}
