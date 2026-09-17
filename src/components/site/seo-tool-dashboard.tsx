@@ -200,6 +200,13 @@ function ContentAnalyzer({ token }: { token: string }) {
 
       {result && (
         <div className="mt-6 space-y-4">
+          {/* SPA route notice */}
+          {result.isSpaRoute && (
+            <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-3 text-xs text-blue-300">
+              ℹ️ <strong>Client-side route detected.</strong> This page is rendered via React (SPA). The analyzer fetched the base HTML from <code className="rounded bg-white/10 px-1">/</code> which contains the SEO meta tags, JSON-LD schema, and app shell. The actual page content is rendered client-side and not visible to server-side crawlers. Consider server-side rendering (SSR) or static generation for better crawlability.
+            </div>
+          )}
+
           {/* Score cards */}
           <div className="grid gap-3 sm:grid-cols-4">
             {[
@@ -220,13 +227,21 @@ function ContentAnalyzer({ token }: { token: string }) {
           <div className="rounded-2xl border border-border/50 bg-card/40 p-4">
             <h3 className="text-sm font-semibold">Technical Checks</h3>
             <div className="mt-2 grid gap-2 text-xs sm:grid-cols-3 lg:grid-cols-4">
-              {Object.entries(result.technical as Record<string, unknown>).map(([k, v]) => (
+              {Object.entries(result.technical as Record<string, unknown>)
+                .filter(([k]) => k !== "isSpaRoute") // hide internal flag
+                .map(([k, v]) => (
                 <div key={k} className="flex items-center gap-1.5">
                   {typeof v === "boolean" ? (
                     v ? <CheckCircle2 className="h-3 w-3 text-green-400" /> : <AlertTriangle className="h-3 w-3 text-red-400" />
                   ) : null}
                   <span className="text-muted-foreground">{k}:</span>
-                  <span className="font-medium">{String(v)}</span>
+                  <span className={cn(
+                    "font-medium",
+                    typeof v === "boolean" ? (v ? "text-green-400" : "text-red-400") : "",
+                    k === "h1Count" && typeof v === "number" ? (v === 1 ? "text-green-400" : v > 1 ? "text-amber-400" : "text-red-400") : ""
+                  )}>
+                    {k === "h1Text" ? `"${String(v).slice(0, 40)}${String(v).length > 40 ? "..." : ""}"` : String(v)}
+                  </span>
                 </div>
               ))}
             </div>
