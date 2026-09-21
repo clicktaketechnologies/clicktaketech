@@ -68,3 +68,8 @@ worklog.md
 # misc
 test
 prompt
+
+# example + test files (not part of the app)
+/examples/
+/tests/
+/download/
