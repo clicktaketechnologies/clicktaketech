@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -279,6 +280,9 @@ export function HomeView({ onNavigate }: HomeViewProps) {
         </div>
       </Section>
 
+      {/* ===== OUR CLIENTS ===== */}
+      <OurClientsSection onNavigate={onNavigate} />
+
       {/* ===== TECH STACK ===== */}
       <Section>
         <Reveal>
@@ -404,5 +408,57 @@ function HeroTerminal() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ===== OUR CLIENTS (live from DB) =====
+function OurClientsSection({ onNavigate }: { onNavigate: (v: import("@/lib/site-data").NavView) => void }) {
+  const [clients, setClients] = useState<{ id: string; name: string; logo: string; website: string | null; category: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/clients")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok && data.clients?.length > 0) {
+          setClients(data.clients);
+        }
+      })
+      .catch(() => { /* ignore */ });
+  }, []);
+
+  if (clients.length === 0) return null;
+
+  return (
+    <Section className="border-y border-border/40">
+      <Reveal>
+        <p className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Trusted by {clients.length}+ clients across 4 continents
+        </p>
+      </Reveal>
+      <Reveal delay={0.05}>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+          {clients.map((c) => (
+            <div key={c.id} className="group flex h-16 items-center justify-center transition-opacity hover:opacity-100 sm:h-20" title={c.name}>
+              {c.logo ? (
+                <img src={c.logo} alt={c.name} className="max-h-16 max-w-[140px] object-contain opacity-60 transition-opacity group-hover:opacity-100 sm:max-h-20" />
+              ) : (
+                <span className="text-sm font-bold text-muted-foreground opacity-60 transition-opacity group-hover:opacity-100">{c.name}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <div className="mt-8 text-center">
+          <button
+            onClick={() => onNavigate("portfolio")}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 transition-colors hover:text-blue-300"
+          >
+            View portfolio
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </Reveal>
+    </Section>
   );
 }

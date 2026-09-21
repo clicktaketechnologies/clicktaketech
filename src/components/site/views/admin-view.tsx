@@ -58,6 +58,7 @@ import {
   StorageProvidersTab,
   SecurityLogsTab,
   TeamCareersTab,
+  ClientsTab,
 } from "@/components/site/admin-advanced-tabs";
 import {
   BlogImportPanel,
@@ -86,6 +87,7 @@ type Tab =
   | "settings"
   | "security"
   | "users"
+  | "clients"
   | "activity";
 
 const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dashboard" | "cms" | "branding" | "leads" | "system" }[] = [
@@ -96,6 +98,7 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dash
   { id: "pricing", label: "Services & Packages", icon: Tag, group: "cms" },
   { id: "media", label: "Media Library", icon: ImageIcon, group: "cms" },
   { id: "team-careers", label: "Team & Careers", icon: Briefcase, group: "cms" },
+  { id: "clients", label: "Client Logos", icon: ImageIcon, group: "cms" },
   // Branding
   { id: "typography", label: "Typography Engine", icon: Type, group: "branding" },
   { id: "theme", label: "Theme Engine", icon: Palette, group: "branding" },
@@ -343,6 +346,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {tab === "pricing" && <PricingTab token={token} />}
           {tab === "media" && <MediaTab token={token} />}
           {tab === "team-careers" && <TeamCareersTab token={token} />}
+          {tab === "clients" && <ClientsTab token={token} />}
           {/* Branding */}
           {tab === "typography" && <TypographyTab token={token} />}
           {tab === "theme" && <ThemeEngineTab token={token} />}

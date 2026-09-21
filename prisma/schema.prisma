@@ -430,3 +430,17 @@ model SeoReport {
 
   @@index([type])
 }
+
+model ClientLogo {
+  id        String   @id @default(cuid())
+  name      String
+  logo      String   // URL to logo image
+  website   String?
+  category  String   @default("general") // saas | ecommerce | education | repair | other
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([active])
+  @@index([category])
+}

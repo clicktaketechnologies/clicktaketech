@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   Plus, Pencil, Trash2, Check, X, Loader2, Play, Pause, Copy,
   TrendingUp, Users, Mail, FlaskConical, Palette, Type, Cloud, ShieldAlert,
+  Eye,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -795,6 +796,128 @@ function JobEditor({ initial, onClose, onSave }: { initial: Job | null; onClose:
         </div>
         <div className="mt-6 flex justify-end gap-2"><Button onClick={onClose} variant="outline" className="border-border/60 bg-card/40">Cancel</Button><Button onClick={() => onSave(f)} className="bg-brand-gradient text-white"><Check className="mr-1 h-4 w-4" /> Save</Button></div>
       </div>
+    </div>
+  );
+}
+
+// ============================ CLIENTS LOGO MANAGER ============================
+type ClientRow = { id: string; name: string; logo: string; website: string | null; category: string; order: number; active: boolean };
+
+export function ClientsTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [rows, setRows] = useState<ClientRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [form, setForm] = useState({ name: "", logo: "", website: "", category: "general" });
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    const res = await adminFetch("/api/admin/clients");
+    const data = await res.json().catch(() => ({}));
+    setRows(data.clients ?? []);
+    setLoading(false);
+  }, [adminFetch]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const create = async () => {
+    if (!form.name) return;
+    const res = await adminFetch("/api/admin/clients", { method: "POST", body: JSON.stringify(form) });
+    if (res.ok) { toast({ title: "Client added" }); setForm({ name: "", logo: "", website: "", category: "general" }); setCreating(false); load(); }
+    else { const d = await res.json().catch(()=>({})); toast({ title: d.error || "Failed", variant: "destructive" }); }
+  };
+
+  const toggleActive = async (c: ClientRow) => {
+    const res = await adminFetch("/api/admin/clients", { method: "PATCH", body: JSON.stringify({ id: c.id, active: !c.active }) });
+    if (res.ok) load();
+  };
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this client?")) return;
+    const res = await adminFetch(`/api/admin/clients?id=${id}`, { method: "DELETE" });
+    if (res.ok) { toast({ title: "Deleted" }); load(); }
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-bold">Client Logos ({rows.length})</h2>
+          <p className="text-xs text-muted-foreground">Upload client logos — they appear in the &quot;Our Clients&quot; section on the homepage.</p>
+        </div>
+        <Button onClick={() => setCreating((v) => !v)} className="bg-brand-gradient text-white">
+          <Plus className="mr-1 h-4 w-4" /> Add Client
+        </Button>
+      </div>
+
+      {/* Create form */}
+      {creating && (
+        <div className="mt-4 grid gap-3 rounded-2xl border border-border/50 bg-card/40 p-4 sm:grid-cols-2">
+          <div>
+            <Label className="text-sm">Client Name *</Label>
+            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="DibNow" className="mt-1.5 bg-background/50" />
+          </div>
+          <div>
+            <Label className="text-sm">Logo URL</Label>
+            <Input value={form.logo} onChange={(e) => setForm({ ...form, logo: e.target.value })} placeholder="/uploads/logo.png (upload via Media Library first)" className="mt-1.5 bg-background/50" />
+            {form.logo && <div className="mt-2 flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-white/5">{form.logo && <img src={form.logo} alt="preview" className="h-full w-full object-contain" />}</div>}
+          </div>
+          <div>
+            <Label className="text-sm">Website URL (optional)</Label>
+            <Input value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} placeholder="https://client.com" className="mt-1.5 bg-background/50" />
+          </div>
+          <div>
+            <Label className="text-sm">Category</Label>
+            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="mt-1.5 h-10 w-full rounded-lg border border-border/50 bg-background/50 px-3 text-sm">
+              <option value="general">General</option>
+              <option value="saas">SaaS Platform</option>
+              <option value="ecommerce">E-commerce</option>
+              <option value="education">Education</option>
+              <option value="repair">Repair Shop</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div className="sm:col-span-2 flex justify-end">
+            <Button onClick={create} className="bg-brand-gradient text-white"><Check className="mr-1 h-4 w-4" /> Add Client</Button>
+          </div>
+        </div>
+      )}
+
+      {/* Client grid */}
+      {loading ? (
+        <div className="py-12 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" /></div>
+      ) : rows.length === 0 ? (
+        <div className="mt-4 rounded-2xl border border-dashed border-border/60 bg-card/40 p-12 text-center text-sm text-muted-foreground">No clients yet. Click &quot;Add Client&quot; to upload your first logo.</div>
+      ) : (
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {rows.map((c) => (
+            <div key={c.id} className={cn("group relative overflow-hidden rounded-xl border p-4 text-center", c.active ? "border-border/50 bg-card/40" : "border-border/30 bg-card/20 opacity-50")}>
+              <div className="flex h-16 items-center justify-center overflow-hidden">
+                {c.logo ? (
+                  <img src={c.logo} alt={c.name} className="max-h-16 max-w-full object-contain" />
+                ) : (
+                  <span className="text-sm font-bold text-muted-foreground">{c.name}</span>
+                )}
+              </div>
+              <div className="mt-2 truncate text-xs font-medium">{c.name}</div>
+              <div className="text-[10px] text-blue-400">{c.category}</div>
+              {/* Hover actions */}
+              <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
+                <button onClick={() => toggleActive(c)} className={cn("rounded-lg p-2", c.active ? "bg-amber-500/10 text-amber-400" : "bg-green-500/10 text-green-400")} title={c.active ? "Hide" : "Show"}>
+                  {c.active ? <Eye className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+                <button onClick={() => del(c.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20" title="Delete">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
