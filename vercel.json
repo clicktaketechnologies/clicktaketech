@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "regions": ["lhr1"],
+  "functions": {
+    "src/app/api/admin/**/*.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/chat/**/*.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/seo-tool/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
+  "crons": []
+}

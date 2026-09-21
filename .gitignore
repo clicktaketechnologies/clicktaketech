@@ -36,7 +36,6 @@ yarn-error.log*
 # vercel
 .vercel
 
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
@@ -46,9 +45,26 @@ local-*
 *.log
 dev.log
 dev.out.log
+server.log
+
+# database (local SQLite — use Supabase PostgreSQL in production)
+/db/*.db
+/db/*.db-journal
+
+# user uploads (managed via admin panel)
+/upload/applications/*
+/upload/*.png
+/upload/*.jpg
+!upload/ClickTake-Technologies.png
+!upload/ClickTake-Technologies-White.png
+
+# internal worklog
+worklog.md
+
+# scripts (keep for deployment — these are useful)
+# skills directory (AI tools, not part of the app)
+/skills/
+
+# misc
 test
 prompt
-
-server.log
-# Skills directory
-/skills/
