@@ -239,11 +239,11 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute right-4 top-full z-40 hidden lg:block"
+                  className="absolute left-0 top-full z-40 hidden min-w-[320px] lg:block"
                   onMouseEnter={() => openMenuId(item.id)}
                   onMouseLeave={closeMenuDelayed}
                 >
-                  <div className="mt-2 w-80 overflow-hidden rounded-2xl glass-strong shadow-deep">
+                  <div className="mt-2 w-full overflow-hidden rounded-2xl glass-strong shadow-deep">
                     <div className="border-b border-border/40 bg-blue-500/5 px-5 py-3">
                       <p className="text-sm font-semibold text-foreground">{item.label}</p>
                       <p className="text-xs text-muted-foreground">{item.items.length} pages</p>
