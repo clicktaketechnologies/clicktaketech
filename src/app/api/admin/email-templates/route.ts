@@ -48,7 +48,7 @@ export async function PATCH(req: NextRequest) {
       ...(category ? { category } : {}), ...(status ? { status } : {}),
     },
   });
-  await logActivity({ action: "update", entity: "email", entityId: id, summary: `Updated email template "${t.name}"` });
+  await logActivity({ action: "update", entity: "email", entityId: String(id), summary: `Updated email template "${t.name}"` });
   return NextResponse.json({ ok: true, template: t });
 }
 
@@ -58,6 +58,6 @@ export async function DELETE(req: NextRequest) {
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const t = await db.emailTemplate.delete({ where: { id: String(id) } });
-  await logActivity({ action: "delete", entity: "email", entityId: id, summary: `Deleted email template "${t.name}"` });
+  await logActivity({ action: "delete", entity: "email", entityId: String(id), summary: `Deleted email template "${t.name}"` });
   return NextResponse.json({ ok: true });
 }

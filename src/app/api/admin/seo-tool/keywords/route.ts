@@ -82,6 +82,6 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  await db.keyword.delete({ where: { id } });
+  await db.keyword.delete({ where: { id: String(id) } });
   return NextResponse.json({ ok: true });
 }

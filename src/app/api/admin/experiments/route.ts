@@ -46,7 +46,7 @@ export async function PATCH(req: NextRequest) {
       ...(typeof winner === "string" ? { winner: winner || null } : {}),
     },
   });
-  await logActivity({ action: "update", entity: "experiment", entityId: id, summary: `Updated experiment "${e.name}"` });
+  await logActivity({ action: "update", entity: "experiment", entityId: String(id), summary: `Updated experiment "${e.name}"` });
   return NextResponse.json({ ok: true, experiment: e });
 }
 
@@ -55,7 +55,7 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const e = await db.experiment.delete({ where: { id } });
-  await logActivity({ action: "delete", entity: "experiment", entityId: id, summary: `Deleted experiment "${e.name}"` });
+  const e = await db.experiment.delete({ where: { id: String(id) } });
+  await logActivity({ action: "delete", entity: "experiment", entityId: String(id), summary: `Deleted experiment "${e.name}"` });
   return NextResponse.json({ ok: true });
 }

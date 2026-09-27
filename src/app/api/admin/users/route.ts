@@ -52,7 +52,7 @@ export async function PATCH(req: NextRequest) {
       ...(role ? { role: String(role) } : {}),
     },
   });
-  await logActivity({ action: "update", entity: "user", entityId: id, summary: `Updated user ${user.email}` });
+  await logActivity({ action: "update", entity: "user", entityId: String(id), summary: `Updated user ${user.email}` });
   return NextResponse.json({ ok: true, user: { id: user.id, email: user.email, role: user.role } });
 }
 
@@ -62,6 +62,6 @@ export async function DELETE(req: NextRequest) {
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const user = await db.user.delete({ where: { id: String(id) } });
-  await logActivity({ action: "delete", entity: "user", entityId: id, summary: `Deleted user ${user.email}` });
+  await logActivity({ action: "delete", entity: "user", entityId: String(id), summary: `Deleted user ${user.email}` });
   return NextResponse.json({ ok: true });
 }

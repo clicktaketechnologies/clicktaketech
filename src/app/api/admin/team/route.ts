@@ -57,6 +57,6 @@ export async function DELETE(req: NextRequest) {
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const m = await db.teamMember.delete({ where: { id: String(id) } });
-  await logActivity({ action: "delete", entity: "team", entityId: id, summary: `Deleted team member "${m.name}"` });
+  await logActivity({ action: "delete", entity: "team", entityId: String(id), summary: `Deleted team member "${m.name}"` });
   return NextResponse.json({ ok: true });
 }

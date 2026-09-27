@@ -48,7 +48,7 @@ export async function PATCH(req: NextRequest) {
       ...(typeof owner === "string" ? { owner: owner || null } : {}),
     },
   });
-  await logActivity({ action: "update", entity: "lead", entityId: id, summary: `Updated lead ${lead.name} → ${stage || "stage"}` });
+  await logActivity({ action: "update", entity: "lead", entityId: String(id), summary: `Updated lead ${lead.name} → ${stage || "stage"}` });
   return NextResponse.json({ ok: true, lead });
 }
 
@@ -58,6 +58,6 @@ export async function DELETE(req: NextRequest) {
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const lead = await db.lead.delete({ where: { id: String(id) } });
-  await logActivity({ action: "delete", entity: "lead", entityId: id, summary: `Deleted lead ${lead.name}` });
+  await logActivity({ action: "delete", entity: "lead", entityId: String(id), summary: `Deleted lead ${lead.name}` });
   return NextResponse.json({ ok: true });
 }

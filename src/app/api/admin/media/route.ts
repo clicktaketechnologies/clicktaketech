@@ -99,7 +99,7 @@ export async function PATCH(req: NextRequest) {
       ...(typeof folder === "string" ? { folder } : {}),
     },
   });
-  await logActivity({ action: "update", entity: "media", entityId: id, summary: `Updated media "${asset.name}"` });
+  await logActivity({ action: "update", entity: "media", entityId: String(id), summary: `Updated media "${asset.name}"` });
   return NextResponse.json({ ok: true, asset });
 }
 
@@ -118,7 +118,7 @@ export async function DELETE(req: NextRequest) {
       /* ignore */
     }
     await db.mediaAsset.delete({ where: { id: String(id) } });
-    await logActivity({ action: "delete", entity: "media", entityId: id, summary: `Deleted media "${asset.name}"` });
+    await logActivity({ action: "delete", entity: "media", entityId: String(id), summary: `Deleted media "${asset.name}"` });
   }
   return NextResponse.json({ ok: true });
 }
