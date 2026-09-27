@@ -80,6 +80,10 @@ async function resolveCredentials(
   if (envSuper && norm(email) === envSuper.email && password === envSuper.password) {
     // Best-effort: make sure the DB row matches the env so persisted tokens
     // (base64(email:password)) and the DB-based fallback paths all agree.
+    // ALL DB access here is wrapped — if the User table doesn't exist yet
+    // (e.g. a fresh Supabase DB where the postinstall schema-push didn't
+    // complete), we still authenticate via env and return fallback values.
+    let dbRow: { id: string; name: string | null; role: string; permissions: string | null } | null = null;
     try {
       const existing = await db.user.findUnique({ where: { email: envSuper.email } });
       if (existing && existing.password !== envSuper.password) {
@@ -87,8 +91,11 @@ async function resolveCredentials(
           where: { id: existing.id },
           data: { password: envSuper.password, role: "admin", permissions: null },
         });
-      } else if (!existing) {
-        await db.user.create({
+        dbRow = { id: existing.id, name: existing.name, role: existing.role, permissions: existing.permissions };
+      } else if (existing) {
+        dbRow = { id: existing.id, name: existing.name, role: existing.role, permissions: existing.permissions };
+      } else {
+        const created = await db.user.create({
           data: {
             email: envSuper.email,
             name: "ClickTake Admin",
@@ -97,11 +104,12 @@ async function resolveCredentials(
             permissions: null,
           },
         });
+        dbRow = { id: created.id, name: created.name, role: created.role, permissions: created.permissions };
       }
     } catch {
-      /* ignore DB sync errors — env match is enough to authenticate */
+      /* DB unavailable (table missing / connection error) — env match is
+         enough to authenticate. Return fallback values below. */
     }
-    const dbRow = await db.user.findUnique({ where: { email: envSuper.email } });
     return {
       id: dbRow?.id ?? "super-admin",
       email: envSuper.email,
@@ -111,7 +119,12 @@ async function resolveCredentials(
     };
   }
   // 2) DB fallback — any other user (editor, viewer, etc.).
-  const user = await db.user.findUnique({ where: { email: norm(email) } });
+  let user: { id: string; email: string; name: string | null; role: string; permissions: string | null } | null = null;
+  try {
+    user = await db.user.findUnique({ where: { email: norm(email) } });
+  } catch {
+    return null; // DB unavailable and not an env super-admin → reject
+  }
   if (!user || user.password !== password) return null;
   return {
     id: user.id,
