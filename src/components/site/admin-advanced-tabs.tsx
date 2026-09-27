@@ -579,7 +579,7 @@ export function SecurityLogsTab({ token }: { token: string }) {
 
 // ============================ TEAM & CAREERS ============================
 type Member = { id: string; name: string; role: string; department: string; bio: string | null; photo: string | null; linkedin: string | null; twitter: string | null; order: number; active: boolean };
-type Job = { id: string; slug: string; title: string; department: string; location: string; type: string; description: string; salary: string | null; active: boolean };
+type Job = { id: string; slug: string; title: string; department: string; location: string; type: string; description: string; requirements: string | null; salary: string | null; active: boolean };
 
 export function TeamCareersTab({ token }: { token: string }) {
   const [subTab, setSubTab] = useState<"team" | "jobs">("team");
