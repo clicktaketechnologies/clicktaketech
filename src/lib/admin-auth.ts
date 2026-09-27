@@ -119,7 +119,9 @@ async function resolveCredentials(
     };
   }
   // 2) DB fallback — any other user (editor, viewer, etc.).
-  let user: { id: string; email: string; name: string | null; role: string; permissions: string | null } | null = null;
+  // Let Prisma infer the return type (includes the `password` field we need
+  // to compare) instead of annotating a narrow type that omits it.
+  let user: { id: string; email: string; name: string | null; role: string; password: string; permissions: string | null } | null = null;
   try {
     user = await db.user.findUnique({ where: { email: norm(email) } });
   } catch {
