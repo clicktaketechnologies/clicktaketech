@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import {
   Upload, FileText, Loader2, Check, AlertTriangle, X, TrendingUp,
   Eye, Globe, Smartphone, Monitor, Tablet, ExternalLink, Zap,
-  ArrowRight, BarChart3, Activity, Sparkles,
+  ArrowRight, BarChart3, Activity, Sparkles, Users,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -258,7 +258,7 @@ export function TrafficWidget({ token }: { token: string }) {
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             <StatCard label="Total Visits" value={String(data.stats.totalVisits)} icon={Eye} color="text-blue-400" />
             <StatCard label="Last 30d" value={String(data.stats.recentVisits)} icon={TrendingUp} color="text-pink-400" />
-            <StatCard label="Unique" value={String(data.stats.uniqueVisitors)} icon={Users2} color="text-blue-400" />
+            <StatCard label="Unique" value={String(data.stats.uniqueVisitors)} icon={Users} color="text-blue-400" />
             <StatCard label="Avg/Day" value={String(data.stats.avgPerDay)} icon={Activity} color="text-pink-400" />
           </div>
 
@@ -329,18 +329,6 @@ function StatCard({ label, value, icon: Icon, color }: { label: string; value: s
       <div className="mt-1.5 text-xl font-bold text-gradient-brand">{value}</div>
       <div className="text-[10px] text-muted-foreground">{label}</div>
     </div>
-  );
-}
-
-// users icon
-function Users2(props: React.ComponentProps<typeof Eye>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
   );
 }
 
