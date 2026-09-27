@@ -332,7 +332,7 @@ model Job {
 
 model Keyword {
   id          String   @id @default(cuid())
-  keyword     String
+  keyword     String   @unique
   type        String   @default("commercial")
   volume      Int      @default(0)
   difficulty  Int      @default(0)
