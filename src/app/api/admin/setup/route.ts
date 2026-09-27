@@ -4,6 +4,7 @@ import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
 import { execSync } from "node:child_process";
 import path from "node:path";
+import { createTables } from "@/lib/admin-create-tables";
 import {
   SERVICE_CATEGORIES,
   BLOG_POSTS,
@@ -70,7 +71,30 @@ export async function POST(req: NextRequest) {
   }
 
   if (!schemaReady) {
-    summary.error = "Schema push failed. See steps for details.";
+    // Step 2b: raw SQL fallback — create all tables via CREATE TABLE IF
+    // NOT EXISTS using db.$executeRawUnsafe. This works even on Vercel
+    // serverless where the prisma CLI isn't in the bundle.
+    steps.push("schema: CLI methods failed — falling back to raw SQL table creation");
+    try {
+      const tableResults = await createTables();
+      steps.push(...tableResults);
+      // Re-check if Page table is now accessible
+      try {
+        await db.page.count();
+        schemaReady = true;
+        steps.push("schema: confirmed ready via raw SQL creation");
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        steps.push(`schema: raw SQL created tables but Page still inaccessible — ${msg.substring(0, 150)}`);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      steps.push(`schema: raw SQL creation failed — ${msg.substring(0, 150)}`);
+    }
+  }
+
+  if (!schemaReady) {
+    summary.error = "Schema creation failed (CLI + raw SQL both failed). See steps for details.";
     summary.steps = steps;
     return NextResponse.json({ ok: false, summary }, { status: 500 });
   }
