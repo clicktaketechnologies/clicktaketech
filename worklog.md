@@ -348,3 +348,34 @@ Stage Summary:
 - DB was immediately synced to the env value (ChangeMe!2025) so the user can log in right now.
 - Working credentials (verified end-to-end with agent-browser): admin@clicktaketech.com / ChangeMe!2025.
 - Lint clean (0 errors, 0 warnings). Dev server recompiled cleanly. No 500s. All 4 e2e scenarios pass.
+
+---
+Task ID: 9
+Agent: general-purpose (push-code-live)
+Task: Push code live (deploy admin login fix to production)
+
+Work Log:
+- Read /home/z/my-project/worklog.md to align with Task IDs 7 + 8 (admin-login fixer + env-password login fixer).
+- Inspected git state: remote = https://github.com/clicktaketechnologies/clicktaketech.git, branch = main, 2 auto-commits ahead of origin/main (UUID commit messages from the environment's auto-commit hook).
+- Verified all admin-login fixes from Task IDs 7 + 8 are staged in those commits:
+  * src/lib/admin-auth.ts (env-aware resolveCredentials + decodeToken + resolveAdminFromToken)
+  * src/app/api/admin/auth/route.ts (GET verify + env-sync POST)
+  * src/app/api/admin/auth/demo-credentials/route.ts (new file — returns env creds)
+  * src/components/site/views/admin-view.tsx (verify-on-mount, 401 auto-logout, dynamic demo creds)
+  * scripts/seed-cms.ts + scripts/postinstall.cjs (env-driven seeding)
+  * db/custom.db (synced to ChangeMe!2025)
+  * worklog.md
+- Also noticed scratch debug outputs in tool-results/*.txt got auto-committed by the environment hook. Cleaned those up: added "tool-results/" to .gitignore, ran `git rm -r --cached tool-results/` (untracked 16 files), committed as "chore: untrack scratch tool-results/ outputs + add to .gitignore".
+- Final repo state: 3 commits ready to push to origin/main, working tree clean.
+- Attempted `git push origin main` — failed with "fatal: could not read Username for 'https://github.com': No such device or address". Investigated all credential sources: no `gh` CLI installed, no `~/.ssh/` keys, no `~/.git-credentials`, no `~/.netrc`, no `~/.config/gh/`, no GH_TOKEN/GITHUB_TOKEN env vars, no credential.helper configured. The sandbox environment has zero GitHub auth.
+- Checked for alternative deploy paths: no Vercel CLI installed, no `.vercel/` config, no deploy script in package.json beyond `build`. DEPLOY.md confirms the workflow is "push to GitHub main → Vercel auto-deploys".
+- Conclusion: the final `git push` MUST be run from a machine with GitHub credentials (the user's own terminal). Provided the exact command + what will be pushed + what happens after Vercel auto-deploy.
+
+Stage Summary:
+- 3 commits staged on main, ahead of origin/main:
+  1. 0046c10 — Task ID 7 fixes (admin-auth.ts decodeToken/verify, GET verify endpoint, admin-view stale-token recovery + 401 auto-logout + LoginGate inline banner).
+  2. 7aae14a — Task ID 8 fixes (env-aware resolveCredentials, demo-credentials endpoint, dynamic LoginGate creds, seed-cms + postinstall env sync, DB synced to ChangeMe!2025).
+  3. 8ecde53 — chore: untrack scratch tool-results/ + .gitignore.
+- Push command (run from a machine with GitHub auth): `cd /home/z/my-project && git push origin main`
+- After push: Vercel auto-deploys, postinstall.cjs switches Prisma to postgresql + pushes schema to Supabase + seeds/syncs admin user to SUPERADMIN_EMAIL/SUPERADMIN_PASSWORD env vars. Production admin login will work with admin@clicktaketech.com / ChangeMe!2025 (or whatever SUPERADMIN_PASSWORD is set to in Vercel env vars).
+- Could NOT complete the push from this sandbox — no GitHub credentials available.
