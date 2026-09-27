@@ -27,38 +27,42 @@ console.log('✅ Prisma schema updated');
 console.log('📦 Generating Prisma client...');
 execSync('bunx prisma generate', { stdio: 'inherit' });
 
-// Step 3: Push schema to database (PostgreSQL only)
+// Step 3: Push schema + seed (PostgreSQL only)
 if (dbUrl.startsWith('postgresql://') || dbUrl.startsWith('postgres://')) {
   console.log('🗄️ Pushing schema to Supabase...');
   try {
     execSync('bunx prisma db push --accept-data-loss', { stdio: 'inherit' });
     console.log('✅ Schema pushed to Supabase');
-    
-    // Step 4: Seed admin user
+
     console.log('👤 Seeding admin user...');
     const { PrismaClient } = require('@prisma/client');
     const db = new PrismaClient();
-    
-    const existing = await db.user.findUnique({ where: { email: 'admin@clicktaketech.com' } });
-    if (!existing) {
-      await db.user.create({
-        data: {
-          email: 'admin@clicktaketech.com',
-          name: 'ClickTake Admin',
-          password: 'clicktake-admin-2026',
-          role: 'admin',
-          permissions: null,
-        },
+
+    db.user.findUnique({ where: { email: 'admin@clicktaketech.com' } })
+      .then(function(existing) {
+        if (!existing) {
+          return db.user.create({
+            data: {
+              email: 'admin@clicktaketech.com',
+              name: 'ClickTake Admin',
+              password: 'clicktake-admin-2026',
+              role: 'admin',
+              permissions: null,
+            },
+          }).then(function() {
+            console.log('✅ Admin user created!');
+          });
+        } else {
+          console.log('✅ Admin user already exists');
+        }
+      })
+      .then(function() { return db.$disconnect(); })
+      .catch(function(err) {
+        console.log('⚠️ Seed skipped:', err.message);
+        return db.$disconnect();
       });
-      console.log('✅ Admin user created!');
-    } else {
-      console.log('✅ Admin user already exists');
-    }
-    
-    await db.$disconnect();
   } catch (err) {
     console.log('⚠️ Database push/seed skipped:', err.message);
-    console.log('   Run manually: bunx prisma db push --accept-data-loss');
   }
 } else {
   console.log('ℹ️ Skipping database push (SQLite local dev)');
