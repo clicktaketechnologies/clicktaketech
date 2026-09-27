@@ -19,31 +19,32 @@ export async function GET(req: NextRequest) {
     const token = req.headers.get("x-admin-token");
     if (!token) {
       return NextResponse.json(
-        { ok: false, error: "No token supplied." },
+        { ok: false, error: "No token supplied.", _v: "auth-fix-v2" },
         { status: 401 }
       );
     }
     const user = await resolveAdminFromToken(token);
     if (!user) {
       return NextResponse.json(
-        { ok: false, error: "Your session has expired. Please log in again." },
+        { ok: false, error: "Your session has expired. Please log in again.", _v: "auth-fix-v2", _envSet: !!(process.env.SUPERADMIN_EMAIL && process.env.SUPERADMIN_PASSWORD) },
         { status: 401 }
       );
     }
     return NextResponse.json({
       ok: true,
       token,
+      _v: "auth-fix-v2",
       user: {
         email: user.email,
         name: user.name,
         role: user.role,
-        permissions: user.permissions, // JSON string or null (super admin)
+        permissions: user.permissions,
       },
     });
   } catch (err) {
     console.error("[admin/auth] verify error", err);
     return NextResponse.json(
-      { ok: false, error: "Session verification failed." },
+      { ok: false, error: "Session verification failed.", _v: "auth-fix-v2" },
       { status: 500 }
     );
   }
