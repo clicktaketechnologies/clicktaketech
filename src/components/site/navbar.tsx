@@ -130,7 +130,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                     onClick={() => item.items && handleNav(item.items[0].id)}
                     className={cn(
                       "flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
-                      isDropdownActive(item) || active === item.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                      isDropdownActive(item) || active === (item.id as string) ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                     )}
                   >
                     {item.label}
