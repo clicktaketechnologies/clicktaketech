@@ -38,22 +38,33 @@ if (dbUrl.startsWith('postgresql://') || dbUrl.startsWith('postgres://')) {
     const { PrismaClient } = require('@prisma/client');
     const db = new PrismaClient();
 
-    db.user.findUnique({ where: { email: 'admin@clicktaketech.com' } })
+    const adminEmail = (process.env.SUPERADMIN_EMAIL || 'admin@clicktaketech.com').trim().toLowerCase();
+    const adminPassword = process.env.SUPERADMIN_PASSWORD || 'clicktake-admin-2026';
+
+    db.user.findUnique({ where: { email: adminEmail } })
       .then(function(existing) {
         if (!existing) {
           return db.user.create({
             data: {
-              email: 'admin@clicktaketech.com',
+              email: adminEmail,
               name: 'ClickTake Admin',
-              password: 'clicktake-admin-2026',
+              password: adminPassword,
               role: 'admin',
               permissions: null,
             },
           }).then(function() {
-            console.log('✅ Admin user created!');
+            console.log('✅ Admin user created! (' + adminEmail + ')');
+          });
+        } else if (existing.password !== adminPassword) {
+          // Keep the DB in sync with env on re-deploy.
+          return db.user.update({
+            where: { id: existing.id },
+            data: { password: adminPassword, role: 'admin', permissions: null },
+          }).then(function() {
+            console.log('✅ Admin user password re-synced to env value (' + adminEmail + ')');
           });
         } else {
-          console.log('✅ Admin user already exists');
+          console.log('✅ Admin user already up to date (' + adminEmail + ')');
         }
       })
       .then(function() { return db.$disconnect(); })

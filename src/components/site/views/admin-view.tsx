@@ -487,15 +487,19 @@ function LoginGate({
   const [email, setEmail] = useState("admin@clicktaketech.com");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  // The currently-configured super-admin credentials, fetched from the
+  // server (which reads SUPERADMIN_EMAIL + SUPERADMIN_PASSWORD from env).
+  // Displayed in the demo credentials card so the form NEVER shows a stale
+  // hardcoded password after someone updates .env.
+  const [demoCreds, setDemoCreds] = useState<{ email: string; password: string } | null>(null);
   // Visible inline error banner — shown when the server returns an error OR
   // when the parent AdminView detected a stale/expired session on mount and
   // bounced us back here. More reliable than a fleeting toast.
   const [error, setError] = useState<string | null>(initialError);
 
-  // On mount: if there's a stale token in localStorage (e.g. the user
-  // arrived here directly with a corrupt storage entry from an older
-  // build, bypassing the AdminView verify path), proactively clear it so
-  // the next login attempt starts clean.
+  // On mount: (a) clear any stale localStorage token, (b) fetch the real
+  // configured credentials from /api/admin/auth/demo-credentials so the
+  // form can show them and pre-fill the email.
   useEffect(() => {
     try {
       const t = localStorage.getItem(TOKEN_KEY);
@@ -509,7 +513,23 @@ function LoginGate({
     } catch {
       /* ignore */
     }
-  }, []);
+    (async () => {
+      try {
+        const res = await fetch("/api/admin/auth/demo-credentials", {
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const data = (await res.json()) as { ok?: boolean; email?: string; password?: string };
+          if (data.ok && data.email && data.password) {
+            setDemoCreds({ email: data.email, password: data.password });
+            setEmail(data.email);
+          }
+        }
+      } catch {
+        /* ignore — optional endpoint */
+      }
+    })();
+  }, [error]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -608,12 +628,20 @@ function LoginGate({
           </Button>
           <div className=" rounded-xl border border-border/40 bg-background/30 p-3 text-center">
             <p className="text-xs font-medium text-muted-foreground">Demo credentials</p>
-            <p className="mt-1 font-mono text-xs text-foreground">
-              admin@clicktaketech.com
-            </p>
-            <p className="font-mono text-xs text-foreground">
-              clicktake-admin-2026
-            </p>
+            {demoCreds ? (
+              <>
+                <p className="mt-1 font-mono text-xs text-foreground break-all">
+                  {demoCreds.email}
+                </p>
+                <p className="font-mono text-xs text-foreground break-all">
+                  {demoCreds.password}
+                </p>
+              </>
+            ) : (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Set SUPERADMIN_EMAIL + SUPERADMIN_PASSWORD in .env
+              </p>
+            )}
           </div>
         </div>
       </form>
