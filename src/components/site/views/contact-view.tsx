@@ -55,7 +55,7 @@ export function ContactView() {
 
   const set = (k: keyof FormState, v: string) => {
     setForm((f) => ({ ...f, [k]: v }));
-    setErrors((e) => ({ ...e, [k]: undefined }));
+    setErrors((e) => { const next = { ...e }; delete next[k]; return next; });
   };
 
   const validateStep = (s: number) => {

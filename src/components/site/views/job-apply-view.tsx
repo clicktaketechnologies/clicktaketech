@@ -103,12 +103,12 @@ export function JobApplyView({ preselectedJobSlug, onNavigate }: JobApplyViewPro
     additionalComments: "",
     termsAccepted: "",
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [files, setFiles] = useState<Record<string, FileState>>(EMPTY_FILES);
 
   const set = (k: string, v: string) => {
     setForm((f) => ({ ...f, [k]: v }));
-    setErrors((e) => ({ ...e, [k]: undefined }));
+    setErrors((e) => { const next = { ...e }; delete next[k]; return next; });
   };
 
   const validateStep = (s: number) => {
