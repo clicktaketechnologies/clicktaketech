@@ -119,6 +119,11 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dash
 ];
 
 const TOKEN_KEY = "clicktake_admin_token";
+// Dispatched from useAdminFetch whenever any admin API returns 401, so the
+// top-level AdminView can clear the stale token and bounce back to the
+// LoginGate without having to thread an onUnauthorized callback through
+// every single tab component.
+const AUTH_EXPIRED_EVENT = "clicktake:admin-auth-expired";
 
 // Maps each tab to the permission key required to view it.
 const TAB_PERMISSIONS: Record<Tab, string> = {
@@ -152,21 +157,115 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   const [checking, setChecking] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [lightMode, setLightMode] = useState(false);
+  // Reason we bounced back to the LoginGate, if any. Surfaced as a
+  // persistent inline banner on the login form so the user understands why
+  // they were logged out — toasts alone can be missed.
+  const [sessionExpiredReason, setSessionExpiredReason] = useState<string | null>(null);
+  const { toast } = useToast();
 
+  // On mount: read the persisted token from localStorage, then ASK THE
+  // SERVER whether it is still valid (user still exists + password still
+  // matches). This catches the most common "admin panel login failed" cause:
+  // a stale token left in localStorage from a previous session before the DB
+  // was seeded, or after the admin password was changed. Without this check,
+  // the SPA would render the dashboard with a dead token, every admin API
+  // call would 401, and the panel would look "broken" / "login failed" even
+  // though the LoginGate was never shown.
   useEffect(() => {
-    try {
-      const t = localStorage.getItem(TOKEN_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (t) setToken(t);
-      const perms = localStorage.getItem("clicktake_admin_perms");
-      if (perms) setUserPerms(parsePermissions(perms));
-      const lm = localStorage.getItem("clicktake_admin_light");
-      if (lm === "true") setLightMode(true);
-    } catch {
-      /* ignore */
-    }
-    setChecking(false);
-  }, []);
+    let cancelled = false;
+    (async () => {
+      let storedToken: string | null = null;
+      try {
+        storedToken = localStorage.getItem(TOKEN_KEY);
+        const lm = localStorage.getItem("clicktake_admin_light");
+        if (lm === "true") setLightMode(true);
+      } catch {
+        /* ignore localStorage access errors (private mode, etc.) */
+      }
+
+      if (!storedToken) {
+        // No persisted session — straight to the login form.
+        setChecking(false);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/admin/auth", {
+          method: "GET",
+          headers: { "x-admin-token": storedToken },
+        });
+        const data = (await res.json().catch(() => ({}))) as
+          | { ok?: boolean; user?: { permissions?: string | null } }
+          | Record<string, never>;
+        if (cancelled) return;
+        if (res.ok && data.ok) {
+          // Token is still valid — restore the session.
+          setToken(storedToken);
+          setUserPerms(parsePermissions(data.user?.permissions ?? null));
+        } else {
+          // Token is stale / rejected by the server — wipe it so the user
+          // sees the login form instead of a dead dashboard.
+          try {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem("clicktake_admin_perms");
+          } catch {
+            /* ignore */
+          }
+          setSessionExpiredReason("Your saved login was no longer valid. Please sign in again.");
+          toast({
+            title: "Session expired",
+            description: "Your saved login was no longer valid. Please sign in again.",
+            variant: "destructive",
+          });
+        }
+      } catch {
+        // Network error during verify — fall back to using the stored token
+        // optimistically; the first 401 from a real admin call will then
+        // trigger the AUTH_EXPIRED_EVENT path below.
+        if (cancelled) return;
+        setToken(storedToken);
+        const perms = (() => {
+          try {
+            return parsePermissions(localStorage.getItem("clicktake_admin_perms"));
+          } catch {
+            return null;
+          }
+        })();
+        setUserPerms(perms);
+      } finally {
+        if (!cancelled) setChecking(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [toast]);
+
+  // Listen for any admin API returning 401 (dispatched by useAdminFetch).
+  // This is the runtime safety net: even if the verify-on-mount passed, a
+  // later 401 (e.g. someone deletes the admin user mid-session) will
+  // immediately bounce back to the login form with a clear toast.
+  useEffect(() => {
+    const handler = () => {
+      try {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem("clicktake_admin_perms");
+      } catch {
+        /* ignore */
+      }
+      setToken(null);
+      setUserPerms(null);
+      setSessionExpiredReason("Your session expired or was no longer valid. Please sign in again.");
+      toast({
+        title: "Session expired",
+        description: "Your login is no longer valid. Please sign in again.",
+        variant: "destructive",
+      });
+    };
+    window.addEventListener(AUTH_EXPIRED_EVENT, handler);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handler);
+  }, [toast]);
 
   const logout = () => {
     try {
@@ -194,7 +293,12 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   }
 
   if (!token) {
-    return <LoginGate onLogin={(t, perms) => { setToken(t); setUserPerms(perms); }} />;
+    return (
+      <LoginGate
+        initialError={sessionExpiredReason}
+        onLogin={(t, perms) => { setToken(t); setUserPerms(perms); setSessionExpiredReason(null); }}
+      />
+    );
   }
 
   const activeTab = TABS.find((t) => t.id === tab);
@@ -372,36 +476,73 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
 }
 
 // ============================ LOGIN ============================
-function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null) => void }) {
+function LoginGate({
+  onLogin,
+  initialError = null,
+}: {
+  onLogin: (t: string, perms: Set<string> | null) => void;
+  initialError?: string | null;
+}) {
   const { toast } = useToast();
   const [email, setEmail] = useState("admin@clicktaketech.com");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  // Visible inline error banner — shown when the server returns an error OR
+  // when the parent AdminView detected a stale/expired session on mount and
+  // bounced us back here. More reliable than a fleeting toast.
+  const [error, setError] = useState<string | null>(initialError);
+
+  // On mount: if there's a stale token in localStorage (e.g. the user
+  // arrived here directly with a corrupt storage entry from an older
+  // build, bypassing the AdminView verify path), proactively clear it so
+  // the next login attempt starts clean.
+  useEffect(() => {
+    try {
+      const t = localStorage.getItem(TOKEN_KEY);
+      if (t) {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem("clicktake_admin_perms");
+        if (!error) {
+          setError("A stale saved session was found and cleared. Please sign in with your credentials below.");
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error(data.error || "Login failed");
+      const data = (await res.json().catch(() => ({}))) as
+        | { ok?: boolean; error?: string; token?: string; user?: { permissions?: string | null } }
+        | Record<string, never>;
+      if (!res.ok || !data.ok) {
+        const msg = data.error || `Login failed (HTTP ${res.status}). Please try again.`;
+        throw new Error(msg);
+      }
       const perms = parsePermissions(data.user?.permissions ?? null);
       try {
-        localStorage.setItem(TOKEN_KEY, data.token);
+        localStorage.setItem(TOKEN_KEY, data.token as string);
         localStorage.setItem("clicktake_admin_perms", data.user?.permissions ?? "null");
       } catch {
-        /* ignore */
+        /* ignore localStorage write failures (private mode, etc.) */
       }
-      onLogin(data.token, perms);
+      onLogin(data.token as string, perms);
       toast({ title: "Logged in", description: "Welcome to the admin panel." });
     } catch (err) {
+      const msg = err instanceof Error ? err.message : "Please try again.";
+      setError(msg);
       toast({
         title: "Login failed",
-        description: err instanceof Error ? err.message : "Please try again.",
+        description: msg,
         variant: "destructive",
       });
     } finally {
@@ -424,6 +565,15 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
             <p className="text-xs text-muted-foreground">ClickTake Technologies CMS</p>
           </div>
         </div>
+        {error && (
+          <div
+            role="alert"
+            className="mt-5 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300"
+          >
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span className="leading-snug">{error}</span>
+          </div>
+        )}
         <div className="mt-6 space-y-4">
           <div>
             <Label className="text-sm">Email</Label>
@@ -432,6 +582,7 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1.5 bg-background/50"
+              autoComplete="username"
               required
             />
           </div>
@@ -443,6 +594,7 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               className="mt-1.5 bg-background/50"
+              autoComplete="current-password"
               required
             />
           </div>
@@ -454,9 +606,15 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {loading ? "Signing in…" : "Sign in"}
           </Button>
-          <p className="text-center text-xs text-muted-foreground">
-            Demo: admin@clicktaketech.com · clicktake-admin-2026
-          </p>
+          <div className=" rounded-xl border border-border/40 bg-background/30 p-3 text-center">
+            <p className="text-xs font-medium text-muted-foreground">Demo credentials</p>
+            <p className="mt-1 font-mono text-xs text-foreground">
+              admin@clicktaketech.com
+            </p>
+            <p className="font-mono text-xs text-foreground">
+              clicktake-admin-2026
+            </p>
+          </div>
         </div>
       </form>
     </div>
@@ -475,6 +633,19 @@ function useAdminFetch(token: string) {
           ...(opts?.headers || {}),
         },
       });
+      // Any admin API returning 401 means the persisted token is no longer
+      // valid (user deleted, password changed, DB re-seeded, etc.). Surface
+      // that to the top-level AdminView via a CustomEvent so it can wipe the
+      // stale token and bounce back to the LoginGate — instead of leaving the
+      // user staring at an empty/broken dashboard that looks like "login
+      // failed" with no way to recover without manually clearing storage.
+      if (res.status === 401 && typeof window !== "undefined") {
+        try {
+          window.dispatchEvent(new CustomEvent(AUTH_EXPIRED_EVENT));
+        } catch {
+          /* ignore — some environments don't allow CustomEvent */
+        }
+      }
       return res;
     },
     [token]
@@ -486,23 +657,26 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
   const [stats, setStats] = useState<Record<string, number>>({});
   const [recentLogs, setRecentLogs] = useState<{ id: string; action: string; entity: string; summary: string; createdAt: string }[]>([]);
 
-  const adminHeaders = { "x-admin-token": token };
+  // Use the shared admin fetch wrapper so any 401 from a stale/invalid token
+  // surfaces as the AUTH_EXPIRED_EVENT and bounces the user back to the
+  // LoginGate (instead of silently rendering a zeroed-out dashboard).
+  const adminFetch = useAdminFetch(token);
 
   useEffect(() => {
     (async () => {
       try {
         const [p, b, pr, q, m, a, u, rd, lg, ld, sh] = await Promise.all([
-          fetch("/api/admin/pages", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/blog", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/pricing", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/queries", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/media", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/applications", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/users", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/redirects", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/activity?limit=6", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/leads", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/seo-history?limit=100", { headers: adminHeaders }).then((r) => r.json()),
+          adminFetch("/api/admin/pages").then((r) => r.json()),
+          adminFetch("/api/admin/blog").then((r) => r.json()),
+          adminFetch("/api/admin/pricing").then((r) => r.json()),
+          adminFetch("/api/admin/queries").then((r) => r.json()),
+          adminFetch("/api/admin/media").then((r) => r.json()),
+          adminFetch("/api/admin/applications").then((r) => r.json()),
+          adminFetch("/api/admin/users").then((r) => r.json()),
+          adminFetch("/api/admin/redirects").then((r) => r.json()),
+          adminFetch("/api/admin/activity?limit=6").then((r) => r.json()),
+          adminFetch("/api/admin/leads").then((r) => r.json()),
+          adminFetch("/api/admin/seo-history?limit=100").then((r) => r.json()),
         ]);
         const next: Record<string, number> = {
           pages: p.pages?.length ?? 0,
@@ -524,8 +698,8 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
         // Also fetch team + jobs counts
         try {
           const [tm, jb] = await Promise.all([
-            fetch("/api/admin/team", { headers: adminHeaders }).then((r) => r.json()),
-            fetch("/api/admin/jobs", { headers: adminHeaders }).then((r) => r.json()),
+            adminFetch("/api/admin/team").then((r) => r.json()),
+            adminFetch("/api/admin/jobs").then((r) => r.json()),
           ]);
           next.teamMembers = tm.members?.length ?? 0;
           next.jobs = jb.jobs?.length ?? 0;
@@ -533,10 +707,10 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
         setStats(next);
         setRecentLogs(lg.logs ?? []);
       } catch {
-        /* ignore */
+        /* ignore — AUTH_EXPIRED_EVENT already handles the 401 path */
       }
     })();
-  }, [token]);
+  }, [token, adminFetch]);
 
   const cards = [
     { label: "Pages", value: stats.pages ?? 0, icon: FileText, tab: "pages" as Tab, color: "text-blue-400" },
