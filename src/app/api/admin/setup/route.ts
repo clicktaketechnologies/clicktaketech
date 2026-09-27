@@ -35,14 +35,38 @@ export async function POST(req: NextRequest) {
   const summary: Record<string, number | string | string[]> = {};
   const steps: string[] = [];
 
-  // Step 1: detect if the schema is provisioned.
+  // Step 1: detect if the schema is provisioned AND the DB is reachable.
   let schemaReady = false;
+  let dbReachable = true;
+  let dbError = "";
   try {
     await db.page.count();
     schemaReady = true;
     steps.push("schema: already provisioned (Page table responds)");
-  } catch {
-    steps.push("schema: Page table missing — will push schema");
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    dbError = msg;
+    // Detect "database unreachable" — this is an INFRASTRUCTURE issue
+    // (paused Supabase project, wrong DATABASE_URL, network block),
+    // NOT a schema issue. No point trying to push schema or create
+    // tables — the DB itself can't be reached.
+    if (/Can't reach database server|ECONNREFUSED|ENOTFOUND|ETIMEDOUT|getaddrinfo|connection refused|connection timed out/i.test(msg)) {
+      dbReachable = false;
+      steps.push(`DB UNREACHABLE: ${msg.substring(0, 200)}`);
+    } else {
+      steps.push(`schema: Page table missing — will try to create: ${msg.substring(0, 100)}`);
+    }
+  }
+
+  // If the DB itself is unreachable, fail fast with a clear message.
+  if (!dbReachable) {
+    return NextResponse.json({
+      ok: false,
+      error: "DATABASE_UNREACHABLE",
+      message: "Your Supabase database is unreachable. This usually means the project is paused (free-tier auto-pauses after inactivity). Go to https://supabase.com → your project → click 'Restore' to resume it. Then come back and click 'Setup Database' again.",
+      dbError: dbError.substring(0, 300),
+      summary: { steps },
+    }, { status: 503 });
   }
 
   // Step 2: push schema if missing.

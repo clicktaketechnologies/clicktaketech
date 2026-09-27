@@ -40,6 +40,7 @@ import {
   Mail,
   Sun,
   Moon,
+  Database,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -684,11 +685,62 @@ function useAdminFetch(token: string) {
 function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: string }) {
   const [stats, setStats] = useState<Record<string, number>>({});
   const [recentLogs, setRecentLogs] = useState<{ id: string; action: string; entity: string; summary: string; createdAt: string }[]>([]);
+  const [setupRunning, setSetupRunning] = useState(false);
+  const [setupResult, setSetupResult] = useState<{ ok: boolean; message?: string; steps?: string[] } | null>(null);
 
   // Use the shared admin fetch wrapper so any 401 from a stale/invalid token
   // surfaces as the AUTH_EXPIRED_EVENT and bounces the user back to the
   // LoginGate (instead of silently rendering a zeroed-out dashboard).
   const adminFetch = useAdminFetch(token);
+
+  // Trigger the one-shot /api/admin/setup endpoint that creates all DB
+  // tables (via raw SQL) + seeds all data (pages, blog, pricing, team,
+  // jobs, clients, settings, etc.). Idempotent — safe to run multiple
+  // times. Surfaces a clear banner if the Supabase DB is unreachable.
+  const runSetup = async () => {
+    setSetupRunning(true);
+    setSetupResult(null);
+    try {
+      const res = await adminFetch("/api/admin/setup", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        setSetupResult({
+          ok: true,
+          message: "Database setup complete! All tables created and data seeded. Reloading dashboard…",
+          steps: data.summary?.steps,
+        });
+        // Reload the page after a short delay so the new data shows up.
+        setTimeout(() => { if (typeof window !== "undefined") window.location.reload(); }, 2000);
+      } else if (data.error === "DATABASE_UNREACHABLE") {
+        setSetupResult({
+          ok: false,
+          message: data.message || "Your Supabase database is unreachable. Check if the project is paused at supabase.com and resume it, then try again.",
+          steps: data.summary?.steps,
+        });
+      } else {
+        setSetupResult({
+          ok: false,
+          message: data.message || data.error || `Setup failed (HTTP ${res.status}).`,
+          steps: data.summary?.steps,
+        });
+      }
+    } catch (err) {
+      setSetupResult({
+        ok: false,
+        message: err instanceof Error ? err.message : "Setup request failed.",
+      });
+    } finally {
+      setSetupRunning(false);
+    }
+  };
+
+  // Detect "empty dashboard" — all key stats are zero → show the setup banner.
+  const allEmpty = (stats.pages ?? 0) === 0
+    && (stats.posts ?? 0) === 0
+    && (stats.tiers ?? 0) === 0
+    && (stats.queries ?? 0) === 0
+    && (stats.leads ?? 0) === 0
+    && (stats.teamMembers ?? 0) === 0;
 
   useEffect(() => {
     (async () => {
@@ -757,6 +809,58 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
 
   return (
     <div>
+      {/* Setup banner — shows when dashboard is empty (DB unprovisioned or unreachable) */}
+      {(allEmpty || setupResult) && (
+        <div className={cn(
+          "mb-5 rounded-2xl border p-5",
+          setupResult?.ok
+            ? "border-green-500/30 bg-green-500/5"
+            : setupResult?.ok === false
+            ? "border-red-500/30 bg-red-500/5"
+            : "border-pink-500/30 bg-pink-500/5"
+        )}>
+          <div className="flex items-start gap-4">
+            <div className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+              setupResult?.ok ? "bg-green-500/15 text-green-400" : setupResult?.ok === false ? "bg-red-500/15 text-red-400" : "bg-pink-500/15 text-pink-400"
+            )}>
+              {setupRunning ? <Loader2 className="h-5 w-5 animate-spin" /> : setupResult?.ok ? <CheckCircle2 className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-foreground">
+                {setupResult?.ok ? "Setup Complete" : setupResult ? "Setup Issue" : "Database Not Set Up"}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {setupResult?.message || "Your dashboard is empty because the Supabase database hasn't been provisioned yet. Click \"Setup Database\" to create all tables and seed your content (pages, blog, pricing, team, jobs, clients, settings)."}
+              </p>
+              {setupResult?.steps && setupResult.steps.length > 0 && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-xs text-blue-400 hover:underline">View {setupResult.steps.length} steps</summary>
+                  <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+                    {setupResult.steps.map((s, i) => (
+                      <li key={i} className={s.includes("FAILED") || s.includes("UNREACHABLE") ? "text-red-400" : ""}>{s}</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+              <div className="mt-3 flex gap-2">
+                {!setupResult?.ok && (
+                  <Button onClick={runSetup} disabled={setupRunning} size="sm" className="bg-brand-gradient text-white">
+                    {setupRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Database className="mr-2 h-4 w-4" />}
+                    {setupRunning ? "Setting up…" : "Setup Database"}
+                  </Button>
+                )}
+                {setupResult?.ok === false && (
+                  <Button onClick={() => { setSetupResult(null); }} variant="outline" size="sm" className="border-border/40 bg-card/40">
+                    Dismiss
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
           <button
