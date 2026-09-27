@@ -123,7 +123,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   </div>
                 );
               }
-              // dropdown
+              // dropdown — positioned directly below the trigger, centered
               return (
                 <div key={item.id} className="relative" onMouseEnter={() => openMenuId(item.id)} onMouseLeave={closeMenuDelayed}>
                   <button
@@ -239,7 +239,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute left-0 top-full z-40 hidden min-w-[320px] lg:block"
+                  className="absolute left-1/2 top-full z-40 hidden -translate-x-1/2 min-w-[340px] lg:block"
                   onMouseEnter={() => openMenuId(item.id)}
                   onMouseLeave={closeMenuDelayed}
                 >
