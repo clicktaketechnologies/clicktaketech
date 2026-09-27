@@ -46,19 +46,26 @@ export async function POST(req: NextRequest) {
 
   // Step 2: push schema if missing.
   if (!schemaReady) {
-    try {
-      const schemaPath = path.join(process.cwd(), "prisma", "schema.prisma");
-      const prismaBin = path.join(process.cwd(), "node_modules", ".bin", "prisma");
-      execSync(`"${prismaBin}" db push --accept-data-loss --schema="${schemaPath}"`, {
-        stdio: "pipe",
-        timeout: 45000,
-        env: { ...process.env },
-      });
-      steps.push("schema: pushed via prisma db push (all tables created)");
-      schemaReady = true;
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      steps.push(`schema: push FAILED — ${msg.substring(0, 200)}`);
+    const schemaPath = path.join(process.cwd(), "prisma", "schema.prisma");
+    const env = { ...process.env };
+    // Try multiple ways to invoke the Prisma CLI — Vercel's serverless
+    // bundle may not include the node_modules/.bin/prisma symlink, but the
+    // prisma package's JS entry point is usually present.
+    const prismaInvocations = [
+      () => execSync(`"${path.join(process.cwd(), "node_modules", ".bin", "prisma")}" db push --accept-data-loss --schema="${schemaPath}"`, { stdio: "pipe", timeout: 45000, env }),
+      () => execSync(`node "${path.join(process.cwd(), "node_modules", "prisma", "build", "index.js")}" db push --accept-data-loss --schema="${schemaPath}"`, { stdio: "pipe", timeout: 45000, env }),
+      () => execSync(`npx --no-install prisma db push --accept-data-loss --schema="${schemaPath}"`, { stdio: "pipe", timeout: 45000, env }),
+    ];
+    for (let i = 0; i < prismaInvocations.length; i++) {
+      try {
+        prismaInvocations[i]();
+        steps.push(`schema: pushed via prisma db push (method ${i + 1}, all tables created)`);
+        schemaReady = true;
+        break;
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        steps.push(`schema: method ${i + 1} failed — ${msg.substring(0, 150)}`);
+      }
     }
   }
 
