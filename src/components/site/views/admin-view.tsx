@@ -128,6 +128,7 @@ const TAB_PERMISSIONS: Record<Tab, string> = {
   pricing: "pricing:view",
   media: "media:view",
   "team-careers": "team:view",
+  clients: "media:view",
   typography: "branding:view",
   theme: "branding:view",
   leads: "leads:view",
