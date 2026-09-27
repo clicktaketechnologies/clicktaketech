@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
@@ -12,10 +13,11 @@ export async function GET(req: NextRequest) {
   const where: Record<string, unknown> = {};
   if (status && status !== "all") where.status = status;
   if (category && category !== "all") where.category = category;
-  const posts = await db.blogPost.findMany({
-    where,
-    orderBy: { updatedAt: "desc" },
-  });
+  const posts = await safeQuery(
+    () => db.blogPost.findMany({ where, orderBy: { updatedAt: "desc" } }),
+    [],
+    "blog"
+  );
   return NextResponse.json({ ok: true, posts });
 }
 

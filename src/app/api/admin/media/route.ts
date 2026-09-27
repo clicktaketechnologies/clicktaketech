@@ -5,6 +5,7 @@ import path from "node:path";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
@@ -27,11 +28,11 @@ export async function GET(req: NextRequest) {
   const folder = searchParams.get("folder");
   const where: Record<string, unknown> = {};
   if (folder && folder !== "all") where.folder = folder;
-  const assets = await db.mediaAsset.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    take: 500,
-  });
+  const assets = await safeQuery(
+    () => db.mediaAsset.findMany({ where, orderBy: { createdAt: "desc" }, take: 500 }),
+    [],
+    "media"
+  );
   return NextResponse.json({ ok: true, assets });
 }
 

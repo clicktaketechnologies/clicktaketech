@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
@@ -11,10 +12,10 @@ export async function GET(req: NextRequest) {
   const entity = searchParams.get("entity");
   const where: Record<string, unknown> = {};
   if (entity && entity !== "all") where.entity = entity;
-  const logs = await db.activityLog.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    take: limit,
-  });
+  const logs = await safeQuery(
+    () => db.activityLog.findMany({ where, orderBy: { createdAt: "desc" }, take: limit }),
+    [],
+    "activity"
+  );
   return NextResponse.json({ ok: true, logs });
 }

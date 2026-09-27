@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   if (!(await requireAdmin(req))) return unauthorizedResponse();
-  const tiers = await db.pricingTier.findMany({ orderBy: { createdAt: "asc" } });
+  const tiers = await safeQuery(
+    () => db.pricingTier.findMany({ orderBy: { createdAt: "asc" } }),
+    [],
+    "pricing"
+  );
   return NextResponse.json({ ok: true, tiers });
 }
 

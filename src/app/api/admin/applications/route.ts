@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
@@ -11,11 +12,11 @@ export async function GET(req: NextRequest) {
   const status = searchParams.get("status");
   const where: Record<string, unknown> = {};
   if (status && status !== "all") where.status = status;
-  const apps = await db.jobApplication.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    take: 500,
-  });
+  const apps = await safeQuery(
+    () => db.jobApplication.findMany({ where, orderBy: { createdAt: "desc" }, take: 500 }),
+    [],
+    "applications"
+  );
   return NextResponse.json({ ok: true, applications: apps });
 }
 

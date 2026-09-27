@@ -2,15 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   if (!(await requireAdmin(req))) return unauthorizedResponse();
-  const users = await db.user.findMany({
-    orderBy: { createdAt: "desc" },
-    select: { id: true, email: true, name: true, role: true, createdAt: true },
-  });
+  const users = await safeQuery(
+    () => db.user.findMany({
+      orderBy: { createdAt: "desc" },
+      select: { id: true, email: true, name: true, role: true, createdAt: true },
+    }),
+    [],
+    "users"
+  );
   return NextResponse.json({ ok: true, users });
 }
 

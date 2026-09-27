@@ -2,12 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   if (!(await requireAdmin(req))) return unauthorizedResponse();
-  const jobs = await db.job.findMany({ orderBy: { updatedAt: "desc" } });
+  const jobs = await safeQuery(
+    () => db.job.findMany({ orderBy: { updatedAt: "desc" } }),
+    [],
+    "jobs"
+  );
   return NextResponse.json({ ok: true, jobs });
 }
 
