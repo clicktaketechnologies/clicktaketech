@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
     /* ignore */
   }
 
-  const results = [];
+  const results: Record<string, unknown>[] = [];
   for (const p of PAGES_TO_AUDIT) {
     const a = await auditPage(p.path);
     const rec = await db.seoAudit.create({
