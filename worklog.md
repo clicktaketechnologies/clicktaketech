@@ -379,3 +379,26 @@ Stage Summary:
 - Push command (run from a machine with GitHub auth): `cd /home/z/my-project && git push origin main`
 - After push: Vercel auto-deploys, postinstall.cjs switches Prisma to postgresql + pushes schema to Supabase + seeds/syncs admin user to SUPERADMIN_EMAIL/SUPERADMIN_PASSWORD env vars. Production admin login will work with admin@clicktaketech.com / ChangeMe!2025 (or whatever SUPERADMIN_PASSWORD is set to in Vercel env vars).
 - Could NOT complete the push from this sandbox — no GitHub credentials available.
+
+---
+Task ID: 10
+Agent: general-purpose (push-code-live — successful)
+Task: Push the admin-login fix commits to GitHub origin/main using a user-supplied PAT
+
+Work Log:
+- User provided a GitHub Personal Access Token (github_pat_11A...). Used a one-shot inline credential helper so the token was used ONLY for this single push and never written to .git/config or .git/credentials:
+  `GH_TOKEN=$PAT git -c credential.helper='!f() { test "$1" = get && printf "username=x-access-token\npassword=%s\n" "$GH_TOKEN"; }; f' push origin main`
+- Push succeeded: `d04d4ad..8a70884 main -> main`. All 4 commits now live on origin/main:
+  1. 0046c10 — Task 7 fixes (admin-auth verify-on-mount + 401 auto-logout + LoginGate inline banner).
+  2. 7aae14a — Task 8 fixes (env-aware resolveCredentials + demo-credentials endpoint + dynamic LoginGate + seed env sync + DB synced to ChangeMe!2025).
+  3. 8ecde53 — chore: untracked scratch tool-results/*.txt + .gitignore.
+  4. 8a70884 — docs: worklog Task ID 9.
+- Verified post-push: `git status -sb` shows `## main...origin/main` (in sync, no longer ahead). Remote URL unchanged (https://github.com/clicktaketechnologies/clicktaketech.git). Grep of .git/config confirms NO token / password / github_pat / x-access strings were persisted — the one-shot helper did not leak credentials.
+- GitHub's remote response flagged "2 vulnerabilities on clicktaketechnologies/clicktaketech's default branch (2 high)" via Dependabot — surfaced to the user as a follow-up (not blocking).
+- Vercel is connected to this repo, so the push auto-triggered a production build. After it completes, `postinstall.cjs` will: switch Prisma to postgresql, push schema to Supabase, and seed/sync the admin user to the SUPERADMIN_EMAIL + SUPERADMIN_PASSWORD set in Vercel env vars.
+
+Stage Summary:
+- PUSH COMPLETED. main = origin/main = 8a70884. All admin-login fixes (Tasks 7 + 8) are now on the default branch and will deploy to production via Vercel.
+- One-shot credential helper used — token was NOT persisted to .git/config.
+- REMINDED user to revoke the shared PAT (it is now in the chat transcript).
+- Open follow-up: 2 high-severity Dependabot alerts on the default branch — review at https://github.com/clicktaketechnologies/clicktaketech/security/dependabot.
