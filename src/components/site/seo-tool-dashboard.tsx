@@ -132,6 +132,20 @@ function ContentAnalyzer({ token }: { token: string }) {
   const [keyword, setKeyword] = useState("");
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<Record<string, unknown> | null>(null);
+  // Helper to safely access result properties for JSX rendering
+  const r = result as {
+    isSpaRoute?: boolean;
+    httpStatus?: number;
+    seoScore?: number;
+    aeoScore?: number;
+    geoScore?: number;
+    voiceScore?: number;
+    technical?: Record<string, unknown>;
+    recommendations?: { category: string; priority: string; issue: string; fix: string }[];
+    suggestedFaqs?: { q: string; a: string }[];
+    entities?: string[];
+    aiCitationWorthiness?: string;
+  } | null;
   const [pages, setPages] = useState<{ slug: string; title: string }[]>([]);
 
   // Load published pages from DB for the dropdown
@@ -201,7 +215,7 @@ function ContentAnalyzer({ token }: { token: string }) {
       {result && (
         <div className="mt-6 space-y-4">
           {/* SPA route notice */}
-          {result.isSpaRoute && (
+          {r?.isSpaRoute && (
             <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-3 text-xs text-blue-300">
               ℹ️ <strong>Client-side route detected.</strong> This page is rendered via React (SPA). The analyzer fetched the base HTML from <code className="rounded bg-white/10 px-1">/</code> which contains the SEO meta tags, JSON-LD schema, and app shell. The actual page content is rendered client-side and not visible to server-side crawlers. Consider server-side rendering (SSR) or static generation for better crawlability.
             </div>
@@ -210,10 +224,10 @@ function ContentAnalyzer({ token }: { token: string }) {
           {/* Score cards */}
           <div className="grid gap-3 sm:grid-cols-4">
             {[
-              { label: "SEO Score", value: result.seoScore as number, icon: Search },
-              { label: "AEO Score", value: result.aeoScore as number, icon: Bot },
-              { label: "GEO Score", value: result.geoScore as number, icon: Globe },
-              { label: "Voice Score", value: result.voiceScore as number, icon: Eye },
+              { label: "SEO Score", value: r?.seoScore as number, icon: Search },
+              { label: "AEO Score", value: r?.aeoScore as number, icon: Bot },
+              { label: "GEO Score", value: r?.geoScore as number, icon: Globe },
+              { label: "Voice Score", value: r?.voiceScore as number, icon: Eye },
             ].map((s) => (
               <div key={s.label} className={cn("rounded-xl border border-border/50 p-4 text-center", scoreBg(s.value))}>
                 <s.icon className={cn("mx-auto h-5 w-5", scoreColor(s.value))} />
@@ -227,7 +241,7 @@ function ContentAnalyzer({ token }: { token: string }) {
           <div className="rounded-2xl border border-border/50 bg-card/40 p-4">
             <h3 className="text-sm font-semibold">Technical Checks</h3>
             <div className="mt-2 grid gap-2 text-xs sm:grid-cols-3 lg:grid-cols-4">
-              {Object.entries(result.technical as Record<string, unknown>)
+              {Object.entries(r?.technical as Record<string, unknown>)
                 .filter(([k]) => k !== "isSpaRoute") // hide internal flag
                 .map(([k, v]) => (
                 <div key={k} className="flex items-center gap-1.5">
@@ -248,11 +262,11 @@ function ContentAnalyzer({ token }: { token: string }) {
           </div>
 
           {/* AI Recommendations */}
-          {Array.isArray(result.recommendations) && (result.recommendations as unknown[]).length > 0 && (
+          {Array.isArray(r?.recommendations) && (r?.recommendations as unknown[]).length > 0 && (
             <div className="rounded-2xl border border-border/50 bg-card/40 p-4">
               <h3 className="flex items-center gap-2 text-sm font-semibold"><Sparkles className="h-4 w-4 text-blue-400" /> AI Recommendations</h3>
               <div className="mt-3 space-y-2">
-                {(result.recommendations as { category: string; priority: string; issue: string; fix: string }[]).map((r, i) => (
+                {(r?.recommendations as { category: string; priority: string; issue: string; fix: string }[]).map((r, i) => (
                   <div key={i} className={cn("rounded-lg p-3 text-xs", r.priority === "high" ? "bg-red-500/5" : r.priority === "medium" ? "bg-amber-500/5" : "bg-blue-500/5")}>
                     <div className="flex items-center gap-2">
                       <span className={cn("rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase", r.priority === "high" ? "bg-red-500/15 text-red-400" : r.priority === "medium" ? "bg-amber-500/15 text-amber-400" : "bg-blue-500/15 text-blue-400")}>{r.priority}</span>
@@ -267,11 +281,11 @@ function ContentAnalyzer({ token }: { token: string }) {
           )}
 
           {/* Suggested FAQs */}
-          {Array.isArray(result.suggestedFaqs) && (result.suggestedFaqs as unknown[]).length > 0 && (
+          {Array.isArray(r?.suggestedFaqs) && (r?.suggestedFaqs as unknown[]).length > 0 && (
             <div className="rounded-2xl border border-border/50 bg-card/40 p-4">
               <h3 className="text-sm font-semibold">Suggested FAQs (for AEO + Featured Snippets)</h3>
               <div className="mt-2 space-y-2">
-                {(result.suggestedFaqs as { q: string; a: string }[]).map((faq, i) => (
+                {(r?.suggestedFaqs as { q: string; a: string }[]).map((faq, i) => (
                   <div key={i} className="rounded-lg bg-background/40 p-3 text-xs">
                     <div className="font-semibold">{faq.q}</div>
                     <p className="mt-1 text-muted-foreground">{faq.a}</p>
@@ -282,11 +296,11 @@ function ContentAnalyzer({ token }: { token: string }) {
           )}
 
           {/* Entities */}
-          {Array.isArray(result.entities) && (result.entities as string[]).length > 0 && (
+          {Array.isArray(r?.entities) && (r?.entities as string[]).length > 0 && (
             <div className="rounded-2xl border border-border/50 bg-card/40 p-4">
               <h3 className="text-sm font-semibold">Semantic Entities (for topical authority)</h3>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                {(result.entities as string[]).map((e, i) => (
+                {(r?.entities as string[]).map((e, i) => (
                   <span key={i} className="rounded-md bg-blue-500/10 px-2 py-1 text-[11px] font-medium text-blue-400">{e}</span>
                 ))}
               </div>
@@ -294,10 +308,10 @@ function ContentAnalyzer({ token }: { token: string }) {
           )}
 
           {/* AI Citation Worthiness */}
-          {result.aiCitationWorthiness && (
+          {r?.aiCitationWorthiness && (
             <div className="rounded-2xl border border-blue-500/30 bg-blue-500/5 p-4">
               <h3 className="flex items-center gap-2 text-sm font-semibold"><Bot className="h-4 w-4 text-blue-400" /> AI Citation Worthiness (GEO)</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{result.aiCitationWorthiness as string}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{r?.aiCitationWorthiness as string}</p>
             </div>
           )}
         </div>
