@@ -173,5 +173,5 @@ export async function POST(req: NextRequest) {
     summary: `Imported ${created.length} blog post(s) from ${f.name} (${skipped.length} skipped)`,
   });
 
-  return NextResponse.json({ ok: true, imported: created.length, skipped: skipped.length, posts: created, skipped });
+  return NextResponse.json({ ok: true, imported: created.length, skippedCount: skipped.length, posts: created, skipped });
 }
