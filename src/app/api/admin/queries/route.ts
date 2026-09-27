@@ -26,7 +26,7 @@ export async function PATCH(req: NextRequest) {
   if (!body?.id) return NextResponse.json({ ok: false, error: "id is required" }, { status: 422 });
   const { id, status } = body as Record<string, string>;
   const q = await db.contactQuery.update({
-    where: { id },
+    where: { id: String(id) },
     data: { ...(status ? { status } : {}) },
   });
   return NextResponse.json({ ok: true, query: q });
@@ -37,6 +37,6 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id is required" }, { status: 422 });
-  await db.contactQuery.delete({ where: { id } });
+  await db.contactQuery.delete({ where: { id: String(id) } });
   return NextResponse.json({ ok: true });
 }

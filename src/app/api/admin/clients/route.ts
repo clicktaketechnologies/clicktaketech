@@ -53,7 +53,7 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const c = await db.clientLogo.delete({ where: { id } });
+  const c = await db.clientLogo.delete({ where: { id: String(id) } });
   await logActivity({ action: "delete", entity: "media", entityId: id, summary: `Deleted client "${c.name}"` });
   return NextResponse.json({ ok: true });
 }

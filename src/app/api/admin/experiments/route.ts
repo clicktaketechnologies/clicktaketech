@@ -36,7 +36,7 @@ export async function PATCH(req: NextRequest) {
   if (!body?.id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const { id, status, visitorsA, visitorsB, convA, convB, winner } = body as Record<string, unknown>;
   const e = await db.experiment.update({
-    where: { id },
+    where: { id: String(id) },
     data: {
       ...(status ? { status: String(status) } : {}),
       ...(typeof visitorsA === "number" ? { visitorsA } : {}),

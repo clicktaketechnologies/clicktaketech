@@ -21,6 +21,6 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body?.id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const { id, status } = body as { id: string; status: string };
-  await db.seoIssue.update({ where: { id }, data: { status } });
+  await db.seoIssue.update({ where: { id: String(id) }, data: { status } });
   return NextResponse.json({ ok: true });
 }

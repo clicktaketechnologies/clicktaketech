@@ -44,7 +44,7 @@ export async function PATCH(req: NextRequest) {
     if (conflict) return NextResponse.json({ ok: false, error: "email already in use" }, { status: 409 });
   }
   const user = await db.user.update({
-    where: { id },
+    where: { id: String(id) },
     data: {
       ...(email ? { email: String(email).toLowerCase() } : {}),
       ...(typeof name === "string" ? { name: name || null } : {}),
@@ -61,7 +61,7 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const user = await db.user.delete({ where: { id } });
+  const user = await db.user.delete({ where: { id: String(id) } });
   await logActivity({ action: "delete", entity: "user", entityId: id, summary: `Deleted user ${user.email}` });
   return NextResponse.json({ ok: true });
 }

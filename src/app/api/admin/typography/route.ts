@@ -37,7 +37,7 @@ export async function PATCH(req: NextRequest) {
   if (active) {
     await db.typographyPreset.updateMany({ data: { active: false } });
   }
-  const p = await db.typographyPreset.update({ where: { id }, data: { ...(typeof active === "boolean" ? { active } : {}) } });
+  const p = await db.typographyPreset.update({ where: { id: String(id) }, data: { ...(typeof active === "boolean" ? { active } : {}) } });
   await logActivity({ action: "update", entity: "setting", entityId: id, summary: `${active ? "Activated" : "Updated"} typography preset "${p.name}"` });
   return NextResponse.json({ ok: true, preset: p });
 }
@@ -47,7 +47,7 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const p = await db.typographyPreset.delete({ where: { id } });
+  const p = await db.typographyPreset.delete({ where: { id: String(id) } });
   await logActivity({ action: "delete", entity: "setting", entityId: id, summary: `Deleted typography preset "${p.name}"` });
   return NextResponse.json({ ok: true });
 }

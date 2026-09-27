@@ -59,7 +59,7 @@ export async function PATCH(req: NextRequest) {
     if (conflict) return NextResponse.json({ ok: false, error: "Slug already in use." }, { status: 409 });
   }
   const page = await db.page.update({
-    where: { id },
+    where: { id: String(id) },
     data: {
       ...(slug ? { slug } : {}),
       ...(title ? { title } : {}),
@@ -81,6 +81,6 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id is required" }, { status: 422 });
-  await db.page.delete({ where: { id } });
+  await db.page.delete({ where: { id: String(id) } });
   return NextResponse.json({ ok: true });
 }

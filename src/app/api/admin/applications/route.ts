@@ -25,7 +25,7 @@ export async function PATCH(req: NextRequest) {
   if (!body?.id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const { id, status } = body as Record<string, string>;
   const app = await db.jobApplication.update({
-    where: { id },
+    where: { id: String(id) },
     data: { ...(status ? { status } : {}) },
   });
   await logActivity({ action: "update", entity: "application", entityId: id, summary: `Set application ${app.fullName} → ${status}` });
@@ -37,7 +37,7 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const app = await db.jobApplication.delete({ where: { id } });
+  const app = await db.jobApplication.delete({ where: { id: String(id) } });
   await logActivity({ action: "delete", entity: "application", entityId: id, summary: `Deleted application ${app.fullName}` });
   return NextResponse.json({ ok: true });
 }

@@ -41,7 +41,7 @@ export async function PATCH(req: NextRequest) {
     if (conflict) return NextResponse.json({ ok: false, error: "slug already in use" }, { status: 409 });
   }
   const t = await db.emailTemplate.update({
-    where: { id },
+    where: { id: String(id) },
     data: {
       ...(name ? { name } : {}), ...(slug ? { slug } : {}), ...(subject ? { subject } : {}),
       ...(typeof tBody === "string" ? { body: tBody } : {}),
@@ -57,7 +57,7 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const t = await db.emailTemplate.delete({ where: { id } });
+  const t = await db.emailTemplate.delete({ where: { id: String(id) } });
   await logActivity({ action: "delete", entity: "email", entityId: id, summary: `Deleted email template "${t.name}"` });
   return NextResponse.json({ ok: true });
 }

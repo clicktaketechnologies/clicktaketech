@@ -93,7 +93,7 @@ export async function PATCH(req: NextRequest) {
   if (!body?.id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const { id, alt, folder } = body as Record<string, string>;
   const asset = await db.mediaAsset.update({
-    where: { id },
+    where: { id: String(id) },
     data: {
       ...(typeof alt === "string" ? { alt: alt || null } : {}),
       ...(typeof folder === "string" ? { folder } : {}),
@@ -108,7 +108,7 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const asset = await db.mediaAsset.findUnique({ where: { id } });
+  const asset = await db.mediaAsset.findUnique({ where: { id: String(id) } });
   if (asset) {
     // best-effort delete the file from disk
     try {
@@ -117,7 +117,7 @@ export async function DELETE(req: NextRequest) {
     } catch {
       /* ignore */
     }
-    await db.mediaAsset.delete({ where: { id } });
+    await db.mediaAsset.delete({ where: { id: String(id) } });
     await logActivity({ action: "delete", entity: "media", entityId: id, summary: `Deleted media "${asset.name}"` });
   }
   return NextResponse.json({ ok: true });
