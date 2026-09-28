@@ -2251,7 +2251,6 @@ function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => voi
   }, [adminFetch]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 
@@ -2260,6 +2259,40 @@ function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => voi
   };
 
   const val = (s: SettingRow) => (s.key in drafts ? drafts[s.key] : s.value);
+
+  // Upload a logo/favicon file from the user's computer to /api/admin/media,
+  // then store the returned URL (/uploads/<filename>) in the setting. No URL
+  // text input — the user picks a file and the upload handles everything.
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const uploadImage = async (key: string, file: File) => {
+    setUploadingKey(key);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "branding");
+      fd.append("alt", key);
+      const res = await adminFetch("/api/admin/media", { method: "POST", body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok && data.asset?.url) {
+        setVal(key, data.asset.url);
+        // Save immediately so it persists.
+        const row = rows.find((r) => r.key === key);
+        if (row) {
+          await adminFetch("/api/admin/settings", {
+            method: "PATCH",
+            body: JSON.stringify([{ key, value: data.asset.url }]),
+          });
+        }
+        toast({ title: "Uploaded", description: `${file.name} saved as ${data.asset.url}` });
+      } else {
+        toast({ title: "Upload failed", description: data.error || `HTTP ${res.status}`, variant: "destructive" });
+      }
+    } catch (err) {
+      toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
+    } finally {
+      setUploadingKey(null);
+    }
+  };
 
   const saveCategory = async (category: string) => {
     setSaving(true);
@@ -2383,19 +2416,66 @@ function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => voi
           ) : cat === "identity" ? (
             /* Identity: color pickers + image previews */
             <div className="mt-4 space-y-4">
-              {/* Logo + Favicon previews */}
+              {/* Logo + Favicon — file upload only (no URL text input) */}
               <div className="grid gap-3 sm:grid-cols-3">
-                {rows.filter((r) => r.category === "identity" && isImageKey(r.key)).map((r) => (
-                  <div key={r.id} className="rounded-xl border border-border/40 bg-background/40 p-3">
-                    <Label className="text-xs font-mono">{r.key}</Label>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-white/5">
-                        {val(r) && <img src={val(r)} alt={r.key} className="h-full w-full object-contain" />}
+                {rows.filter((r) => r.category === "identity" && isImageKey(r.key)).map((r) => {
+                  const label = r.key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+                  return (
+                    <div key={r.id} className="rounded-xl border border-border/40 bg-background/40 p-3">
+                      <Label className="text-xs font-mono">{r.key}</Label>
+                      <div className="mt-2 flex items-center gap-3">
+                        {/* Preview */}
+                        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-white/5">
+                          {val(r) ? (
+                            <img src={val(r)} alt={label} className="h-full w-full object-contain" />
+                          ) : (
+                            <span className="text-[10px] text-muted-foreground">No image</span>
+                          )}
+                        </div>
+                        <div className="flex flex-1 flex-col gap-1.5">
+                          {/* File upload button */}
+                          <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand-gradient px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-90">
+                            {uploadingKey === r.key ? (
+                              <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Uploading…</>
+                            ) : val(r) ? (
+                              <><Upload className="h-3.5 w-3.5" /> Replace</>
+                            ) : (
+                              <><Upload className="h-3.5 w-3.5" /> Upload {label}</>
+                            )}
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/x-icon,image/vnd.microsoft.icon"
+                              className="hidden"
+                              disabled={uploadingKey === r.key}
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) uploadImage(r.key, f);
+                                e.target.value = ""; // allow re-uploading same file
+                              }}
+                            />
+                          </label>
+                          {/* Remove button — only if a logo is set */}
+                          {val(r) && (
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                setVal(r.key, "");
+                                await adminFetch("/api/admin/settings", {
+                                  method: "PATCH",
+                                  body: JSON.stringify([{ key: r.key, value: "" }]),
+                                });
+                                toast({ title: "Removed", description: `${label} cleared` });
+                              }}
+                              className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-border/40 bg-card/40 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-400"
+                            >
+                              <Trash2 className="h-3 w-3" /> Remove
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <Input value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} className="flex-1 bg-background/50 text-xs" placeholder="/uploads/logo.png" />
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               {/* Brand colors with color pickers */}
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
