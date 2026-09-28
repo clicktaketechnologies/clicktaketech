@@ -58,33 +58,57 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "File too large (max 12 MB)" }, { status: 422 });
   }
   try {
-    if (!existsSync(UPLOAD_DIR)) await mkdir(UPLOAD_DIR, { recursive: true });
-    const safeName = f.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 80);
-    const fname = `${Date.now()}_${safeName}`;
-    const dest = path.join(UPLOAD_DIR, fname);
     const buffer = Buffer.from(await f.arrayBuffer());
-    await writeFile(dest, buffer);
-    const url = `/uploads/${fname}`;
-    const asset = await db.mediaAsset.create({
-      data: {
-        name: f.name,
-        url,
-        mime: f.type,
-        size: f.size,
-        alt: alt || null,
-        folder,
-      },
-    });
-    await logActivity({
-      action: "create",
-      entity: "media",
-      entityId: asset.id,
-      summary: `Uploaded media "${f.name}" (${(f.size / 1024).toFixed(0)} KB)`,
-    });
-    return NextResponse.json({ ok: true, asset });
+    // Try Cloudinary first (works on Vercel — no local filesystem needed).
+    // Cloudinary credentials are in env. Falls back to local disk if
+    // Cloudinary isn't configured (local dev).
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET || process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    let url: string;
+    if (cloudName && uploadPreset) {
+      // Upload to Cloudinary via unsigned upload preset.
+      const cldForm = new FormData();
+      cldForm.append("file", `data:${f.type};base64,${buffer.toString("base64")}`);
+      cldForm.append("upload_preset", uploadPreset);
+      if (folder) cldForm.append("folder", folder);
+      const cldRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
+        method: "POST",
+        body: cldForm,
+      });
+      const cldData = await cldRes.json().catch(() => ({}));
+      if (!cldRes.ok || !cldData.secure_url) {
+        throw new Error(`Cloudinary upload failed: ${cldData.error?.message || cldRes.status}`);
+      }
+      url = cldData.secure_url;
+    } else {
+      // Fallback: local filesystem (works in local dev, NOT on Vercel).
+      if (!existsSync(UPLOAD_DIR)) await mkdir(UPLOAD_DIR, { recursive: true });
+      const safeName = f.name.replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 80);
+      const fname = `${Date.now()}_${safeName}`;
+      const dest = path.join(UPLOAD_DIR, fname);
+      await writeFile(dest, buffer);
+      url = `/uploads/${fname}`;
+    }
+    // Save to DB (best-effort — if DB is unreachable, still return the URL).
+    let asset = null;
+    try {
+      asset = await db.mediaAsset.create({
+        data: { name: f.name, url, mime: f.type, size: f.size, alt: alt || null, folder },
+      });
+      await logActivity({
+        action: "create",
+        entity: "media",
+        entityId: asset.id,
+        summary: `Uploaded media "${f.name}" (${(f.size / 1024).toFixed(0)} KB)`,
+      });
+    } catch {
+      /* DB unreachable — the URL is still valid and usable */
+    }
+    return NextResponse.json({ ok: true, asset: asset || { url, name: f.name } });
   } catch (err) {
     console.error("[media] upload error", err);
-    return NextResponse.json({ ok: false, error: "Upload failed" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : "Upload failed";
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
 }
 
