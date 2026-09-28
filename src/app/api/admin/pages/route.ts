@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { safeQuery } from "@/lib/admin-safe-query";
+import { getSeedPages } from "@/lib/admin-seed-data";
 
 export const runtime = "nodejs";
 
@@ -13,9 +14,15 @@ export async function GET(req: NextRequest) {
   const where: Record<string, unknown> = {};
   if (status && status !== "all") where.status = status;
   if (category && category !== "all") where.category = category;
+  // Fall back to seed data when the DB is unreachable so the admin panel
+  // shows real content instead of a blank dashboard.
+  const seedFallback = getSeedPages().filter((p) =>
+    (!status || status === "all" || p.status === status) &&
+    (!category || category === "all" || p.category === category)
+  );
   const pages = await safeQuery(
     () => db.page.findMany({ where, orderBy: { updatedAt: "desc" } }),
-    [],
+    seedFallback,
     "pages"
   );
   return NextResponse.json({ ok: true, pages });

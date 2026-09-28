@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
 import { safeQuery } from "@/lib/admin-safe-query";
+import { getSeedSettings } from "@/lib/admin-seed-data";
 
 export const runtime = "nodejs";
 
@@ -12,9 +13,12 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category");
   const where: Record<string, unknown> = {};
   if (category && category !== "all") where.category = category;
+  const seedFallback = getSeedSettings().filter((s) =>
+    !category || category === "all" || s.category === category
+  );
   const settings = await safeQuery(
     () => db.siteSetting.findMany({ where, orderBy: { category: "asc" } }),
-    [],
+    seedFallback,
     "settings"
   );
   return NextResponse.json({ ok: true, settings });

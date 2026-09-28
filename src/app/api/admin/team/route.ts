@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
 import { safeQuery } from "@/lib/admin-safe-query";
+import { getSeedTeamMembers } from "@/lib/admin-seed-data";
 
 export const runtime = "nodejs";
 
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
   if (!(await requireAdmin(req))) return unauthorizedResponse();
   const members = await safeQuery(
     () => db.teamMember.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] }),
-    [],
+    getSeedTeamMembers(),
     "team"
   );
   return NextResponse.json({ ok: true, members });

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
 import { safeQuery } from "@/lib/admin-safe-query";
+import { getSeedUsers } from "@/lib/admin-seed-data";
 
 export const runtime = "nodejs";
 
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
       select: { id: true, email: true, name: true, role: true, createdAt: true },
     }),
-    [],
+    getSeedUsers(),
     "users"
   );
   return NextResponse.json({ ok: true, users });

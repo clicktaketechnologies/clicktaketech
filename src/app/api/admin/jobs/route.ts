@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
 import { safeQuery } from "@/lib/admin-safe-query";
+import { getSeedJobs } from "@/lib/admin-seed-data";
 
 export const runtime = "nodejs";
 
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
   if (!(await requireAdmin(req))) return unauthorizedResponse();
   const jobs = await safeQuery(
     () => db.job.findMany({ orderBy: { updatedAt: "desc" } }),
-    [],
+    getSeedJobs(),
     "jobs"
   );
   return NextResponse.json({ ok: true, jobs });
