@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       url = `/uploads/${fname}`;
     }
     // Save to DB (best-effort — if DB is unreachable, still return the URL).
-    let asset = null;
+    let asset: { id: string; name: string; url: string; mime: string; size: number; alt: string | null; folder: string; createdAt: Date } | null = null;
     try {
       asset = await db.mediaAsset.create({
         data: { name: f.name, url, mime: f.type, size: f.size, alt: alt || null, folder },
