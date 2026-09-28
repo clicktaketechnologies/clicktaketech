@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
@@ -11,10 +12,11 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category");
   const where: Record<string, unknown> = {};
   if (category && category !== "all") where.category = category;
-  const settings = await db.siteSetting.findMany({
-    where,
-    orderBy: { category: "asc" },
-  });
+  const settings = await safeQuery(
+    () => db.siteSetting.findMany({ where, orderBy: { category: "asc" } }),
+    [],
+    "settings"
+  );
   return NextResponse.json({ ok: true, settings });
 }
 

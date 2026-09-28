@@ -126,8 +126,14 @@ export default function RootLayout({
       <head>
         <SeoStructuredData />
       </head>
+      {/* suppressHydrationWarning on body — browser extensions
+          (Grammarly, LastPass, 1Password, etc.) inject attributes like
+          data-gr-ext-installed / data-new-gr-c-s-check-loaded onto <body>
+          before React hydrates, causing a hydration mismatch warning.
+          This is harmless and the recommended React fix. */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        suppressHydrationWarning
       >
         {children}
         <Toaster />

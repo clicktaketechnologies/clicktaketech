@@ -465,7 +465,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {/* System */}
           {tab === "storage" && <StorageProvidersTab token={token} />}
           {tab === "seo" && <SeoToolDashboard token={token} />}
-          {tab === "settings" && <SettingsTab token={token} />}
+          {tab === "settings" && <SettingsTab token={token} onJump={(t) => setTab(t as Tab)} />}
           {tab === "redirects" && <RedirectsTab token={token} />}
           {tab === "security" && <SecurityLogsTab token={token} />}
           {tab === "users" && <UsersTab token={token} />}
@@ -2234,7 +2234,7 @@ function RedirectsTab({ token }: { token: string }) {
 // ============================ SITE SETTINGS ============================
 type SettingRow = { id: string; key: string; value: string; category: string };
 
-function SettingsTab({ token }: { token: string }) {
+function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => void }) {
   const adminFetch = useAdminFetch(token);
   const { toast } = useToast();
   const [rows, setRows] = useState<SettingRow[]>([]);
@@ -2320,6 +2320,21 @@ function SettingsTab({ token }: { token: string }) {
         <h2 className="text-lg font-bold">Config Settings</h2>
         <p className="text-xs text-muted-foreground">Full branding control — logo, colors, identity, hours, location, and integrations.</p>
       </div>
+      {categories.length === 0 && (
+        <div className="rounded-2xl border border-pink-500/30 bg-pink-500/5 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 text-pink-400">
+              <AlertTriangle className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-foreground">No settings loaded</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                The settings database is empty or unreachable. Go to the <button onClick={() => onJump("overview")} className="text-blue-400 hover:underline font-medium">Dashboard</button> tab and click <span className="font-medium text-foreground">"Setup Database"</span> to create the tables and seed all settings. If setup reports the database is unreachable, your Supabase project may be paused — resume it at <span className="text-blue-400">supabase.com</span> first.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {categories.map((cat) => (
         <div key={cat} className="rounded-2xl border border-border/50 bg-card/40 p-5">
           <div className="flex items-center justify-between">
