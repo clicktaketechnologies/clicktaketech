@@ -15,6 +15,17 @@ export async function GET() {
     scopes_supported: ["admin:read", "admin:write", "public:read"],
     bearer_methods_supported: ["header"],
     resource_documentation: "https://clicktaketech.com/api/docs",
+    agent_auth: {
+      register_uri: "https://clicktaketech.com/api/agent/register",
+      methods: [
+        {
+          method: "oauth_client_credentials",
+          token_endpoint: "https://clicktaketech.com/api/auth/token",
+          scopes: ["admin:read", "admin:write", "public:read"],
+          bearer_methods: ["header"],
+        },
+      ],
+    },
   };
 
   return NextResponse.json(metadata, {

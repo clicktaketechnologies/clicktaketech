@@ -24,10 +24,15 @@ export async function GET() {
     ],
     revocation_endpoint: "https://clicktaketech.com/api/auth/revoke",
     agent_auth: {
-      skill:
-        "https://clicktaketech.com/.well-known/agent-skills/auth-registration/SKILL.md",
       register_uri: "https://clicktaketech.com/api/agent/register",
-      methods: ["oauth_client_credentials"],
+      methods: [
+        {
+          method: "oauth_client_credentials",
+          token_endpoint: "https://clicktaketech.com/api/auth/token",
+          scopes: ["admin:read", "admin:write", "public:read"],
+          bearer_methods: ["header"],
+        },
+      ],
     },
   };
 
