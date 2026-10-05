@@ -5,19 +5,36 @@ import { getServiceContent } from "../src/lib/service-content";
 async function main() {
   console.log("Seeding CMS tables...");
 
-  // 1. Admin user (email/password — change password after first login)
-  const existing = await db.user.findUnique({ where: { email: "admin@clicktaketech.com" } });
+  // 1. Admin user (email/password — sourced from env so changing
+  // SUPERADMIN_EMAIL / SUPERADMIN_PASSWORD in .env takes effect on the next
+  // re-seed; falls back to a sensible default if env is unset).
+  const adminEmail = (
+    process.env.SUPERADMIN_EMAIL || "admin@clicktaketech.com"
+  ).trim().toLowerCase();
+  const adminPassword =
+    process.env.SUPERADMIN_PASSWORD || "clicktake-admin-2026";
+  const existing = await db.user.findUnique({ where: { email: adminEmail } });
   if (!existing) {
     await db.user.create({
       data: {
-        email: "admin@clicktaketech.com",
+        email: adminEmail,
         name: "ClickTake Admin",
         // NOTE: demo password only — replace with a hashed password in production.
-        password: "clicktake-admin-2026",
+        password: adminPassword,
         role: "admin",
+        permissions: null,
       },
     });
-    console.log("  ✓ admin user created (admin@clicktaketech.com / clicktake-admin-2026)");
+    console.log(`  ✓ admin user created (${adminEmail} / ${adminPassword})`);
+  } else if (existing.password !== adminPassword) {
+    // Keep the DB in sync with env on re-seed.
+    await db.user.update({
+      where: { id: existing.id },
+      data: { password: adminPassword, role: "admin", permissions: null },
+    });
+    console.log(`  ✓ admin user password re-synced to env value (${adminEmail})`);
+  } else {
+    console.log(`  ✓ admin user already up to date (${adminEmail})`);
   }
 
   // 2. Pages — top-level pages + 24 service detail pages

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
@@ -12,11 +13,11 @@ export async function GET(req: NextRequest) {
   const where: Record<string, unknown> = {};
   if (status && status !== "all") where.status = status;
   if (source && source !== "all") where.source = source;
-  const queries = await db.contactQuery.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    take: 500,
-  });
+  const queries = await safeQuery(
+    () => db.contactQuery.findMany({ where, orderBy: { createdAt: "desc" }, take: 500 }),
+    [],
+    "queries"
+  );
   return NextResponse.json({ ok: true, queries });
 }
 

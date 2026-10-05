@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
 import { logActivity } from "@/lib/admin-activity";
+import { safeQuery } from "@/lib/admin-safe-query";
 
 export const runtime = "nodejs";
 
@@ -11,7 +12,11 @@ export async function GET(req: NextRequest) {
   const stage = searchParams.get("stage");
   const where: Record<string, unknown> = {};
   if (stage && stage !== "all") where.stage = stage;
-  const leads = await db.lead.findMany({ where, orderBy: { updatedAt: "desc" }, take: 500 });
+  const leads = await safeQuery(
+    () => db.lead.findMany({ where, orderBy: { updatedAt: "desc" }, take: 500 }),
+    [],
+    "leads"
+  );
   return NextResponse.json({ ok: true, leads });
 }
 

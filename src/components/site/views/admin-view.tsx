@@ -40,6 +40,7 @@ import {
   Mail,
   Sun,
   Moon,
+  Database,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -119,6 +120,11 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dash
 ];
 
 const TOKEN_KEY = "clicktake_admin_token";
+// Dispatched from useAdminFetch whenever any admin API returns 401, so the
+// top-level AdminView can clear the stale token and bounce back to the
+// LoginGate without having to thread an onUnauthorized callback through
+// every single tab component.
+const AUTH_EXPIRED_EVENT = "clicktake:admin-auth-expired";
 
 // Maps each tab to the permission key required to view it.
 const TAB_PERMISSIONS: Record<Tab, string> = {
@@ -128,6 +134,7 @@ const TAB_PERMISSIONS: Record<Tab, string> = {
   pricing: "pricing:view",
   media: "media:view",
   "team-careers": "team:view",
+  clients: "media:view",
   typography: "branding:view",
   theme: "branding:view",
   leads: "leads:view",
@@ -152,21 +159,115 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   const [checking, setChecking] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [lightMode, setLightMode] = useState(false);
+  // Reason we bounced back to the LoginGate, if any. Surfaced as a
+  // persistent inline banner on the login form so the user understands why
+  // they were logged out — toasts alone can be missed.
+  const [sessionExpiredReason, setSessionExpiredReason] = useState<string | null>(null);
+  const { toast } = useToast();
 
+  // On mount: read the persisted token from localStorage, then ASK THE
+  // SERVER whether it is still valid (user still exists + password still
+  // matches). This catches the most common "admin panel login failed" cause:
+  // a stale token left in localStorage from a previous session before the DB
+  // was seeded, or after the admin password was changed. Without this check,
+  // the SPA would render the dashboard with a dead token, every admin API
+  // call would 401, and the panel would look "broken" / "login failed" even
+  // though the LoginGate was never shown.
   useEffect(() => {
-    try {
-      const t = localStorage.getItem(TOKEN_KEY);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (t) setToken(t);
-      const perms = localStorage.getItem("clicktake_admin_perms");
-      if (perms) setUserPerms(parsePermissions(perms));
-      const lm = localStorage.getItem("clicktake_admin_light");
-      if (lm === "true") setLightMode(true);
-    } catch {
-      /* ignore */
-    }
-    setChecking(false);
-  }, []);
+    let cancelled = false;
+    (async () => {
+      let storedToken: string | null = null;
+      try {
+        storedToken = localStorage.getItem(TOKEN_KEY);
+        const lm = localStorage.getItem("clicktake_admin_light");
+        if (lm === "true") setLightMode(true);
+      } catch {
+        /* ignore localStorage access errors (private mode, etc.) */
+      }
+
+      if (!storedToken) {
+        // No persisted session — straight to the login form.
+        setChecking(false);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/admin/auth", {
+          method: "GET",
+          headers: { "x-admin-token": storedToken },
+        });
+        const data = (await res.json().catch(() => ({}))) as
+          | { ok?: boolean; user?: { permissions?: string | null } }
+          | Record<string, never>;
+        if (cancelled) return;
+        if (res.ok && data.ok) {
+          // Token is still valid — restore the session.
+          setToken(storedToken);
+          setUserPerms(parsePermissions(data.user?.permissions ?? null));
+        } else {
+          // Token is stale / rejected by the server — wipe it so the user
+          // sees the login form instead of a dead dashboard.
+          try {
+            localStorage.removeItem(TOKEN_KEY);
+            localStorage.removeItem("clicktake_admin_perms");
+          } catch {
+            /* ignore */
+          }
+          setSessionExpiredReason("Your saved login was no longer valid. Please sign in again.");
+          toast({
+            title: "Session expired",
+            description: "Your saved login was no longer valid. Please sign in again.",
+            variant: "destructive",
+          });
+        }
+      } catch {
+        // Network error during verify — fall back to using the stored token
+        // optimistically; the first 401 from a real admin call will then
+        // trigger the AUTH_EXPIRED_EVENT path below.
+        if (cancelled) return;
+        setToken(storedToken);
+        const perms = (() => {
+          try {
+            return parsePermissions(localStorage.getItem("clicktake_admin_perms"));
+          } catch {
+            return null;
+          }
+        })();
+        setUserPerms(perms);
+      } finally {
+        if (!cancelled) setChecking(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [toast]);
+
+  // Listen for any admin API returning 401 (dispatched by useAdminFetch).
+  // This is the runtime safety net: even if the verify-on-mount passed, a
+  // later 401 (e.g. someone deletes the admin user mid-session) will
+  // immediately bounce back to the login form with a clear toast.
+  useEffect(() => {
+    const handler = () => {
+      try {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem("clicktake_admin_perms");
+      } catch {
+        /* ignore */
+      }
+      setToken(null);
+      setUserPerms(null);
+      setSessionExpiredReason("Your session expired or was no longer valid. Please sign in again.");
+      toast({
+        title: "Session expired",
+        description: "Your login is no longer valid. Please sign in again.",
+        variant: "destructive",
+      });
+    };
+    window.addEventListener(AUTH_EXPIRED_EVENT, handler);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handler);
+  }, [toast]);
 
   const logout = () => {
     try {
@@ -194,7 +295,12 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
   }
 
   if (!token) {
-    return <LoginGate onLogin={(t, perms) => { setToken(t); setUserPerms(perms); }} />;
+    return (
+      <LoginGate
+        initialError={sessionExpiredReason}
+        onLogin={(t, perms) => { setToken(t); setUserPerms(perms); setSessionExpiredReason(null); }}
+      />
+    );
   }
 
   const activeTab = TABS.find((t) => t.id === tab);
@@ -360,7 +466,7 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {/* System */}
           {tab === "storage" && <StorageProvidersTab token={token} />}
           {tab === "seo" && <SeoToolDashboard token={token} />}
-          {tab === "settings" && <SettingsTab token={token} />}
+          {tab === "settings" && <SettingsTab token={token} onJump={(t) => setTab(t as Tab)} />}
           {tab === "redirects" && <RedirectsTab token={token} />}
           {tab === "security" && <SecurityLogsTab token={token} />}
           {tab === "users" && <UsersTab token={token} />}
@@ -372,36 +478,93 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
 }
 
 // ============================ LOGIN ============================
-function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null) => void }) {
+function LoginGate({
+  onLogin,
+  initialError = null,
+}: {
+  onLogin: (t: string, perms: Set<string> | null) => void;
+  initialError?: string | null;
+}) {
   const { toast } = useToast();
   const [email, setEmail] = useState("admin@clicktaketech.com");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  // The currently-configured super-admin credentials, fetched from the
+  // server (which reads SUPERADMIN_EMAIL + SUPERADMIN_PASSWORD from env).
+  // Displayed in the demo credentials card so the form NEVER shows a stale
+  // hardcoded password after someone updates .env.
+  const [demoCreds, setDemoCreds] = useState<{ email: string; password: string } | null>(null);
+  // Visible inline error banner — shown when the server returns an error OR
+  // when the parent AdminView detected a stale/expired session on mount and
+  // bounced us back here. More reliable than a fleeting toast.
+  const [error, setError] = useState<string | null>(initialError);
+
+  // On mount: (a) clear any stale localStorage token, (b) fetch the real
+  // configured credentials from /api/admin/auth/demo-credentials so the
+  // form can show them and pre-fill the email.
+  useEffect(() => {
+    try {
+      const t = localStorage.getItem(TOKEN_KEY);
+      if (t) {
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem("clicktake_admin_perms");
+        if (!error) {
+          setError("A stale saved session was found and cleared. Please sign in with your credentials below.");
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    (async () => {
+      try {
+        const res = await fetch("/api/admin/auth/demo-credentials", {
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const data = (await res.json()) as { ok?: boolean; email?: string; password?: string };
+          if (data.ok && data.email && data.password) {
+            setDemoCreds({ email: data.email, password: data.password });
+            setEmail(data.email);
+          }
+        }
+      } catch {
+        /* ignore — optional endpoint */
+      }
+    })();
+  }, [error]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error(data.error || "Login failed");
+      const data = (await res.json().catch(() => ({}))) as
+        | { ok?: boolean; error?: string; token?: string; user?: { permissions?: string | null } }
+        | Record<string, never>;
+      if (!res.ok || !data.ok) {
+        const msg = data.error || `Login failed (HTTP ${res.status}). Please try again.`;
+        throw new Error(msg);
+      }
       const perms = parsePermissions(data.user?.permissions ?? null);
       try {
-        localStorage.setItem(TOKEN_KEY, data.token);
+        localStorage.setItem(TOKEN_KEY, data.token as string);
         localStorage.setItem("clicktake_admin_perms", data.user?.permissions ?? "null");
       } catch {
-        /* ignore */
+        /* ignore localStorage write failures (private mode, etc.) */
       }
-      onLogin(data.token, perms);
+      onLogin(data.token as string, perms);
       toast({ title: "Logged in", description: "Welcome to the admin panel." });
     } catch (err) {
+      const msg = err instanceof Error ? err.message : "Please try again.";
+      setError(msg);
       toast({
         title: "Login failed",
-        description: err instanceof Error ? err.message : "Please try again.",
+        description: msg,
         variant: "destructive",
       });
     } finally {
@@ -424,6 +587,15 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
             <p className="text-xs text-muted-foreground">ClickTake Technologies CMS</p>
           </div>
         </div>
+        {error && (
+          <div
+            role="alert"
+            className="mt-5 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300"
+          >
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span className="leading-snug">{error}</span>
+          </div>
+        )}
         <div className="mt-6 space-y-4">
           <div>
             <Label className="text-sm">Email</Label>
@@ -432,6 +604,7 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1.5 bg-background/50"
+              autoComplete="username"
               required
             />
           </div>
@@ -443,6 +616,7 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               className="mt-1.5 bg-background/50"
+              autoComplete="current-password"
               required
             />
           </div>
@@ -454,9 +628,23 @@ function LoginGate({ onLogin }: { onLogin: (t: string, perms: Set<string> | null
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {loading ? "Signing in…" : "Sign in"}
           </Button>
-          <p className="text-center text-xs text-muted-foreground">
-            Demo: admin@clicktaketech.com · clicktake-admin-2026
-          </p>
+          <div className=" rounded-xl border border-border/40 bg-background/30 p-3 text-center">
+            <p className="text-xs font-medium text-muted-foreground">Demo credentials</p>
+            {demoCreds ? (
+              <>
+                <p className="mt-1 font-mono text-xs text-foreground break-all">
+                  {demoCreds.email}
+                </p>
+                <p className="font-mono text-xs text-foreground break-all">
+                  {demoCreds.password}
+                </p>
+              </>
+            ) : (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Set SUPERADMIN_EMAIL + SUPERADMIN_PASSWORD in .env
+              </p>
+            )}
+          </div>
         </div>
       </form>
     </div>
@@ -475,6 +663,19 @@ function useAdminFetch(token: string) {
           ...(opts?.headers || {}),
         },
       });
+      // Any admin API returning 401 means the persisted token is no longer
+      // valid (user deleted, password changed, DB re-seeded, etc.). Surface
+      // that to the top-level AdminView via a CustomEvent so it can wipe the
+      // stale token and bounce back to the LoginGate — instead of leaving the
+      // user staring at an empty/broken dashboard that looks like "login
+      // failed" with no way to recover without manually clearing storage.
+      if (res.status === 401 && typeof window !== "undefined") {
+        try {
+          window.dispatchEvent(new CustomEvent(AUTH_EXPIRED_EVENT));
+        } catch {
+          /* ignore — some environments don't allow CustomEvent */
+        }
+      }
       return res;
     },
     [token]
@@ -485,24 +686,78 @@ function useAdminFetch(token: string) {
 function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: string }) {
   const [stats, setStats] = useState<Record<string, number>>({});
   const [recentLogs, setRecentLogs] = useState<{ id: string; action: string; entity: string; summary: string; createdAt: string }[]>([]);
+  const [setupRunning, setSetupRunning] = useState(false);
+  const [setupResult, setSetupResult] = useState<{ ok: boolean; message?: string; steps?: string[] } | null>(null);
 
-  const adminHeaders = { "x-admin-token": token };
+  // Use the shared admin fetch wrapper so any 401 from a stale/invalid token
+  // surfaces as the AUTH_EXPIRED_EVENT and bounces the user back to the
+  // LoginGate (instead of silently rendering a zeroed-out dashboard).
+  const adminFetch = useAdminFetch(token);
+
+  // Trigger the one-shot /api/admin/setup endpoint that creates all DB
+  // tables (via raw SQL) + seeds all data (pages, blog, pricing, team,
+  // jobs, clients, settings, etc.). Idempotent — safe to run multiple
+  // times. Surfaces a clear banner if the Supabase DB is unreachable.
+  const runSetup = async () => {
+    setSetupRunning(true);
+    setSetupResult(null);
+    try {
+      const res = await adminFetch("/api/admin/setup", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        setSetupResult({
+          ok: true,
+          message: "Database setup complete! All tables created and data seeded. Reloading dashboard…",
+          steps: data.summary?.steps,
+        });
+        // Reload the page after a short delay so the new data shows up.
+        setTimeout(() => { if (typeof window !== "undefined") window.location.reload(); }, 2000);
+      } else if (data.error === "DATABASE_UNREACHABLE") {
+        setSetupResult({
+          ok: false,
+          message: data.message || "Your Supabase database is unreachable. Check if the project is paused at supabase.com and resume it, then try again.",
+          steps: data.summary?.steps,
+        });
+      } else {
+        setSetupResult({
+          ok: false,
+          message: data.message || data.error || `Setup failed (HTTP ${res.status}).`,
+          steps: data.summary?.steps,
+        });
+      }
+    } catch (err) {
+      setSetupResult({
+        ok: false,
+        message: err instanceof Error ? err.message : "Setup request failed.",
+      });
+    } finally {
+      setSetupRunning(false);
+    }
+  };
+
+  // Detect "empty dashboard" — all key stats are zero → show the setup banner.
+  const allEmpty = (stats.pages ?? 0) === 0
+    && (stats.posts ?? 0) === 0
+    && (stats.tiers ?? 0) === 0
+    && (stats.queries ?? 0) === 0
+    && (stats.leads ?? 0) === 0
+    && (stats.teamMembers ?? 0) === 0;
 
   useEffect(() => {
     (async () => {
       try {
         const [p, b, pr, q, m, a, u, rd, lg, ld, sh] = await Promise.all([
-          fetch("/api/admin/pages", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/blog", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/pricing", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/queries", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/media", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/applications", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/users", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/redirects", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/activity?limit=6", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/leads", { headers: adminHeaders }).then((r) => r.json()),
-          fetch("/api/admin/seo-history?limit=100", { headers: adminHeaders }).then((r) => r.json()),
+          adminFetch("/api/admin/pages").then((r) => r.json()),
+          adminFetch("/api/admin/blog").then((r) => r.json()),
+          adminFetch("/api/admin/pricing").then((r) => r.json()),
+          adminFetch("/api/admin/queries").then((r) => r.json()),
+          adminFetch("/api/admin/media").then((r) => r.json()),
+          adminFetch("/api/admin/applications").then((r) => r.json()),
+          adminFetch("/api/admin/users").then((r) => r.json()),
+          adminFetch("/api/admin/redirects").then((r) => r.json()),
+          adminFetch("/api/admin/activity?limit=6").then((r) => r.json()),
+          adminFetch("/api/admin/leads").then((r) => r.json()),
+          adminFetch("/api/admin/seo-history?limit=100").then((r) => r.json()),
         ]);
         const next: Record<string, number> = {
           pages: p.pages?.length ?? 0,
@@ -524,8 +779,8 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
         // Also fetch team + jobs counts
         try {
           const [tm, jb] = await Promise.all([
-            fetch("/api/admin/team", { headers: adminHeaders }).then((r) => r.json()),
-            fetch("/api/admin/jobs", { headers: adminHeaders }).then((r) => r.json()),
+            adminFetch("/api/admin/team").then((r) => r.json()),
+            adminFetch("/api/admin/jobs").then((r) => r.json()),
           ]);
           next.teamMembers = tm.members?.length ?? 0;
           next.jobs = jb.jobs?.length ?? 0;
@@ -533,10 +788,10 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
         setStats(next);
         setRecentLogs(lg.logs ?? []);
       } catch {
-        /* ignore */
+        /* ignore — AUTH_EXPIRED_EVENT already handles the 401 path */
       }
     })();
-  }, [token]);
+  }, [token, adminFetch]);
 
   const cards = [
     { label: "Pages", value: stats.pages ?? 0, icon: FileText, tab: "pages" as Tab, color: "text-blue-400" },
@@ -555,6 +810,58 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
 
   return (
     <div>
+      {/* Setup banner — shows when dashboard is empty (DB unprovisioned or unreachable) */}
+      {(allEmpty || setupResult) && (
+        <div className={cn(
+          "mb-5 rounded-2xl border p-5",
+          setupResult?.ok
+            ? "border-green-500/30 bg-green-500/5"
+            : setupResult?.ok === false
+            ? "border-red-500/30 bg-red-500/5"
+            : "border-pink-500/30 bg-pink-500/5"
+        )}>
+          <div className="flex items-start gap-4">
+            <div className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+              setupResult?.ok ? "bg-green-500/15 text-green-400" : setupResult?.ok === false ? "bg-red-500/15 text-red-400" : "bg-pink-500/15 text-pink-400"
+            )}>
+              {setupRunning ? <Loader2 className="h-5 w-5 animate-spin" /> : setupResult?.ok ? <CheckCircle2 className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-foreground">
+                {setupResult?.ok ? "Setup Complete" : setupResult ? "Setup Issue" : "Database Not Set Up"}
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {setupResult?.message || "Your dashboard is empty because the Supabase database hasn't been provisioned yet. Click \"Setup Database\" to create all tables and seed your content (pages, blog, pricing, team, jobs, clients, settings)."}
+              </p>
+              {setupResult?.steps && setupResult.steps.length > 0 && (
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-xs text-blue-400 hover:underline">View {setupResult.steps.length} steps</summary>
+                  <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+                    {setupResult.steps.map((s, i) => (
+                      <li key={i} className={s.includes("FAILED") || s.includes("UNREACHABLE") ? "text-red-400" : ""}>{s}</li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+              <div className="mt-3 flex gap-2">
+                {!setupResult?.ok && (
+                  <Button onClick={runSetup} disabled={setupRunning} size="sm" className="bg-brand-gradient text-white">
+                    {setupRunning ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Database className="mr-2 h-4 w-4" />}
+                    {setupRunning ? "Setting up…" : "Setup Database"}
+                  </Button>
+                )}
+                {setupResult?.ok === false && (
+                  <Button onClick={() => { setSetupResult(null); }} variant="outline" size="sm" className="border-border/40 bg-card/40">
+                    Dismiss
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
           <button
@@ -1928,7 +2235,7 @@ function RedirectsTab({ token }: { token: string }) {
 // ============================ SITE SETTINGS ============================
 type SettingRow = { id: string; key: string; value: string; category: string };
 
-function SettingsTab({ token }: { token: string }) {
+function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => void }) {
   const adminFetch = useAdminFetch(token);
   const { toast } = useToast();
   const [rows, setRows] = useState<SettingRow[]>([]);
@@ -1945,7 +2252,6 @@ function SettingsTab({ token }: { token: string }) {
   }, [adminFetch]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 
@@ -1954,6 +2260,40 @@ function SettingsTab({ token }: { token: string }) {
   };
 
   const val = (s: SettingRow) => (s.key in drafts ? drafts[s.key] : s.value);
+
+  // Upload a logo/favicon file from the user's computer to /api/admin/media,
+  // then store the returned URL (/uploads/<filename>) in the setting. No URL
+  // text input — the user picks a file and the upload handles everything.
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const uploadImage = async (key: string, file: File) => {
+    setUploadingKey(key);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "branding");
+      fd.append("alt", key);
+      const res = await adminFetch("/api/admin/media", { method: "POST", body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok && data.asset?.url) {
+        setVal(key, data.asset.url);
+        // Save immediately so it persists.
+        const row = rows.find((r) => r.key === key);
+        if (row) {
+          await adminFetch("/api/admin/settings", {
+            method: "PATCH",
+            body: JSON.stringify([{ key, value: data.asset.url }]),
+          });
+        }
+        toast({ title: "Uploaded", description: `${file.name} saved as ${data.asset.url}` });
+      } else {
+        toast({ title: "Upload failed", description: data.error || `HTTP ${res.status}`, variant: "destructive" });
+      }
+    } catch (err) {
+      toast({ title: "Upload failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
+    } finally {
+      setUploadingKey(null);
+    }
+  };
 
   const saveCategory = async (category: string) => {
     setSaving(true);
@@ -2014,6 +2354,21 @@ function SettingsTab({ token }: { token: string }) {
         <h2 className="text-lg font-bold">Config Settings</h2>
         <p className="text-xs text-muted-foreground">Full branding control — logo, colors, identity, hours, location, and integrations.</p>
       </div>
+      {categories.length === 0 && (
+        <div className="rounded-2xl border border-pink-500/30 bg-pink-500/5 p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-pink-500/15 text-pink-400">
+              <AlertTriangle className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-foreground">No settings loaded</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                The settings database is empty or unreachable. Go to the <button onClick={() => onJump("overview")} className="text-blue-400 hover:underline font-medium">Dashboard</button> tab and click <span className="font-medium text-foreground">"Setup Database"</span> to create the tables and seed all settings. If setup reports the database is unreachable, your Supabase project may be paused — resume it at <span className="text-blue-400">supabase.com</span> first.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {categories.map((cat) => (
         <div key={cat} className="rounded-2xl border border-border/50 bg-card/40 p-5">
           <div className="flex items-center justify-between">
@@ -2062,19 +2417,66 @@ function SettingsTab({ token }: { token: string }) {
           ) : cat === "identity" ? (
             /* Identity: color pickers + image previews */
             <div className="mt-4 space-y-4">
-              {/* Logo + Favicon previews */}
+              {/* Logo + Favicon — file upload only (no URL text input) */}
               <div className="grid gap-3 sm:grid-cols-3">
-                {rows.filter((r) => r.category === "identity" && isImageKey(r.key)).map((r) => (
-                  <div key={r.id} className="rounded-xl border border-border/40 bg-background/40 p-3">
-                    <Label className="text-xs font-mono">{r.key}</Label>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-white/5">
-                        {val(r) && <img src={val(r)} alt={r.key} className="h-full w-full object-contain" />}
+                {rows.filter((r) => r.category === "identity" && isImageKey(r.key)).map((r) => {
+                  const label = r.key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+                  return (
+                    <div key={r.id} className="rounded-xl border border-border/40 bg-background/40 p-3">
+                      <Label className="text-xs font-mono">{r.key}</Label>
+                      <div className="mt-2 flex items-center gap-3">
+                        {/* Preview */}
+                        <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-white/5">
+                          {val(r) ? (
+                            <img src={val(r)} alt={label} className="h-full w-full object-contain" />
+                          ) : (
+                            <span className="text-[10px] text-muted-foreground">No image</span>
+                          )}
+                        </div>
+                        <div className="flex flex-1 flex-col gap-1.5">
+                          {/* File upload button */}
+                          <label className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand-gradient px-3 py-2 text-xs font-medium text-white transition-opacity hover:opacity-90">
+                            {uploadingKey === r.key ? (
+                              <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Uploading…</>
+                            ) : val(r) ? (
+                              <><Upload className="h-3.5 w-3.5" /> Replace</>
+                            ) : (
+                              <><Upload className="h-3.5 w-3.5" /> Upload {label}</>
+                            )}
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/x-icon,image/vnd.microsoft.icon"
+                              className="hidden"
+                              disabled={uploadingKey === r.key}
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) uploadImage(r.key, f);
+                                e.target.value = ""; // allow re-uploading same file
+                              }}
+                            />
+                          </label>
+                          {/* Remove button — only if a logo is set */}
+                          {val(r) && (
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                setVal(r.key, "");
+                                await adminFetch("/api/admin/settings", {
+                                  method: "PATCH",
+                                  body: JSON.stringify([{ key: r.key, value: "" }]),
+                                });
+                                toast({ title: "Removed", description: `${label} cleared` });
+                              }}
+                              className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-border/40 bg-card/40 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-red-500/10 hover:text-red-400"
+                            >
+                              <Trash2 className="h-3 w-3" /> Remove
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <Input value={val(r)} onChange={(e) => setVal(r.key, e.target.value)} className="flex-1 bg-background/50 text-xs" placeholder="/uploads/logo.png" />
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               {/* Brand colors with color pickers */}
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
