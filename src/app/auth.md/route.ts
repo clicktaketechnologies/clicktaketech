@@ -5,6 +5,8 @@ export const runtime = "nodejs";
  * Served at /auth.md as text/markdown. The markdown MUST start with an H1
  * heading containing the literal "auth.md". Points AI agents at the
  * OAuth/OIDC metadata endpoints and explains credential use + scopes.
+ * Includes an `agent_auth` block (YAML) per the Auth.md spec so scanners
+ * can detect agent registration support.
  */
 export async function GET() {
   const markdown = `# auth.md
@@ -37,6 +39,24 @@ Agents obtain credentials by registering at the register_uri endpoint. The token
 - OAuth protected resource: https://clicktaketech.com/.well-known/oauth-protected-resource
 - OIDC discovery: https://clicktaketech.com/.well-known/openid-configuration
 - JWKS: https://clicktaketech.com/.well-known/http-message-signatures-directory
+
+## agent_auth
+
+\`\`\`yaml
+agent_auth:
+  skill: https://clicktaketech.com/.well-known/agent-skills/auth-registration/SKILL.md
+  register_uri: https://clicktaketech.com/api/agent/register
+  methods:
+    - method: oauth_client_credentials
+      authorization_server: https://clicktaketech.com/.well-known/oauth-authorization-server
+      token_endpoint: https://clicktaketech.com/api/auth/token
+      scopes:
+        - admin:read
+        - admin:write
+        - public:read
+      bearer_methods:
+        - header
+\`\`\`
 `;
 
   return new Response(markdown, {
