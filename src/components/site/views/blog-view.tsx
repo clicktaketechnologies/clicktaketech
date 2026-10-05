@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Clock, Search, BookOpen } from "lucide-react";
+import { ArrowRight, Clock, Calendar, Search, BookOpen } from "lucide-react";
 import { BLOG_POSTS, BLOG_CATEGORIES, type NavView } from "@/lib/site-data";
 import { Reveal, Section, LocalTrustStrip, CtaSection } from "@/components/site/section";
 import { Input } from "@/components/ui/input";
@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 
 type BlogViewProps = {
   onNavigate: (v: NavView) => void;
+  onNavigateBlogPost?: (slug: string) => void;
 };
 
-export function BlogView({ onNavigate }: BlogViewProps) {
+export function BlogView({ onNavigate, onNavigateBlogPost }: BlogViewProps) {
   const [activeCat, setActiveCat] = useState("All");
   const [query, setQuery] = useState("");
 
@@ -68,7 +69,7 @@ export function BlogView({ onNavigate }: BlogViewProps) {
                     <Clock className="h-3 w-3 text-blue-400" /> {featured.readTime} read
                   </span>
                 </div>
-                <button onClick={() => onNavigate("contact")} className="group mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-[0_0_20px_-4px] hover:shadow-blue-500/60">
+                <button onClick={() => onNavigateBlogPost ? onNavigateBlogPost(featured.slug) : onNavigate("blog")} className="group mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-[0_0_20px_-4px] hover:shadow-blue-500/60">
                   Read article
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
@@ -119,8 +120,10 @@ export function BlogView({ onNavigate }: BlogViewProps) {
                 <h3 className="mt-4 text-lg font-semibold leading-snug text-foreground">{post.title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-4">{post.excerpt}</p>
                 <div className="mt-5 flex items-center justify-between border-t border-border/40 pt-4">
-                  <span className="text-xs text-muted-foreground">{post.date}</span>
-                  <button onClick={() => onNavigate("contact")} className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                    <Calendar className="h-3 w-3" /> {post.date}
+                  </span>
+                  <button onClick={() => onNavigateBlogPost ? onNavigateBlogPost(post.slug) : onNavigate("blog")} className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 opacity-0 transition-opacity group-hover:opacity-100">
                     Read <ArrowRight className="h-3 w-3" />
                   </button>
                 </div>

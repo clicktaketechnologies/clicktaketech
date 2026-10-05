@@ -1,12 +1,13 @@
 import type { MetadataRoute } from "next";
-import { SERVICE_CATEGORIES, CITIES, BLOG_POSTS } from "@/lib/site-data";
+import { SERVICE_CATEGORIES, CITIES } from "@/lib/site-data";
+import { getServiceContent } from "@/lib/service-content";
 
 const BASE_URL = "https://clicktaketech.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  // Top-level pages
+  // Top-level pages — all return 200 via the catch-all route
   const pages: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${BASE_URL}/services`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
@@ -21,22 +22,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/cities`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE_URL}/connect`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
     { url: `${BASE_URL}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${BASE_URL}/legal/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/legal/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/legal/cookies`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    // Legal pages — single-segment URLs (not nested)
+    { url: `${BASE_URL}/legal-privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal-terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/legal-cookies`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 
-  // Service pages (4 categories + 24 services)
+  // Service detail pages — each service has its own SEO-optimized page
+  // These are single-segment URLs (e.g., /ppc-paid-ads, /seo-services)
   for (const cat of SERVICE_CATEGORIES) {
-    pages.push({
-      url: `${BASE_URL}/services/${cat.id}`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    });
     for (const s of cat.services) {
+      const content = getServiceContent(s.slug);
       pages.push({
-        url: `${BASE_URL}/services/${cat.id}/${s.slug}`,
+        url: `${BASE_URL}/${s.slug}`,
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.7,
@@ -44,20 +42,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Blog posts (9 articles)
-  for (const post of BLOG_POSTS) {
-    pages.push({
-      url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    });
-  }
-
-  // City pages (13 cities)
+  // City landing pages — single-segment (e.g., /birmingham, /london)
   for (const city of CITIES) {
     pages.push({
-      url: `${BASE_URL}/cities/${city.slug}`,
+      url: `${BASE_URL}/${city.slug}`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,

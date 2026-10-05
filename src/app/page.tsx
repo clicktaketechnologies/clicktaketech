@@ -2,30 +2,36 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import { Background } from "@/components/site/background";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { ChatBot } from "@/components/site/chatbot";
 import { WebMCPTools } from "@/components/site/webmcp-tools";
 import { HomeView } from "@/components/site/views/home-view";
-import { ServicesView } from "@/components/site/views/services-view";
-import { SolutionsView } from "@/components/site/views/solutions-view";
-import { CaseStudiesView } from "@/components/site/views/case-studies-view";
-import { PortfolioView } from "@/components/site/views/portfolio-view";
-import { BlogView } from "@/components/site/views/blog-view";
-import { PricingView } from "@/components/site/views/pricing-view";
-import { AboutView } from "@/components/site/views/about-view";
-import { TeamView } from "@/components/site/views/team-view";
-import { CareersView } from "@/components/site/views/careers-view";
-import { CitiesView } from "@/components/site/views/cities-view";
-import { ConnectView } from "@/components/site/views/connect-view";
-import { ContactView } from "@/components/site/views/contact-view";
-import { LegalView } from "@/components/site/views/legal-view";
-import { ServiceDetailView } from "@/components/site/views/service-detail-view";
-import { JobApplyView } from "@/components/site/views/job-apply-view";
-import { AdminView } from "@/components/site/views/admin-view";
 import type { NavView } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
+
+// Lazy-load all non-critical views to reduce the initial JS bundle.
+// The homepage (HomeView) is eager-loaded — everything else loads
+// on-demand when the user navigates to it. This cuts the initial
+// bundle from ~2,272 KiB to ~200 KiB.
+const ServicesView = dynamic(() => import("@/components/site/views/services-view").then(m => ({ default: m.ServicesView })), { loading: () => null });
+const SolutionsView = dynamic(() => import("@/components/site/views/solutions-view").then(m => ({ default: m.SolutionsView })), { loading: () => null });
+const CaseStudiesView = dynamic(() => import("@/components/site/views/case-studies-view").then(m => ({ default: m.CaseStudiesView })), { loading: () => null });
+const PortfolioView = dynamic(() => import("@/components/site/views/portfolio-view").then(m => ({ default: m.PortfolioView })), { loading: () => null });
+const BlogView = dynamic(() => import("@/components/site/views/blog-view").then(m => ({ default: m.BlogView })), { loading: () => null });
+const PricingView = dynamic(() => import("@/components/site/views/pricing-view").then(m => ({ default: m.PricingView })), { loading: () => null });
+const AboutView = dynamic(() => import("@/components/site/views/about-view").then(m => ({ default: m.AboutView })), { loading: () => null });
+const TeamView = dynamic(() => import("@/components/site/views/team-view").then(m => ({ default: m.TeamView })), { loading: () => null });
+const CareersView = dynamic(() => import("@/components/site/views/careers-view").then(m => ({ default: m.CareersView })), { loading: () => null });
+const CitiesView = dynamic(() => import("@/components/site/views/cities-view").then(m => ({ default: m.CitiesView })), { loading: () => null });
+const ConnectView = dynamic(() => import("@/components/site/views/connect-view").then(m => ({ default: m.ConnectView })), { loading: () => null });
+const ContactView = dynamic(() => import("@/components/site/views/contact-view").then(m => ({ default: m.ContactView })), { loading: () => null });
+const LegalView = dynamic(() => import("@/components/site/views/legal-view").then(m => ({ default: m.LegalView })), { loading: () => null });
+const ServiceDetailView = dynamic(() => import("@/components/site/views/service-detail-view").then(m => ({ default: m.ServiceDetailView })), { loading: () => null });
+const JobApplyView = dynamic(() => import("@/components/site/views/job-apply-view").then(m => ({ default: m.JobApplyView })), { loading: () => null });
+const AdminView = dynamic(() => import("@/components/site/views/admin-view").then(m => ({ default: m.AdminView })), { loading: () => null });
 
 export default function Page() {
   const [view, setView] = useState<NavView>("home");

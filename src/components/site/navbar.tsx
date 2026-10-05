@@ -34,13 +34,29 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
   }, []);
 
   const handleNav = (v: NavView) => {
-    onNavigate(v);
+    // Close all menus first (with smooth animation), then navigate after
+    // a short delay so the user sees the menu close before the view changes.
+    const wasMenuOpen = openMenu !== null;
     setOpenMenu(null);
-    setMobileOpen(false);
     setMobileServicesOpen(false);
     setMobileResourcesOpen(false);
     setMobileCompanyOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (mobileOpen) {
+      setMobileOpen(false);
+      setTimeout(() => {
+        onNavigate(v);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 220);
+    } else if (wasMenuOpen) {
+      // Desktop mega menu — let exit animation play before navigating
+      setTimeout(() => {
+        onNavigate(v);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 200);
+    } else {
+      onNavigate(v);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const openMenuId = (id: string) => {
@@ -48,7 +64,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
     setOpenMenu(id);
   };
   const closeMenuDelayed = () => {
-    closeTimer.current = setTimeout(() => setOpenMenu(null), 120);
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 300);
   };
 
   // Determine if a nav item is "active" (active view falls under a dropdown)
@@ -62,7 +78,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-[100] transition-all duration-300",
         scrolled ? "py-2.5" : "py-4"
       )}
     >
@@ -75,22 +91,24 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
           onMouseLeave={closeMenuDelayed}
         >
           {/* Logo (brand PNG, dark-surface variant) */}
-          <button
-            onClick={() => handleNav("home")}
+          <a
+            href="/"
+            onClick={(e) => { e.preventDefault(); handleNav("home"); }}
             className="group flex shrink-0 items-center pl-1"
             aria-label="ClickTake Technologies — home"
           >
             <Logo surface="dark" height={38} priority className="transition-opacity group-hover:opacity-90" />
-          </button>
+          </a>
 
           {/* Desktop nav */}
           <div className="hidden items-center gap-0.5 lg:flex">
             {NAV_ITEMS.map((item) => {
               if (item.kind === "link") {
                 return (
-                  <button
+                  <a
                     key={item.id}
-                    onClick={() => handleNav(item.id)}
+                    href={`/${item.id === "home" ? "" : item.id}`}
+                    onClick={(e) => { e.preventDefault(); handleNav(item.id as NavView); }}
                     className={cn(
                       "relative rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                       active === item.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
@@ -104,14 +122,15 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                       />
                     )}
                     {item.label}
-                  </button>
+                  </a>
                 );
               }
               if (item.kind === "mega") {
                 return (
                   <div key={item.id} className="relative" onMouseEnter={() => openMenuId("mega")} onMouseLeave={closeMenuDelayed}>
-                    <button
-                      onClick={() => handleNav("services")}
+                    <a
+                      href="/services"
+                      onClick={(e) => { e.preventDefault(); handleNav("services"); }}
                       className={cn(
                         "flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                         active === item.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
@@ -119,15 +138,16 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                     >
                       {item.label}
                       <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", openMenu === "mega" && "rotate-180")} />
-                    </button>
+                    </a>
                   </div>
                 );
               }
               // dropdown — positioned directly below the trigger, centered
               return (
                 <div key={item.id} className="relative" onMouseEnter={() => openMenuId(item.id)} onMouseLeave={closeMenuDelayed}>
-                  <button
-                    onClick={() => item.items && handleNav(item.items[0].id)}
+                  <a
+                    href={item.items ? `/${item.items[0].id}` : "/"}
+                    onClick={(e) => { e.preventDefault(); if (item.items) handleNav(item.items[0].id); }}
                     className={cn(
                       "flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                       isDropdownActive(item) || active === (item.id as string) ? "text-foreground" : "text-muted-foreground hover:text-foreground"
@@ -135,7 +155,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   >
                     {item.label}
                     <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", openMenu === item.id && "rotate-180")} />
-                  </button>
+                  </a>
                 </div>
               );
             })}
@@ -150,13 +170,14 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
               <Phone className="h-3.5 w-3.5 text-blue-400" />
               +44 7391 653377
             </a>
-            <button
-              onClick={() => handleNav("contact")}
+            <a
+              href="/contact"
+              onClick={(e) => { e.preventDefault(); handleNav("contact"); }}
               className="group hidden items-center gap-1.5 rounded-xl bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[0_0_18px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_24px_-2px] hover:shadow-pink-500/60 sm:inline-flex"
             >
               Start Your Project
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-            </button>
+            </a>
             <button
               onClick={() => setMobileOpen((v) => !v)}
               className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground lg:hidden"
@@ -176,12 +197,12 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-x-4 top-full z-40 hidden lg:block"
+              className="absolute inset-x-4 top-full z-[200] hidden pt-2 lg:block"
               onMouseEnter={() => openMenuId("mega")}
               onMouseLeave={closeMenuDelayed}
             >
               <div className="mx-auto max-w-7xl">
-                <div className="mt-2 overflow-hidden rounded-2xl glass-strong shadow-deep">
+                <div className="overflow-hidden rounded-2xl glass-strong shadow-deep">
                   <div className="grid grid-cols-4 gap-0">
                     {SERVICE_CATEGORIES.map((cat) => (
                       <div key={cat.id} className="border-r border-border/40 p-4 last:border-r-0">
@@ -239,11 +260,11 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute left-1/2 top-full z-40 hidden -translate-x-1/2 min-w-[340px] lg:block"
+                  className="absolute left-1/2 top-full z-[200] hidden -translate-x-1/2 min-w-[340px] pt-2 lg:block"
                   onMouseEnter={() => openMenuId(item.id)}
                   onMouseLeave={closeMenuDelayed}
                 >
-                  <div className="mt-2 w-full overflow-hidden rounded-2xl glass-strong shadow-deep">
+                  <div className="w-full overflow-hidden rounded-2xl glass-strong shadow-deep">
                     <div className="border-b border-border/40 bg-blue-500/5 px-5 py-3">
                       <p className="text-sm font-semibold text-foreground">{item.label}</p>
                       <p className="text-xs text-muted-foreground">{item.items.length} pages</p>
@@ -314,8 +335,12 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                             <button
                               key={s.slug}
                               onClick={() => {
-                                if (onNavigateService) onNavigateService(s.slug);
-                                else handleNav("services");
+                                setMobileOpen(false);
+                                setTimeout(() => {
+                                  if (onNavigateService) onNavigateService(s.slug);
+                                  else onNavigate("services");
+                                  window.scrollTo({ top: 0, behavior: "smooth" });
+                                }, 220);
                               }}
                               className="rounded-md px-2 py-1.5 text-left text-xs text-muted-foreground hover:bg-blue-500/10 hover:text-foreground"
                             >
