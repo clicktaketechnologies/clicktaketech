@@ -5,7 +5,8 @@ export const runtime = "nodejs";
 /**
  * A2A (Agent-to-Agent) Agent Card.
  * Served at /.well-known/agent-card.json as application/json.
- * Per the A2A Protocol Specification.
+ * Per the A2A Protocol Specification — each supportedInterfaces entry
+ * needs a top-level `url` field (not nested inside transport).
  */
 export async function GET() {
   const card = {
@@ -15,11 +16,9 @@ export async function GET() {
     url: "https://clicktaketech.com/api/a2a",
     supportedInterfaces: [
       {
+        url: "https://clicktaketech.com/api/a2a",
         protocol: "https://a2a-protocol.org/v1",
-        transport: {
-          type: "jsonrpc",
-          url: "https://clicktaketech.com/api/a2a",
-        },
+        transport: "jsonrpc",
       },
     ],
     capabilities: {
