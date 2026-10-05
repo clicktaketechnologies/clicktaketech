@@ -7,7 +7,7 @@ export const runtime = "nodejs";
  * ClickTake admin API via OAuth 2.0 client credentials.
  */
 export async function GET() {
-  const markdown = `# auth.md Agent Registration Skill
+  const markdown = `# Agent Registration Skill
 
 ## Description
 AI agents can register and authenticate with the ClickTake admin API using OAuth 2.0 client credentials.
