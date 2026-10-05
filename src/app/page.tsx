@@ -6,6 +6,7 @@ import { Background } from "@/components/site/background";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { ChatBot } from "@/components/site/chatbot";
+import { WebMCPTools } from "@/components/site/webmcp-tools";
 import { HomeView } from "@/components/site/views/home-view";
 import { ServicesView } from "@/components/site/views/services-view";
 import { SolutionsView } from "@/components/site/views/solutions-view";
@@ -171,6 +172,7 @@ export default function Page() {
       </main>
       <Footer onNavigate={navigate} />
       <ChatBot />
+      <WebMCPTools />
     </div>
   );
 }

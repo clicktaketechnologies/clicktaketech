@@ -141,6 +141,7 @@ const TAB_PERMISSIONS: Record<Tab, string> = {
   redirects: "redirects:view",
   security: "security:view",
   users: "users:view",
+  clients: "clients:view",
   activity: "activity:view",
 };
 

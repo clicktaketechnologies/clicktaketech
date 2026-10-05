@@ -4,14 +4,22 @@ export const runtime = "nodejs";
 
 /**
  * Lightweight health check endpoint.
- * Ping this every 10 minutes via UptimeRobot/cron-job.org to keep
- * Vercel serverless functions warm (prevent cold starts on free tier).
+ * Served at /api/health as application/json. Used by uptime monitors and
+ * by the API Catalog (RFC 9727) \`status\` link to verify service health.
  */
 export async function GET() {
-  return NextResponse.json({
-    ok: true,
-    status: "healthy",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime ? `${process.uptime().toFixed(0)}s` : "n/a",
-  });
+  return NextResponse.json(
+    {
+      ok: true,
+      status: "healthy",
+      service: "clicktaketech.com",
+      timestamp: new Date().toISOString(),
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store",
+      },
+    }
+  );
 }

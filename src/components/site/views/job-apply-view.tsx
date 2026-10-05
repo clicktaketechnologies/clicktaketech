@@ -108,7 +108,11 @@ export function JobApplyView({ preselectedJobSlug, onNavigate }: JobApplyViewPro
 
   const set = (k: string, v: string) => {
     setForm((f) => ({ ...f, [k]: v }));
-    setErrors((e) => ({ ...e, [k]: undefined }));
+    setErrors((e) => {
+      const next = { ...e };
+      delete next[k];
+      return next;
+    });
   };
 
   const validateStep = (s: number) => {

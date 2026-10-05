@@ -1,3 +1,13 @@
+# ===== ClickTake Technologies — robots.txt =====
+# https://clicktaketech.com
+
+# Content-Signal directives (https://contentsignals.org)
+# Declares preferences for how AI agents may use this site's content:
+#   ai-train=no   — do NOT use content for AI model training
+#   search=yes    — search indexing is allowed
+#   ai-input=no    — do NOT use content as AI input (RAG / retrieval)
+Content-Signal: ai-train=no, search=yes, ai-input=no
+
 User-agent: Googlebot
 Allow: /
 
@@ -12,3 +22,10 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /api/
+
+# Agent discovery — machine-readable resource locations
+# See: /.well-known/ for full discovery metadata
+
+Sitemap: https://clicktaketech.com/sitemap.xml
+Host: https://clicktaketech.com
