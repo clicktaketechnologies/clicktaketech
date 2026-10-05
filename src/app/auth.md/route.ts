@@ -3,35 +3,40 @@ export const runtime = "nodejs";
 /**
  * /auth.md — Agent Authentication Discovery document.
  * Served at /auth.md as text/markdown. The markdown MUST start with an H1
- * heading containing the literal "auth.md". Includes an `agent_auth` JSON
- * block so scanners can detect agent registration support.
+ * heading containing the literal "auth.md".
+ *
+ * The agent_auth metadata is in YAML frontmatter at the top of the file
+ * (delimited by ---) so scanners can extract it without parsing the body.
  */
 export async function GET() {
-  const markdown = `# auth.md
+  const markdown = `---
+agent_auth:
+  skill: https://clicktaketech.com/.well-known/agent-skills/auth-registration/SKILL.md
+  register_uri: https://clicktaketech.com/api/agent/register
+  methods:
+    - method: oauth_client_credentials
+      authorization_server: https://clicktaketech.com/.well-known/oauth-authorization-server
+      token_endpoint: https://clicktaketech.com/api/auth/token
+      scopes:
+        - admin:read
+        - admin:write
+        - public:read
+      bearer_methods:
+        - header
+resource: https://clicktaketech.com
+authorization_servers:
+  - https://clicktaketech.com
+scopes_supported:
+  - admin:read
+  - admin:write
+  - public:read
+bearer_methods_supported:
+  - header
+---
+
+# auth.md
 
 ClickTake Technologies — Agent Authentication Discovery
-
-<!-- agent_auth -->
-<!-- The JSON block below is the canonical agent_auth metadata. Scanners
-     parse it to discover how agents register and authenticate. -->
-
-\`\`\`json
-{
-  "agent_auth": {
-    "skill": "https://clicktaketech.com/.well-known/agent-skills/auth-registration/SKILL.md",
-    "register_uri": "https://clicktaketech.com/api/agent/register",
-    "methods": [
-      {
-        "method": "oauth_client_credentials",
-        "authorization_server": "https://clicktaketech.com/.well-known/oauth-authorization-server",
-        "token_endpoint": "https://clicktaketech.com/api/auth/token",
-        "scopes": ["admin:read", "admin:write", "public:read"],
-        "bearer_methods": ["header"]
-      }
-    ]
-  }
-}
-\`\`\`
 
 ## Resource
 - Resource identifier: https://clicktaketech.com
