@@ -86,6 +86,7 @@ export default function CatchAllPage() {
 
   useEffect(() => {
     const { view: v, serviceSlug: s, jobSlug: j } = pathToView(pathname || "/");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setView(v);
     setServiceSlug(s);
     setJobSlug(j);
