@@ -36,16 +36,23 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
   const handleNav = (v: NavView) => {
     // Close all menus first (with smooth animation), then navigate after
     // a short delay so the user sees the menu close before the view changes.
+    const wasMenuOpen = openMenu !== null;
     setOpenMenu(null);
     setMobileServicesOpen(false);
     setMobileResourcesOpen(false);
     setMobileCompanyOpen(false);
     if (mobileOpen) {
-      setMobileOpen(false); // triggers AnimatePresence exit animation
+      setMobileOpen(false);
       setTimeout(() => {
         onNavigate(v);
         window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 220); // matches the exit animation duration (0.2s + small buffer)
+      }, 220);
+    } else if (wasMenuOpen) {
+      // Desktop mega menu — let exit animation play before navigating
+      setTimeout(() => {
+        onNavigate(v);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 200);
     } else {
       onNavigate(v);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -57,7 +64,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
     setOpenMenu(id);
   };
   const closeMenuDelayed = () => {
-    closeTimer.current = setTimeout(() => setOpenMenu(null), 120);
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 300);
   };
 
   // Determine if a nav item is "active" (active view falls under a dropdown)
@@ -71,7 +78,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-[100] transition-all duration-300",
         scrolled ? "py-2.5" : "py-4"
       )}
     >
@@ -190,12 +197,12 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-x-4 top-full z-40 hidden lg:block"
+              className="absolute inset-x-4 top-full z-[200] hidden pt-2 lg:block"
               onMouseEnter={() => openMenuId("mega")}
               onMouseLeave={closeMenuDelayed}
             >
               <div className="mx-auto max-w-7xl">
-                <div className="mt-2 overflow-hidden rounded-2xl glass-strong shadow-deep">
+                <div className="overflow-hidden rounded-2xl glass-strong shadow-deep">
                   <div className="grid grid-cols-4 gap-0">
                     {SERVICE_CATEGORIES.map((cat) => (
                       <div key={cat.id} className="border-r border-border/40 p-4 last:border-r-0">
@@ -253,11 +260,11 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute left-1/2 top-full z-40 hidden -translate-x-1/2 min-w-[340px] lg:block"
+                  className="absolute left-1/2 top-full z-[200] hidden -translate-x-1/2 min-w-[340px] pt-2 lg:block"
                   onMouseEnter={() => openMenuId(item.id)}
                   onMouseLeave={closeMenuDelayed}
                 >
-                  <div className="mt-2 w-full overflow-hidden rounded-2xl glass-strong shadow-deep">
+                  <div className="w-full overflow-hidden rounded-2xl glass-strong shadow-deep">
                     <div className="border-b border-border/40 bg-blue-500/5 px-5 py-3">
                       <p className="text-sm font-semibold text-foreground">{item.label}</p>
                       <p className="text-xs text-muted-foreground">{item.items.length} pages</p>
