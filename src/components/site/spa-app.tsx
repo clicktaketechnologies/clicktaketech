@@ -15,7 +15,8 @@ import { PricingView } from "@/components/site/views/pricing-view";
 import { AboutView } from "@/components/site/views/about-view";
 import { ContactView } from "@/components/site/views/contact-view";
 import { BlogView } from "@/components/site/views/blog-view";
-import type { NavView } from "@/lib/site-data";
+import { BlogPostView } from "@/components/site/views/blog-post-view";
+import { BLOG_POSTS, type NavView } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
 import { CITIES, SERVICE_CATEGORIES } from "@/lib/site-data";
 
@@ -56,6 +57,8 @@ function pathToView(path: string): { view: NavView; serviceSlug: string; jobSlug
   if (p === "admin") return { view: "admin", serviceSlug: "", jobSlug: "" };
   const content = getServiceContent(p);
   if (content) return { view: "service-detail", serviceSlug: p, jobSlug: "" };
+  // Blog post slugs → show blog post view
+  if (BLOG_POSTS.some(b => b.slug === p)) return { view: "blog-post", serviceSlug: "", jobSlug: "" };
   // City slugs → show cities view
   if (CITIES.some(c => c.slug === p)) return { view: "cities", serviceSlug: "", jobSlug: "" };
   return { view: "home", serviceSlug: "", jobSlug: "" };
@@ -86,6 +89,9 @@ export default function SpaApp() {
   const [view, setView] = useState<NavView>(initial.view);
   const [serviceSlug, setServiceSlug] = useState<string>(initial.serviceSlug);
   const [jobSlug, setJobSlug] = useState<string>(initial.jobSlug);
+  const [blogPostSlug, setBlogPostSlug] = useState<string>(
+    initial.view === "blog-post" ? (pathname || "").replace(/^\/+|\/+$/g, "") : ""
+  );
 
   useEffect(() => {
     const { view: v, serviceSlug: s, jobSlug: j } = pathToView(pathname || "/");
@@ -93,6 +99,10 @@ export default function SpaApp() {
     setView(v);
     setServiceSlug(s);
     setJobSlug(j);
+    if (v === "blog-post") {
+      const slug = (pathname || "").replace(/^\/+|\/+$/g, "");
+      setBlogPostSlug(slug);
+    }
   }, [pathname]);
 
   const navigate = (v: NavView) => {
@@ -102,6 +112,11 @@ export default function SpaApp() {
   const navigateService = (slug: string) => {
     setServiceSlug(slug);
     setView("service-detail");
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const navigateBlogPost = (slug: string) => {
+    setBlogPostSlug(slug);
+    setView("blog-post");
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const applyJob = (slug: string) => {
@@ -124,6 +139,9 @@ export default function SpaApp() {
   useEffect(() => {
     if (view === "service-detail") {
       document.title = getServiceContent(serviceSlug)?.metaTitle ?? "Service | ClickTake Technologies";
+    } else if (view === "blog-post") {
+      const post = BLOG_POSTS.find(b => b.slug === blogPostSlug);
+      document.title = post ? `${post.title} | ClickTake Technologies` : "Blog | ClickTake Technologies";
     } else if (view === "job-apply") {
       document.title = "Apply to Join ClickTake — Intern Onboarding & Identity Verification";
     } else if (view === "admin") {
@@ -132,7 +150,7 @@ export default function SpaApp() {
       const path = (view === "home" ? "" : view).toString();
       document.title = PATH_TITLES[path] ?? "ClickTake Technologies";
     }
-  }, [view, serviceSlug]);
+  }, [view, serviceSlug, blogPostSlug]);
 
   if (view === "admin") {
     return (
@@ -160,7 +178,8 @@ export default function SpaApp() {
             {view === "solutions" && <SolutionsView onNavigate={navigate} />}
             {view === "case-studies" && <CaseStudiesView onNavigate={navigate} />}
             {view === "portfolio" && <PortfolioView onNavigate={navigate} />}
-            {view === "blog" && <BlogView onNavigate={navigate} />}
+            {view === "blog" && <BlogView onNavigate={navigate} onNavigateBlogPost={navigateBlogPost} />}
+            {view === "blog-post" && <BlogPostView slug={blogPostSlug} onNavigate={navigate} onNavigateBlogPost={navigateBlogPost} />}
             {view === "pricing" && <PricingView onNavigate={navigate} />}
             {view === "about" && <AboutView onNavigate={navigate} />}
             {view === "team" && <TeamView onNavigate={navigate} />}
@@ -189,6 +208,9 @@ export default function SpaApp() {
         ))}
         {CITIES.map(c => (
           <a key={c.slug} href={`/${c.slug}`}>{`${c.name} ${c.country}`}</a>
+        ))}
+        {BLOG_POSTS.slice(0, 10).map(b => (
+          <a key={b.slug} href={`/${b.slug}`}>{b.title}</a>
         ))}
       </nav>
     </div>

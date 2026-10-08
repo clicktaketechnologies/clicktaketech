@@ -79,7 +79,8 @@ export type NavView =
   | "admin"
   | "legal-privacy"
   | "legal-terms"
-  | "legal-cookies";
+  | "legal-cookies"
+  | "blog-post";
 
 // ===== Service detail SEO content =====
 // Detailed, keyword-optimized content for each of the 24 services.
@@ -1462,6 +1463,7 @@ export type BlogPost = {
   title: string;
   category: string;
   excerpt: string;
+  body?: string; // full blog post content (markdown)
   date: string;
   readTime: string;
 };
