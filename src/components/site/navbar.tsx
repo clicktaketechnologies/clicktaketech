@@ -34,13 +34,22 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
   }, []);
 
   const handleNav = (v: NavView) => {
-    onNavigate(v);
+    // Close all menus first (with smooth animation), then navigate after
+    // a short delay so the user sees the menu close before the view changes.
     setOpenMenu(null);
-    setMobileOpen(false);
     setMobileServicesOpen(false);
     setMobileResourcesOpen(false);
     setMobileCompanyOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (mobileOpen) {
+      setMobileOpen(false); // triggers AnimatePresence exit animation
+      setTimeout(() => {
+        onNavigate(v);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 220); // matches the exit animation duration (0.2s + small buffer)
+    } else {
+      onNavigate(v);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const openMenuId = (id: string) => {
@@ -319,8 +328,12 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                             <button
                               key={s.slug}
                               onClick={() => {
-                                if (onNavigateService) onNavigateService(s.slug);
-                                else handleNav("services");
+                                setMobileOpen(false);
+                                setTimeout(() => {
+                                  if (onNavigateService) onNavigateService(s.slug);
+                                  else onNavigate("services");
+                                  window.scrollTo({ top: 0, behavior: "smooth" });
+                                }, 220);
                               }}
                               className="rounded-md px-2 py-1.5 text-left text-xs text-muted-foreground hover:bg-blue-500/10 hover:text-foreground"
                             >
