@@ -1,12 +1,48 @@
-# ===== ClickTake Technologies — robots.txt =====
+# ClickTake Technologies — robots.txt
 # https://clicktaketech.com
 
-# Content-Signal directives (https://contentsignals.org)
-# Declares preferences for how AI agents may use this site's content:
-#   ai-train=no   — do NOT use content for AI model training
-#   search=yes    — search indexing is allowed
-#   ai-input=no    — do NOT use content as AI input (RAG / retrieval)
+# Content-Signal directives (contentsignals.org)
+# Declares preferences for how AI agents may use content:
 Content-Signal: ai-train=no, search=yes, ai-input=no
+
+# Allow all crawlers including AI bots
+User-agent: *
+Allow: /
+Disallow: /api/
+Allow: /api/health
+Allow: /api/openapi.json
+Allow: /api/docs
+
+# Explicitly allow AI search bots
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
 
 User-agent: Googlebot
 Allow: /
@@ -14,18 +50,4 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: *
-Allow: /
-Disallow: /api/
-
-# Agent discovery — machine-readable resource locations
-# See: /.well-known/ for full discovery metadata
-
 Sitemap: https://clicktaketech.com/sitemap.xml
-Host: https://clicktaketech.com
