@@ -7,11 +7,13 @@ import { SeoStructuredData } from "@/components/site/seo-structured-data";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const BASE_URL = "https://clicktaketech.com";

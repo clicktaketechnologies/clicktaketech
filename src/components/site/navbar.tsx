@@ -75,22 +75,24 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
           onMouseLeave={closeMenuDelayed}
         >
           {/* Logo (brand PNG, dark-surface variant) */}
-          <button
-            onClick={() => handleNav("home")}
+          <a
+            href="/"
+            onClick={(e) => { e.preventDefault(); handleNav("home"); }}
             className="group flex shrink-0 items-center pl-1"
             aria-label="ClickTake Technologies — home"
           >
             <Logo surface="dark" height={38} priority className="transition-opacity group-hover:opacity-90" />
-          </button>
+          </a>
 
           {/* Desktop nav */}
           <div className="hidden items-center gap-0.5 lg:flex">
             {NAV_ITEMS.map((item) => {
               if (item.kind === "link") {
                 return (
-                  <button
+                  <a
                     key={item.id}
-                    onClick={() => handleNav(item.id)}
+                    href={`/${item.id === "home" ? "" : item.id}`}
+                    onClick={(e) => { e.preventDefault(); handleNav(item.id as NavView); }}
                     className={cn(
                       "relative rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                       active === item.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
@@ -104,14 +106,15 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                       />
                     )}
                     {item.label}
-                  </button>
+                  </a>
                 );
               }
               if (item.kind === "mega") {
                 return (
                   <div key={item.id} className="relative" onMouseEnter={() => openMenuId("mega")} onMouseLeave={closeMenuDelayed}>
-                    <button
-                      onClick={() => handleNav("services")}
+                    <a
+                      href="/services"
+                      onClick={(e) => { e.preventDefault(); handleNav("services"); }}
                       className={cn(
                         "flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                         active === item.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
@@ -119,15 +122,16 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                     >
                       {item.label}
                       <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", openMenu === "mega" && "rotate-180")} />
-                    </button>
+                    </a>
                   </div>
                 );
               }
               // dropdown — positioned directly below the trigger, centered
               return (
                 <div key={item.id} className="relative" onMouseEnter={() => openMenuId(item.id)} onMouseLeave={closeMenuDelayed}>
-                  <button
-                    onClick={() => item.items && handleNav(item.items[0].id)}
+                  <a
+                    href={item.items ? `/${item.items[0].id}` : "/"}
+                    onClick={(e) => { e.preventDefault(); if (item.items) handleNav(item.items[0].id); }}
                     className={cn(
                       "flex items-center gap-1 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
                       isDropdownActive(item) || active === (item.id as string) ? "text-foreground" : "text-muted-foreground hover:text-foreground"
@@ -135,7 +139,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   >
                     {item.label}
                     <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", openMenu === item.id && "rotate-180")} />
-                  </button>
+                  </a>
                 </div>
               );
             })}
@@ -150,13 +154,14 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
               <Phone className="h-3.5 w-3.5 text-blue-400" />
               +44 7391 653377
             </a>
-            <button
-              onClick={() => handleNav("contact")}
+            <a
+              href="/contact"
+              onClick={(e) => { e.preventDefault(); handleNav("contact"); }}
               className="group hidden items-center gap-1.5 rounded-xl bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[0_0_18px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_24px_-2px] hover:shadow-pink-500/60 sm:inline-flex"
             >
               Start Your Project
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-            </button>
+            </a>
             <button
               onClick={() => setMobileOpen((v) => !v)}
               className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border/60 bg-card/40 text-foreground lg:hidden"

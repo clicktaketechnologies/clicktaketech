@@ -100,15 +100,17 @@ export function Footer({ onNavigate }: FooterProps) {
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <button
-                      onClick={() => {
+                    <a
+                      href={`/${link.view === "home" ? "" : link.view}`}
+                      onClick={(e) => {
+                        e.preventDefault();
                         onNavigate(link.view);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
-                      className="text-sm text-muted-foreground transition-colors hover:text-blue-400"
+                      className="text-sm text-muted-foreground underline-offset-2 hover:text-blue-400 hover:underline"
                     >
                       {link.label}
-                    </button>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -137,16 +139,18 @@ export function Footer({ onNavigate }: FooterProps) {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
             {LEGAL_LINKS.map((link) => (
-              <button
+              <a
                 key={link.id}
-                onClick={() => {
+                href={`/${link.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
                   onNavigate(link.id);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className="transition-colors hover:text-blue-400"
+                className="underline-offset-2 transition-colors hover:text-blue-400 hover:underline"
               >
                 {link.label}
-              </button>
+              </a>
             ))}
             <span className="inline-flex items-center gap-1.5 text-muted-foreground">
               Built with <Heart className="h-3.5 w-3.5 fill-pink-500 text-pink-500" />
