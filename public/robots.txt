@@ -1,10 +1,6 @@
 # ClickTake Technologies — robots.txt
 # https://clicktaketech.com
 
-# Content-Signal directives (contentsignals.org)
-# Declares preferences for how AI agents may use content:
-Content-Signal: ai-train=no, search=yes, ai-input=no
-
 # Allow all crawlers including AI bots
 User-agent: *
 Allow: /

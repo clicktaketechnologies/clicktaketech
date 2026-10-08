@@ -1,0 +1,68 @@
+# ClickTake Technologies
+
+> ClickTake Technologies is an AI-native software engineering firm shipping production-grade software, autonomous AI agents, cloud architecture, digital marketing, and creative services. 24 services across 4 practices, serving 13 cities in 4 continents since 2019.
+
+## Services
+
+ClickTake offers 24 services across 4 practices:
+
+### Digital Marketing
+- [PPC / Paid Ads](https://clicktaketech.com/ppc-paid-ads): Google, Meta, LinkedIn, TikTok — profitable CPA
+- [SEO Services](https://clicktaketech.com/seo-services): Technical, on-page, off-page, local pack
+- [Content Strategy & SEO](https://clicktaketech.com/content-strategy-seo): Topical authority, content clusters
+- [Conversion Rate Optimization](https://clicktaketech.com/conversion-rate-optimization): A/B testing, 25-60% CVR lift
+- [Social Media Marketing](https://clicktaketech.com/social-media-marketing): Organic, paid, community, influencer
+- [SEO & Web Design](https://clicktaketech.com/seo-web-design-services): PageSpeed 90+, schema, indexable builds
+
+### Web & Software
+- [Full-Stack Web Development](https://clicktaketech.com/full-stack-web-development): Next.js 16, TypeScript, Prisma
+- [SaaS Platform Engineering](https://clicktaketech.com/saas-platform-engineering): Multi-tenant, Stripe billing, RBAC
+- [Auth & Identity](https://clicktaketech.com/auth-identity): NextAuth, OAuth/SAML, passkeys
+- [Python Backend & APIs](https://clicktaketech.com/python-backend-apis): FastAPI, async workers, p99 120ms
+- [WordPress Web Design](https://clicktaketech.com/wordpress-web-design-services): WooCommerce, ACF, headless WP
+- [Ecommerce Web Design](https://clicktaketech.com/ecommerce-web-design-services): Headless Shopify/Medusa, 1.5s LCP
+
+### AI & Automation
+- [Custom LLM Solutions](https://clicktaketech.com/custom-llm-solutions): RAG, fine-tuning, eval harness
+- [AI Chatbots & Assistants](https://clicktaketech.com/ai-chatbots-assistants): Tool-use, memory, human handoff
+- [Prompt Engineering](https://clicktaketech.com/prompt-engineering): Versioning, eval suites, cost optimization
+- [AI Automation](https://clicktaketech.com/ai-automation): 30+ hrs/wk saved, human-in-the-loop
+- [AI Agent Development](https://clicktaketech.com/ai-agent-development): LangGraph, planning, memory, multi-agent
+- [Computer Vision & NLP](https://clicktaketech.com/computer-vision-nlp): OCR, object detection, document AI
+
+### Creative & Brand
+- [Professional Web Design](https://clicktaketech.com/professional-web-design-services): UX research, Figma, hi-fi prototypes
+- [Web Design Services](https://clicktaketech.com/web-design-services): End-to-end design systems, UI kits
+- [Small Business Web Design](https://clicktaketech.com/small-business-web-design-services): Fast launch, local-SEO, easy CMS
+- [Responsive Web Design](https://clicktaketech.com/responsive-web-design-services): Mobile-first, fluid layouts, WCAG 2.2 AA
+- [Graphic Design](https://clicktaketech.com/graphic-design): Brand identity, logos, collateral, guidelines
+- [B2B Video Production](https://clicktaketech.com/b2b-video-production): Explainers, demos, ad creatives
+
+## Pricing
+
+- [Transparent Pricing](https://clicktaketech.com/pricing): Starter £1,500/mo, Growth £4,500/mo, Scale £9,500/mo, Custom
+
+## Company
+
+- [About](https://clicktaketech.com/about): AI-native agency since 2019, 28 people, 4 offices
+- [Our Team](https://clicktaketech.com/team): Senior engineers, AI specialists, designers
+- [Careers](https://clicktaketech.com/careers): 5 open positions across 4 offices
+- [Cities We Serve](https://clicktaketech.com/cities): 13 cities, 4 countries
+- [Connect](https://clicktaketech.com/connect): Direct contact + social channels
+- [Contact](https://clicktaketech.com/contact): Free 30-min scoping call
+
+## API & Agent Discovery
+
+- [API Catalog](https://clicktaketech.com/.well-known/api-catalog)
+- [OpenAPI Spec](https://clicktaketech.com/api/openapi.json)
+- [API Docs](https://clicktaketech.com/api/docs)
+- [A2A Agent Card](https://clicktaketech.com/.well-known/agent-card.json)
+- [MCP Server Card](https://clicktaketech.com/.well-known/mcp/server-card.json)
+- [Agent Skills](https://clicktaketech.com/.well-known/agent-skills/index.json)
+- [Auth Discovery](https://clicktaketech.com/auth.md)
+
+## Legal
+
+- [Privacy Policy](https://clicktaketech.com/legal-privacy)
+- [Terms of Service](https://clicktaketech.com/legal-terms)
+- [Cookie Policy](https://clicktaketech.com/legal-cookies)

@@ -17,7 +17,7 @@ import { ContactView } from "@/components/site/views/contact-view";
 import { BlogView } from "@/components/site/views/blog-view";
 import type { NavView } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
-import { CITIES } from "@/lib/site-data";
+import { CITIES, SERVICE_CATEGORIES } from "@/lib/site-data";
 
 // Eager-load the 6 most important views (HomeView, ServicesView, PricingView,
 // AboutView, ContactView, BlogView) so their H1 is in the SSR HTML for SEO.
@@ -179,6 +179,18 @@ export default function SpaApp() {
       <Footer onNavigate={navigate} />
       <ChatBot />
       <WebMCPTools />
+      {/* Crawler-friendly internal links — visually hidden but crawlable.
+          Fixes Ahrefs "orphaned sitemap pages" (#207) by ensuring all
+          service detail pages + city pages are linked from every page's
+          SSR HTML. */}
+      <nav aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0 }}>
+        {SERVICE_CATEGORIES.flatMap(cat => cat.services).map(s => (
+          <a key={s.slug} href={`/${s.slug}`}>{s.title}</a>
+        ))}
+        {CITIES.map(c => (
+          <a key={c.slug} href={`/${c.slug}`}>{`${c.name} ${c.country}`}</a>
+        ))}
+      </nav>
     </div>
   );
 }
