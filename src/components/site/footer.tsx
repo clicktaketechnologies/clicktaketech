@@ -92,25 +92,6 @@ export function Footer({ onNavigate }: FooterProps) {
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
             </div>
-            {/* Social media icons */}
-            <div className="mt-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Follow us</p>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                {SOCIAL_LINKS.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={social.label}
-                    title={social.label}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/40 bg-card/40 text-muted-foreground transition-all hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 hover:-translate-y-0.5"
-                  >
-                    <social.icon className="h-4 w-4" />
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Nav columns */}
@@ -138,8 +119,41 @@ export function Footer({ onNavigate }: FooterProps) {
           ))}
         </div>
 
+        {/* Social media + Offices row — fills the gap between grid and bottom bar */}
+        <div className="mt-8 grid gap-6 border-t border-border/40 pt-6 lg:grid-cols-[1fr_auto] lg:items-center">
+          {/* Social media icons — full-width on mobile, left on desktop */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Follow us</p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {SOCIAL_LINKS.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.label}
+                  title={social.label}
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/40 bg-card/40 text-muted-foreground transition-all hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 hover:-translate-y-0.5"
+                >
+                  <social.icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+          {/* Quick CTA — fills the right side */}
+          <div className="flex items-center gap-3">
+            <a
+              href="/contact"
+              onClick={(e) => { e.preventDefault(); onNavigate("contact"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-[0_0_20px_-4px] hover:shadow-blue-500/60"
+            >
+              Start Your Project <Mail className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+
         {/* Offices */}
-        <div className="mt-10 grid gap-3 border-t border-border/40 pt-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid gap-3 border-t border-border/40 pt-6 sm:grid-cols-2 lg:grid-cols-4">
           {OFFICES.map((o) => (
             <div key={o.city} className="flex items-start gap-2.5">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-blue-400" />
