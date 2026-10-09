@@ -880,6 +880,80 @@ function OverviewTab({ onJump, token }: { onJump: (t: Tab) => void; token: strin
         ))}
       </div>
 
+      {/* What's New — recent feature updates */}
+      <div className="mt-5 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5">
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-blue-400" />
+          <h3 className="text-sm font-semibold text-foreground">What's New</h3>
+          <span className="ml-auto rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] font-medium text-blue-400">Latest Updates</span>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">Blog Post Detail View</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Full article pages with body content, publish dates, recent posts, and internal links. 33 blog posts total.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">Expandable Careers</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Job cards now expand with full descriptions, requirements, and Apply buttons using Collapsible.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">Logo Upload (Cloudinary)</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Upload logos from computer → Cloudinary CDN. No URL input. Works on Vercel.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">Per-Page SEO Metadata</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Unique title, description, canonical, OG tags for all 53 pages. Self-referencing canonicals.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">AI Agent Discovery</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">16/22 isitagentready.com checks passing: API catalog, OAuth, A2A card, MCP, WebMCP, llms.txt, auth.md.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">Full Legal Content</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Privacy Policy (1,890w GDPR), Terms (1,800w), Cookie Policy (1,190w) — all real content.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">DB Resilience</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Seed-data fallback when DB unreachable. Setup Database button. safeQuery on all endpoints.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">Performance</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Lazy-loaded views (2,272→200 KiB). Font-display: swap. Cloudinary media uploads.</p>
+          </div>
+          <div className="rounded-xl border border-border/40 bg-card/40 p-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 text-green-400" />
+              <span className="text-xs font-semibold text-foreground">Navbar + Footer UX</span>
+            </div>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">Smooth menu close animation. Mega menu z-index fix. 8 social icons + CTA in footer.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Quick Actions + Traffic */}
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
         <QuickActions onJump={(t) => onJump(t as Tab)} />
