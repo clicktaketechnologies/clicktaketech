@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Phone, MessageCircle, MapPin, Heart } from "lucide-react";
+import { SOCIAL_LINKS } from "@/lib/site-data";
 import { OFFICES, TECH_STACK, LEGAL_LINKS, type NavView } from "@/lib/site-data";
 import { Logo } from "@/components/site/logo";
 
@@ -90,6 +91,25 @@ export function Footer({ onNavigate }: FooterProps) {
               <a href="https://wa.me/447391653377" target="_blank" rel="noreferrer" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
+            </div>
+            {/* Social media icons */}
+            <div className="mt-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Follow us</p>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                {SOCIAL_LINKS.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={social.label}
+                    title={social.label}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/40 bg-card/40 text-muted-foreground transition-all hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 hover:-translate-y-0.5"
+                  >
+                    <social.icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
