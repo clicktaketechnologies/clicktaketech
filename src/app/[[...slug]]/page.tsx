@@ -156,7 +156,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: title === PAGE_META[""].title ? title : { absolute: title },
+    title: { absolute: title },
     description,
     keywords,
     alternates: {
