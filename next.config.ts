@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Signal",
-            value: "ai-train=no, search=yes, ai-input=no",
+            value: "ai-train=no, search=yes, ai-input=yes",
           },
         ],
       },

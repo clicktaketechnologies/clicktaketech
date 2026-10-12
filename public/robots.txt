@@ -1,15 +1,11 @@
 # ClickTake Technologies — robots.txt
 # https://clicktaketech.com
 
-# Allow all crawlers including AI bots
+# Allow ALL crawlers including AI bots — no restrictions
 User-agent: *
 Allow: /
-Disallow: /api/
-Allow: /api/health
-Allow: /api/openapi.json
-Allow: /api/docs
 
-# Explicitly allow AI search bots
+# Explicitly allow AI search bots (GEO/AEO ranking)
 User-agent: ChatGPT-User
 Allow: /
 
@@ -44,6 +40,9 @@ User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
+Allow: /
+
+User-agent: *
 Allow: /
 
 Sitemap: https://clicktaketech.com/sitemap.xml

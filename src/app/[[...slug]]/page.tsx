@@ -123,9 +123,42 @@ export async function generateMetadata({
     }
   }
 
+  // Determine keywords based on page type
+  let keywords: string[] = [];
+  if (!path) {
+    // Homepage
+    keywords = ["software development company", "AI agency", "custom software development", "AI automation", "web design services", "SEO services", "digital marketing agency", "Next.js development", "LLM solutions", "AI chatbot development"];
+  } else if (path === "services") {
+    keywords = ["software services", "AI services", "digital marketing services", "web development services", "SEO services", "PPC management", "AI chatbot development", "custom software development", "SaaS platform engineering", "WordPress web design"];
+  } else if (path === "pricing") {
+    keywords = ["software pricing", "AI agency pricing", "web design pricing", "SEO pricing", "PPC pricing", "SaaS development cost", "custom software cost", "digital marketing pricing"];
+  } else if (path === "about") {
+    keywords = ["software company", "AI agency", "digital agency", "software development firm", "AI-native company", "ClickTake Technologies", "Birmingham software company"];
+  } else if (path === "contact") {
+    keywords = ["contact software company", "hire software developers", "AI agency contact", "software development consultation", "free scoping call"];
+  } else if (path === "blog") {
+    keywords = ["software development blog", "AI blog", "SEO blog", "web development blog", "digital marketing blog", "PPC blog", "AI automation blog"];
+  } else if (path === "careers") {
+    keywords = ["software jobs", "AI engineer jobs", "Next.js developer jobs", "SEO specialist jobs", "graphic design jobs", "software company careers"];
+  } else if (path === "team") {
+    keywords = ["software team", "AI engineers", "digital marketing team", "web developers", "ClickTake team", "senior engineers"];
+  } else {
+    // Try service detail
+    const content = getServiceContent(path);
+    if (content) {
+      keywords = [content.primaryKeyword, ...content.secondaryKeywords];
+    } else if (CITIES.some((c) => c.slug === path)) {
+      const city = CITIES.find((c) => c.slug === path)!;
+      keywords = [`${city.name.toLowerCase()} software company`, `${city.name.toLowerCase()} AI agency`, `${city.name.toLowerCase()} web design`, `${city.name.toLowerCase()} SEO`, `${city.name.toLowerCase()} digital marketing`, `${city.name.toLowerCase()} custom software`];
+    } else {
+      keywords = ["software development company", "AI agency", "custom software", "digital marketing"];
+    }
+  }
+
   return {
     title: title === PAGE_META[""].title ? title : { absolute: title },
     description,
+    keywords,
     alternates: {
       canonical: pageUrl, // SELF-REFERENCING — not all → homepage!
     },
