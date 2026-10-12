@@ -20,8 +20,8 @@ const BASE_URL = "https://clicktaketech.com";
 
 const PAGE_META: Record<string, { title: string; description: string }> = {
   "": {
-    title: "ClickTake Technologies — AI-Native Software Engineering & Digital Agency",
-    description: "ClickTake Technologies ships production-grade software, autonomous AI agents, cloud architecture, digital marketing & creative services. 24 services across 4 practices — serving 13 cities in 4 continents. Trusted by 150+ teams with 99.9% uptime.",
+    title: "ClickTake Technologies — Software & AI Agency",
+    description: "ClickTake Technologies is a software development company and AI agency shipping custom software, AI agents, web design, SEO & digital marketing. 24 services, 4 offices, 120+ deployments since 2019.",
   },
   services: {
     title: "24 Services across 4 Practices | ClickTake Technologies",

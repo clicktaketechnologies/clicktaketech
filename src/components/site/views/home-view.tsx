@@ -60,8 +60,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
               </Reveal>
               <Reveal delay={0.05}>
                 <h1 className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
-                  We ship <span className="text-gradient-brand">software</span> that actually works —
-                  and <span className="text-gradient-pink">AI</span> that earns its keep.
+                  The <span className="text-gradient-brand">software development company</span> & <span className="text-gradient-pink">AI agency</span> that ships work, not slides.
                 </h1>
               </Reveal>
               <Reveal delay={0.08}>
