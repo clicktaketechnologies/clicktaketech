@@ -8,6 +8,7 @@ function OrganizationJsonLd() {
     "@type": "Organization",
     name: "ClickTake Technologies",
     url: BASE_URL,
+    logo: `${BASE_URL}/logo-dark.png`,
     description:
       "AI-native software engineering firm shipping production-grade autonomous agents, multi-tenant SaaS platforms, cloud architecture, digital marketing and creative services for enterprises across 4 continents.",
     foundingDate: "2019",

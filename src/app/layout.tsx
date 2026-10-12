@@ -21,12 +21,11 @@ const BASE_URL = "https://clicktaketech.com";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default:
-      "ClickTake Technologies — AI-Native Software Engineering & Digital Agency",
+    default: "ClickTake Technologies — Software & AI Agency",
     template: "%s | ClickTake Technologies",
   },
   description:
-    "ClickTake Technologies ships production-grade software, autonomous AI agents, cloud architecture, digital marketing & creative services. 24 services across 4 practices — serving 13 cities in 4 continents. Trusted by 150+ teams with 99.9% uptime.",
+    "ClickTake Technologies ships custom software, AI agents, web design, SEO & digital marketing. 24 services, 4 offices, 120+ deployments since 2019.",
   keywords: [
     "AI agents",
     "custom software development",
@@ -127,6 +126,7 @@ export default function RootLayout({
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <SeoStructuredData />
+        <link rel="llms.txt" href="/llms.txt" type="text/plain" />
       </head>
       {/* suppressHydrationWarning on body — browser extensions
           (Grammarly, LastPass, 1Password, etc.) inject attributes like

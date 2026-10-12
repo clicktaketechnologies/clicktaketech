@@ -130,7 +130,7 @@ export function Footer({ onNavigate }: FooterProps) {
                   key={social.label}
                   href={social.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   title={social.label}
                   className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/40 bg-card/40 text-muted-foreground transition-all hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 hover:-translate-y-0.5"
