@@ -127,6 +127,9 @@ export default function RootLayout({
       <head>
         <SeoStructuredData />
         <link rel="llms.txt" href="/llms.txt" type="text/plain" />
+        {/* LCP optimization: dns-prefetch + preconnect to speed up resource loading */}
+        <link rel="dns-prefetch" href="//api.cloudinary.com" />
+        <link rel="preconnect" href="//api.cloudinary.com" crossOrigin="anonymous" />
       </head>
       {/* suppressHydrationWarning on body — browser extensions
           (Grammarly, LastPass, 1Password, etc.) inject attributes like

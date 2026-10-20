@@ -285,3 +285,29 @@
 .animate-pulse-ring {
   animation: pulse-ring 2.4s ease-out infinite;
 }
+
+/* LCP optimization — defer rendering of below-the-fold content */
+/* Apply content-visibility:auto to sections after the hero so the
+   browser skips rendering them until scrolled into view. This
+   dramatically reduces initial render time (LCP). */
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 500px;
+}
+
+/* Optimize font loading — swap immediately, don't block render */
+@font-face {
+  font-family: 'Geist';
+  font-display: swap;
+  src: local('Geist');
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-display: swap;
+  src: local('Geist Mono');
+}
+
+/* Reduce layout shifts by reserving space for animated elements */
+.motion-div-container {
+  contain: layout style paint;
+}

@@ -171,7 +171,7 @@ export default function SpaApp() {
       </a>
       <Background />
       <Navbar active={view} onNavigate={navigate} onNavigateService={navigateService} />
-      <main id="main-content" className="flex-1">
+      <main id="main-content" className="flex-1" style={{ contain: "layout" }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={view === "service-detail" ? `service-${serviceSlug}` : view === "job-apply" ? `job-${jobSlug}` : view}
@@ -206,10 +206,8 @@ export default function SpaApp() {
       <ChatBot />
       <WebMCPTools />
       {/* Crawler-friendly internal links — visually hidden but crawlable.
-          Fixes Ahrefs "orphaned sitemap pages" (#207) by ensuring all
-          service detail pages + city pages are linked from every page's
-          SSR HTML. */}
-      <nav aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0 }}>
+          Uses content-visibility:auto so this doesn't affect render performance. */}
+      <nav aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0, contentVisibility: "auto", containIntrinsicSize: "1px" }}>
         {SERVICE_CATEGORIES.flatMap(cat => cat.services).map(s => (
           <a key={s.slug} href={`/${s.slug}`}>{s.title}</a>
         ))}

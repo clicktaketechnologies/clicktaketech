@@ -123,7 +123,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       </section>
 
       {/* ===== CAPABILITIES ===== */}
-      <Section id="capabilities">
+      <Section id="capabilities" className="below-fold">
         <SectionHeading
           eyebrow="What We Do"
           title={
@@ -167,7 +167,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       </Section>
 
       {/* ===== PROCESS ===== */}
-      <Section className="border-y border-border/40 bg-card/20">
+      <Section className="below-fold border-y border-border/40 bg-card/20">
         <SectionHeading
           eyebrow="How We Work"
           title={
@@ -240,7 +240,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       </Section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <Section className="border-y border-border/40 bg-card/20">
+      <Section className="below-fold border-y border-border/40 bg-card/20">
         <SectionHeading
           eyebrow="Client Outcomes"
           title={
@@ -304,7 +304,7 @@ export function HomeView({ onNavigate }: HomeViewProps) {
       </Section>
 
       {/* ===== E-A-T TRUST STRIP ===== */}
-      <Section className="border-t border-border/40 bg-card/20">
+      <Section className="below-fold border-t border-border/40 bg-card/20">
         <SectionHeading
           eyebrow="Expertise · Authoritativeness · Trust"
           title={
@@ -428,7 +428,7 @@ function OurClientsSection({ onNavigate }: { onNavigate: (v: import("@/lib/site-
   if (clients.length === 0) return null;
 
   return (
-    <Section className="border-y border-border/40">
+    <Section className="below-fold border-y border-border/40">
       <Reveal>
         <p className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Trusted by {clients.length}+ clients across 4 continents
