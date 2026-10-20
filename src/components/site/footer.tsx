@@ -97,7 +97,7 @@ export function Footer({ onNavigate }: FooterProps) {
           {/* Nav columns */}
           {footerNav.map((col) => (
             <div key={col.title}>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">{col.title}</h4>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground">{col.title}</h3>
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>

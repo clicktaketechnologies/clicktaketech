@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s | ClickTake Technologies",
   },
   description:
-    "ClickTake Technologies ships custom software, AI agents, web design, SEO & digital marketing. 24 services, 4 offices, 120+ deployments since 2019.",
+    "Software development company and AI agency. Custom software, AI agents, web design, SEO & marketing. 24 services, 4 offices, 120+ deployments since 2019.",
   keywords: [
     "AI agents",
     "custom software development",
