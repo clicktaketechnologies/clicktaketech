@@ -16,6 +16,7 @@ import { AboutView } from "@/components/site/views/about-view";
 import { ContactView } from "@/components/site/views/contact-view";
 import { BlogView } from "@/components/site/views/blog-view";
 import { BlogPostView } from "@/components/site/views/blog-post-view";
+import { PlatformsView } from "@/components/site/views/platforms-view";
 import { BLOG_POSTS, type NavView } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
 import { CITIES, SERVICE_CATEGORIES } from "@/lib/site-data";
@@ -48,6 +49,7 @@ function pathToView(path: string): { view: NavView; serviceSlug: string; jobSlug
   if (p === "team") return { view: "team", serviceSlug: "", jobSlug: "" };
   if (p === "careers") return { view: "careers", serviceSlug: "", jobSlug: "" };
   if (p === "cities") return { view: "cities", serviceSlug: "", jobSlug: "" };
+  if (p === "platforms") return { view: "platforms", serviceSlug: "", jobSlug: "" };
   if (p === "connect") return { view: "connect", serviceSlug: "", jobSlug: "" };
   if (p === "contact") return { view: "contact", serviceSlug: "", jobSlug: "" };
   if (p === "legal-privacy") return { view: "legal-privacy", serviceSlug: "", jobSlug: "" };
@@ -192,6 +194,7 @@ export default function SpaApp() {
             {view === "team" && <TeamView onNavigate={navigate} />}
             {view === "careers" && (<CareersView onNavigate={navigate} onApply={applyJob} />)}
             {view === "cities" && <CitiesView onNavigate={navigate} />}
+            {view === "platforms" && <PlatformsView onNavigate={navigate} />}
             {view === "connect" && <ConnectView onNavigate={navigate} />}
             {view === "contact" && <ContactView />}
             {view === "service-detail" && (<ServiceDetailView slug={serviceSlug} onNavigate={navigate} onNavigateService={navigateService} />)}

@@ -83,6 +83,10 @@ const PAGE_META: Record<string, { title: string; description: string }> = {
     title: "Cookie Policy | ClickTake Technologies",
     description: "ClickTake Technologies cookie policy — what cookies we use, why, and how to manage your preferences.",
   },
+  platforms: {
+    title: "Our Platforms — Products & Solutions | ClickTake Technologies",
+    description: "Explore ClickTake Technologies' product suite: AcademyPro (LMS), Employee Management System, ClickOpticx ISP Suite, and Host Lama web hosting. 4 platforms built and maintained in-house.",
+  },
 };
 
 function getPathFromSlug(slug?: string[]): string {

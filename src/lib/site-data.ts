@@ -80,7 +80,8 @@ export type NavView =
   | "legal-privacy"
   | "legal-terms"
   | "legal-cookies"
-  | "blog-post";
+  | "blog-post"
+  | "platforms";
 
 // ===== Service detail SEO content =====
 // Detailed, keyword-optimized content for each of the 24 services.
