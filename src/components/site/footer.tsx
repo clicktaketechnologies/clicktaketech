@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Phone, MessageCircle, MapPin, Heart } from "lucide-react";
+import { Mail, Phone, MessageCircle, MapPin, Heart, ExternalLink, ArrowRight } from "lucide-react";
 import { SOCIAL_LINKS } from "@/lib/site-data";
 import { OFFICES, TECH_STACK, LEGAL_LINKS, type NavView } from "@/lib/site-data";
 import { Logo } from "@/components/site/logo";
@@ -88,8 +88,37 @@ export function Footer({ onNavigate }: FooterProps) {
               <a href="tel:+447391653377" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
                 <Phone className="h-4 w-4" /> +44 7391 653377
               </a>
-              <a href="https://wa.me/447391653377" target="_blank" rel="noreferrer" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
+              <a href="https://wa.me/447391653377" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2.5 text-muted-foreground transition-colors hover:text-blue-400">
                 <MessageCircle className="h-4 w-4" /> WhatsApp
+              </a>
+            </div>
+            {/* Our Platforms links */}
+            <div className="mt-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Our Platforms</p>
+              <div className="mt-2 space-y-1.5 text-sm">
+                {[
+                  { name: "AcademyPro", url: "https://ams.clicktaketech.com" },
+                  { name: "Employee Management System", url: "https://ems.clicktaketech.com" },
+                  { name: "Click Opticx ISP Suite", url: "https://wifi.clicktaketech.com" },
+                  { name: "Host Lama", url: "https://hostlama.clicktaketech.com" },
+                ].map((p) => (
+                  <a
+                    key={p.name}
+                    href={p.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-blue-400"
+                  >
+                    <ExternalLink className="h-3 w-3" /> {p.name}
+                  </a>
+                ))}
+              </div>
+              <a
+                href="/platforms"
+                onClick={(e) => { e.preventDefault(); onNavigate("platforms"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-blue-400 hover:underline"
+              >
+                View all platforms <ArrowRight className="h-3 w-3" />
               </a>
             </div>
           </div>
