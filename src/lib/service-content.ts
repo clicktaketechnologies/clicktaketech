@@ -2470,7 +2470,7 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       },
       {
         q: "What files do we get?",
-        a: "Source Figma files, exported SVG/PNG/PDF, design tokens as CSS/Tailwind, and a published brand guidelines doc. You own everything.",
+        a: "You receive the source Figma file, exported SVG/PNG/PDF assets, design tokens as CSS and Tailwind variables, a published brand guidelines document, and full commercial usage rights. You own everything outright.",
       },
       {
         q: "Can you redesign our existing brand?",
@@ -2738,7 +2738,7 @@ export const SERVICE_CONTENT: Record<string, ServiceContent> = {
       },
       {
         q: "What about captions and accessibility?",
-        a: "Every video ships with burned-in captions and a separate SRT file. WCAG-compliant captions are standard, not an add-on.",
+        a: "Every video ships with burned-in captions, a separate SRT file, and an audio-description track on request. WCAG 2.1 AA-compliant captions are standard on every deliverable, never a paid add-on.",
       },
     ],
     definition: "What is B2B video production? B2B video production is the planning, scripting, shooting and editing of video content, including explainers, demos, ads and customer stories, engineered to move a business audience through the funnel. ClickTake delivers B2B video production for UK SaaS and enterprise brands, shipping explainers and product demos with captions and platform-cut variants.",
