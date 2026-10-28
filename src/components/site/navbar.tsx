@@ -362,6 +362,11 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                 Solutions <ArrowRight className="h-4 w-4 opacity-50" />
               </button>
 
+              {/* Platforms */}
+              <button onClick={() => handleNav("platforms")} className={cn("flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-medium transition-colors", active === "platforms" ? "bg-blue-500/12 text-foreground ring-1 ring-blue-500/30" : "text-muted-foreground hover:bg-white/5 hover:text-foreground")}>
+                Platforms <ArrowRight className="h-4 w-4 opacity-50" />
+              </button>
+
               {/* Resources (expandable) */}
               {NAV_ITEMS.filter((i) => i.kind === "dropdown").map((item) => (
                 <div key={item.id}>

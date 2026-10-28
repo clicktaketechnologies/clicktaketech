@@ -155,6 +155,7 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "home", label: "Home", kind: "link" },
   { id: "services", label: "Services", kind: "mega" },
   { id: "solutions", label: "Solutions", kind: "link" },
+  { id: "platforms", label: "Platforms", kind: "link" },
   {
     id: "resources",
     label: "Resources",

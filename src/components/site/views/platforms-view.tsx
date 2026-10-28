@@ -1,6 +1,19 @@
 "use client";
 
-import { ArrowRight, ExternalLink, GraduationCap, Users, Wifi, Server, Globe, Zap, Shield, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import {
+  ArrowRight,
+  ExternalLink,
+  GraduationCap,
+  Users,
+  Wifi,
+  Server,
+  Globe,
+  Zap,
+  Shield,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 import { Reveal, Section, CtaSection } from "@/components/site/section";
 import type { NavView } from "@/lib/site-data";
 
@@ -8,48 +21,123 @@ type PlatformsViewProps = {
   onNavigate: (v: NavView) => void;
 };
 
-const PLATFORMS = [
+type Platform = {
+  name: string;
+  url: string;
+  tagline: string;
+  description: string;
+  /** Lucide icon — used as fallback if the logo image fails to load. */
+  icon: LucideIcon;
+  gradient: "from-blue-500/15 to-cyan-500/10" | "from-pink-500/15 to-purple-500/10" | "from-green-500/15 to-emerald-500/10" | "from-orange-500/15 to-red-500/10";
+  tags: string[];
+  stats: string;
+  /** Real (or generated) business logo URL — shown in the icon slot. */
+  logoUrl: string;
+  /** Where the logo came from — shown as a tiny badge under the card title for credibility. */
+  logoSource: "live" | "brand";
+};
+
+const PLATFORMS: Platform[] = [
   {
     name: "AcademyPro",
     url: "https://ams.clicktaketech.com",
     tagline: "All-in-One Academy Management Platform",
-    description: "Complete LMS for schools, training centres, and coaching institutes. Student enrolment, course management, attendance, fee tracking, exam scheduling, and parent communication — all in one dashboard.",
+    description:
+      "Complete LMS for schools, training centres, and coaching institutes. Student enrolment, course management, attendance, fee tracking, exam scheduling, and parent communication — all in one dashboard.",
     icon: GraduationCap,
     gradient: "from-blue-500/15 to-cyan-500/10",
     tags: ["LMS", "Education", "SaaS"],
     stats: "Course management · Enrolment · Fees · Exams",
+    logoUrl: "/platforms/ams-academypro.png",
+    logoSource: "brand",
   },
   {
     name: "Employee Management System",
     url: "https://ems.clicktaketech.com",
     tagline: "Modern HR & Workforce Platform",
-    description: "Enterprise employee management with attendance tracking, project management, payroll, leave management, and performance reviews. Built for teams of 10–10,000 across multiple offices.",
+    description:
+      "Enterprise employee management with attendance tracking, project management, payroll, leave management, and performance reviews. Built for teams of 10–10,000 across multiple offices.",
     icon: Users,
     gradient: "from-pink-500/15 to-purple-500/10",
     tags: ["HR Tech", "Enterprise", "SaaS"],
     stats: "Attendance · Projects · Payroll · Leave",
+    logoUrl: "/platforms/ems-employee-system.png",
+    logoSource: "brand",
   },
   {
     name: "Click Opticx ISP Suite",
     url: "https://wifi.clicktaketech.com",
     tagline: "Enterprise ISP OSS/BSS Management Platform",
-    description: "Complete ISP management suite for internet service providers — customer management, billing, bandwidth allocation, network monitoring, hotspot management, and support ticketing.",
+    description:
+      "Complete ISP management suite for internet service providers — customer management, billing, bandwidth allocation, network monitoring, hotspot management, and support ticketing.",
     icon: Wifi,
     gradient: "from-green-500/15 to-emerald-500/10",
     tags: ["ISP", "Telecom", "OSS/BSS"],
     stats: "Billing · Bandwidth · Hotspot · Support",
+    // Real logo fetched from the live platform's Cloudinary CDN (dark variant for dark surfaces).
+    logoUrl:
+      "https://res.cloudinary.com/dzzuvb4fg/image/upload/w_192,c_limit,q_auto,f_auto/v1791169502/clickopticx/branding/logo-dark-muuo2p2676a247c6.png",
+    logoSource: "live",
   },
   {
     name: "Host Lama",
     url: "https://hostlama.clicktaketech.com",
     tagline: "Fast, Secure & Reliable Web Hosting",
-    description: "Managed web hosting platform with SSD storage, free SSL, cPanel access, one-click installs, and 99.9% uptime guarantee. Shared, VPS, and dedicated hosting plans for businesses of all sizes.",
+    description:
+      "Managed web hosting platform with SSD storage, free SSL, cPanel access, one-click installs, and 99.9% uptime guarantee. Shared, VPS, and dedicated hosting plans for businesses of all sizes.",
     icon: Server,
     gradient: "from-orange-500/15 to-red-500/10",
     tags: ["Hosting", "Infrastructure", "cPanel"],
     stats: "SSD Storage · Free SSL · cPanel · 99.9% Uptime",
+    // Real logo fetched from the live platform's WordPress media library.
+    logoUrl:
+      "https://hostlama.clicktaketech.com/wp-content/uploads/2024/01/HOST-Lama-BLUE.png",
+    logoSource: "live",
   },
 ];
+
+/** Renders a platform's real business logo, with a graceful Lucide-icon fallback
+ *  if the remote image fails to load (CORS, 404, offline, etc.). */
+function PlatformLogo({ platform, size = 56 }: { platform: Platform; size?: number }) {
+  const [errored, setErrored] = useState(false);
+  const Fallback = platform.icon;
+
+  if (errored) {
+    return (
+      <div
+        className={`flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${platform.gradient}`}
+        style={{ width: size, height: size }}
+      >
+        <Fallback className="h-7 w-7 text-foreground" />
+      </div>
+    );
+  }
+
+  // For wide-aspect logos (Host Lama is 337×67 — very wide), use object-contain so
+  // the full wordmark stays visible inside the square frame.
+  // For square/round app icons (AcademyPro / EMS / Click Opticx), object-cover
+  // fills the frame edge-to-edge for a polished app-store look.
+  const aspect =
+    platform.name === "Host Lama" ? "object-contain" : "object-cover";
+
+  return (
+    <div
+      className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${platform.gradient} p-1.5 ring-1 ring-white/10`}
+      style={{ width: size, height: size }}
+    >
+      <img
+        src={platform.logoUrl}
+        alt={`${platform.name} logo`}
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+        onError={() => setErrored(true)}
+        className={`h-full w-full ${aspect}`}
+      />
+    </div>
+  );
+}
 
 export function PlatformsView({ onNavigate }: PlatformsViewProps) {
   return (
@@ -73,7 +161,8 @@ export function PlatformsView({ onNavigate }: PlatformsViewProps) {
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
               ClickTake Technologies doesn&apos;t just build for clients — we ship our own SaaS
               products used by real businesses every day. Four platforms, each solving a
-              different problem, all maintained by our in-house team.
+              different problem, all maintained by our in-house team. The logos below are
+              pulled live from each platform so you always see the current brand.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
@@ -97,10 +186,8 @@ export function PlatformsView({ onNavigate }: PlatformsViewProps) {
                 <div className={`absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-to-br ${platform.gradient} blur-2xl transition-all duration-500 group-hover:scale-125`} />
 
                 <div className="flex items-start justify-between">
-                  <div className={`flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br ${platform.gradient}`}>
-                    <platform.icon className="h-7 w-7 text-foreground" />
-                  </div>
-                  <div className="flex gap-1.5">
+                  <PlatformLogo platform={platform} size={56} />
+                  <div className="flex flex-wrap items-center gap-1.5">
                     {platform.tags.map((tag) => (
                       <span key={tag} className="rounded-full bg-border/30 px-2.5 py-0.5 text-[10px] font-medium text-muted-foreground">
                         {tag}
@@ -109,9 +196,25 @@ export function PlatformsView({ onNavigate }: PlatformsViewProps) {
                   </div>
                 </div>
 
-                <h2 className="mt-5 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                  {platform.name}
-                </h2>
+                <div className="mt-5 flex items-center gap-2">
+                  <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                    {platform.name}
+                  </h2>
+                  {platform.logoSource === "live" ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-0.5 text-[10px] font-medium text-green-400 ring-1 ring-green-500/20">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500" />
+                      </span>
+                      Live logo
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-medium text-blue-300 ring-1 ring-blue-500/20">
+                      Brand mark
+                    </span>
+                  )}
+                </div>
+
                 <p className="mt-1 text-sm font-medium text-blue-400">{platform.tagline}</p>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {platform.description}
