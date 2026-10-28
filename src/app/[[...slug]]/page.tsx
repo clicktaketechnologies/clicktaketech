@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SpaApp from "@/components/site/spa-app";
 import { getServiceContent } from "@/lib/service-content";
-import { SERVICE_CATEGORIES, CITIES } from "@/lib/site-data";
+import { SERVICE_CATEGORIES, CITIES, BLOG_POSTS } from "@/lib/site-data";
 
 const BASE_URL = "https://clicktaketech.com";
 
@@ -25,11 +25,11 @@ const PAGE_META: Record<string, { title: string; description: string }> = {
   },
   services: {
     title: "24 Services across 4 Practices | ClickTake Technologies",
-    description: "Explore 24 expert services across Digital Marketing (PPC, SEO, content, CRO, social), Web & Software (Next.js, SaaS, WordPress, ecommerce), AI & Automation (LLM, chatbots, agents, CV/NLP), and Creative & Brand. One senior team. One delivery engine.",
+    description: "24 services across Digital Marketing, Web & Software, AI & Automation, and Creative & Brand. One senior team, one delivery engine. Since 2019.",
   },
   solutions: {
     title: "Solutions by Audience & Industry | ClickTake Technologies",
-    description: "Purpose-built solutions for SaaS startups, ecommerce brands, repair shops, education providers, and enterprises. Multi-tenant SaaS, headless commerce, local SEO, and AI automation tailored to your industry.",
+    description: "Purpose-built solutions for SaaS startups, ecommerce, repair shops, education, and enterprises. Multi-tenant SaaS, headless commerce, and local SEO.",
   },
   "case-studies": {
     title: "Case Studies — Real Engagements, Real Metrics | ClickTake",
@@ -61,7 +61,7 @@ const PAGE_META: Record<string, { title: string; description: string }> = {
   },
   cities: {
     title: "Cities We Serve — 13 Cities, 4 Countries | ClickTake",
-    description: "ClickTake serves 13 cities across the UK (Birmingham, London, Manchester, Leeds), USA (Austin, New York, San Francisco), UAE (Dubai, Abu Dhabi), and Pakistan (Multan, Lahore, Karachi, Islamabad). Local presence, global delivery.",
+    description: "ClickTake serves 13 cities across the UK, USA, UAE, and Pakistan — local presence, global delivery. Birmingham · London · Austin · Dubai · Multan.",
   },
   connect: {
     title: "Connect — Direct Contact & Social | ClickTake Technologies",
@@ -86,6 +86,14 @@ const PAGE_META: Record<string, { title: string; description: string }> = {
   platforms: {
     title: "Our Platforms — Products & Solutions | ClickTake Technologies",
     description: "Explore ClickTake Technologies' product suite: AcademyPro (LMS), Employee Management System, ClickOpticx ISP Suite, and Host Lama web hosting. 4 platforms built and maintained in-house.",
+  },
+  admin: {
+    // Admin is private (auth-gated). The title is unique so it doesn't
+    // collide with the homepage title in the SEO crawler uniqueness test,
+    // and the description matches the canonical so the test's 50-char
+    // minimum passes. No SEO value — just keeps the test contract clean.
+    title: "Admin Panel | ClickTake Technologies",
+    description: "ClickTake Technologies admin panel — content, leads, and CRM management. Login required.",
   },
 };
 
@@ -116,10 +124,32 @@ export async function generateMetadata({
       title = content.metaTitle;
       description = content.metaDescription;
     } else if (CITIES.some((c) => c.slug === path)) {
-      // City page
+      // City page — keep total meta description ≤200 chars so Google
+      // doesn't truncate. city.desc is ~80 chars; the boilerplate suffix
+      // must stay tight (~50 chars) to fit.
       const city = CITIES.find((c) => c.slug === path)!;
       title = `${city.name} Software & AI Agency | ClickTake Technologies`;
-      description = `${city.desc} ClickTake Technologies — custom software, AI automation, web design, SEO, and digital marketing services in ${city.name}, ${city.country}.`;
+      description = `${city.desc} Software, AI, web & marketing in ${city.name}.`;
+    } else if (path.startsWith("blog/")) {
+      // Blog post detail page — URL is `/blog/{slug}`, but `path` is
+      // `blog/{slug}`. Look up BLOG_POSTS for a unique title + description
+      // per post (regression fix for the duplicate-title bug where all 33
+      // blog posts shared the homepage fallback title).
+      //
+      // NOTE: blog post titles are intentionally NOT suffixed with
+      // " | ClickTake Technologies" because article titles are typically
+      // 70-80 chars already; adding the 24-char brand suffix would push
+      // them past Google's ~60-70 char desktop truncation limit and the
+      // crawler's 80-char title contract.
+      const slug = path.slice("blog/".length);
+      const post = BLOG_POSTS.find((p) => p.slug === slug);
+      if (post) {
+        title = post.title;
+        description = post.excerpt.slice(0, 160); // Google truncates ~155
+      } else {
+        title = "Blog | ClickTake Technologies";
+        description = "Field notes from the ClickTake engineering team.";
+      }
     } else {
       // Fallback
       title = "ClickTake Technologies — AI-Native Software Engineering & Digital Agency";

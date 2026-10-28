@@ -1693,7 +1693,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: "blog-computer-vision-nlp-document-automation-case-study",
-    title: "Computer Vision & NLP Case Study: Automating Invoice Processing for a UK Logistics Firm",
+    title: "Computer Vision & NLP: Automating Invoice Processing for UK Logistics",
     category: "AI Automation",
     excerpt:
       "Computer vision & NLP stop being research and start being ROI when you can cut 30 hours a week of manual invoice processing — which is exactly what we did for a Birmingham logistics firm. We cover the OCR pipeline, the document-classification model, and the human-in-loop fallback that made it shippable. Book a free scoping call and we'll scope the same automation for your ops team.",
@@ -1748,7 +1748,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: "blog-web-design-services-design-system-handoff-developers",
-    title: "Web Design Services: How We Hand Off Design Systems to Developers (Without 20 Rounds)",
+    title: "Web Design Handoff: How We Pass Design Systems to Developers",
     category: "Web",
     excerpt:
       "Web design services live or die on the design-to-developer handoff — most agencies ship Figma chaos and call it a system. We share the design-system structure, token naming and component contract we use to hand off cleanly, so the build round-trips in three rounds not twenty. Book a free scoping call and we'll audit your existing design-to-dev handoff.",
@@ -1757,7 +1757,7 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: "blog-small-business-web-design-services-launch-in-3-weeks",
-    title: "Small Business Web Design Services: How to Launch in 3 Weeks (Without Looking Cheap)",
+    title: "Small Business Web Design: Launch in 3 Weeks Without Looking Cheap",
     category: "Web",
     excerpt:
       "Small business web design services do not have to mean slow, bloated or cheap — you can launch a local-SEO-ready, conversion-focused site in three weeks if you scope like a senior. Here is the exact 21-day timeline, the page list and the CMS setup we use for local service businesses across the Midlands. Book a free scoping call and we'll start your three-week clock.",

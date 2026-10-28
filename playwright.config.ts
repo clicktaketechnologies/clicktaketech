@@ -38,4 +38,18 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
   ],
+  // Auto-start the Next.js dev server if it's not already running on :3000.
+  // `reuseExistingServer: true` means if a developer already has `bun run dev`
+  // running, Playwright uses it instead of starting a second one — this
+  // respects the project rule "must always run in the background" while
+  // still ensuring tests have a server to talk to. The `timeout: 120_000`
+  // covers Turbopack's first-route compile (which can take ~10s).
+  webServer: {
+    command: "./node_modules/.bin/next dev -p 3000",
+    url: "http://localhost:3000",
+    reuseExistingServer: true,
+    timeout: 120_000,
+    stdout: "pipe",
+    stderr: "pipe",
+  },
 });
