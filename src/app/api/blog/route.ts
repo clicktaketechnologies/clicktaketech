@@ -1,3 +1,4 @@
+/* Vercel deploy trigger */
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { BLOG_POSTS } from "@/lib/site-data";
