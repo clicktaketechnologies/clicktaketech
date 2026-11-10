@@ -390,6 +390,10 @@ export function ServiceDetailView({
               Book a free 30-minute consultation. A senior engineer reviews your brief within 4 hours
               and brings a draft architecture — fixed-scope PoC in 6 weeks.
             </p>
+            {/* Transparent pricing factors — audit requirement for buyer-intent pages */}
+            <p className="mx-auto mt-3 max-w-lg text-sm text-muted-foreground">
+              Typical {service.title.toLowerCase()} engagements start from <span className="font-semibold text-foreground">£4,500/mo</span> (Starter) or <span className="font-semibold text-foreground">£9,500/mo</span> (Scale). Final scope depends on complexity, timeline, and team size.
+            </p>
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               <button
                 onClick={() => onNavigate("contact")}

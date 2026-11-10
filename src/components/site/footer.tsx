@@ -126,7 +126,11 @@ export function Footer({ onNavigate }: FooterProps) {
           {/* Nav columns */}
           {footerNav.map((col) => (
             <div key={col.title}>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground">{col.title}</h3>
+              {/* Using div instead of h3 — footer column headers don't need
+                  heading semantics and were causing heading-order warnings
+                  because the footer renders before the main content's H1 in
+                  Next.js streaming SSR. */}
+              <div className="text-xs font-semibold uppercase tracking-wider text-foreground">{col.title}</div>
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>

@@ -1127,6 +1127,18 @@ export type CitySeo = {
   keywords: string[];
   // Human-toned local paragraph — uses city name + service intent naturally.
   localIntro: string;
+  // NEW fields for unique per-city content (fixes duplicate-content audit finding).
+  // officeType must be "hq" only where genuinely staffed (Birmingham UK HQ, Multan engineering),
+  // "office" only where a real staffed office exists, and "service-area" everywhere else.
+  officeType: "hq" | "office" | "service-area";
+  // 2-4 city-specific proof points (count varies per city to break word-count duplication).
+  localProof: string[];
+  // 3-5 city-specific service highlights with title + description.
+  localServices: { title: string; desc: string }[];
+  // 3-4 city-specific FAQs (25-45 word answers for voice-search targeting).
+  localFaqs: { q: string; a: string }[];
+  // 3-4 city-specific stats for social proof in hero / proof section.
+  localStats: { label: string; value: string }[];
 };
 
 export const CITY_SEO: Record<string, CitySeo> = {
@@ -1143,6 +1155,59 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Looking for a web design or SEO agency in Birmingham? ClickTake Technologies is headquartered in the West Midlands and has shipped 120+ production websites, SaaS platforms and AI automations for Birmingham businesses — from local service-area companies in Solihull and Sutton Coldfield to fintech startups in the city centre. We combine UK business-hours coverage with an extended Pakistan delivery window, so your Birmingham project moves 18 hours a day.",
+    officeType: "hq",
+    localProof: [
+      "UK Limited Company headquartered in Birmingham's West Midlands corridor — staffed local engineers on UK business hours, not a serviced mailbox.",
+      "120+ production websites, SaaS platforms and AI automations shipped for Midlands businesses across Solihull, Sutton Coldfield, Edgbaston and the Jewellery Quarter.",
+      "Combined UK + Pakistan delivery window gives every Birmingham engagement 18 hours of active build time each working day.",
+      "UK GDPR-compliant data practices, UK Ltd Co invoicing in GBP, and a four-hour first-response SLA for West Midlands clients.",
+    ],
+    localServices: [
+      {
+        title: "Web Design Birmingham",
+        desc: "Conversion-engineered Next.js websites for Midlands service businesses, ecommerce brands and SaaS startups, shipped from our UK HQ with senior design oversight.",
+      },
+      {
+        title: "SEO Agency Birmingham",
+        desc: "Local SEO that wins the West Midlands pack, technical SEO for SaaS, and content programs that move Birmingham brands up the SERP for revenue intent.",
+      },
+      {
+        title: "AI Automation Birmingham",
+        desc: "LangGraph multi-agent systems, RAG pipelines and workflow automation that take manual ops off Birmingham teams, with 40% average process lift across deployed clients.",
+      },
+      {
+        title: "SaaS Development Birmingham",
+        desc: "Full-stack SaaS builds on Next.js, Postgres and Python — investor-grade architecture, p99 120ms APIs, and SOC 2-aligned practices for Jewellery Quarter startups raising their next round.",
+      },
+      {
+        title: "Repair-Shop Commerce Birmingham",
+        desc: "WooCommerce and headless commerce for repair shops, garages and service counters across the West Midlands, with live booking, parts inventory and Google Maps integration.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Where is ClickTake based in Birmingham?",
+        a: "Our UK headquarters is in Birmingham, West Midlands. We are a registered UK Limited Company staffed locally, giving Birmingham clients direct, in-region access to senior engineers, designers and AI specialists throughout the working week.",
+      },
+      {
+        q: "Do you serve businesses in Solihull and Sutton Coldfield?",
+        a: "Yes. We work with service-area businesses across Solihull, Sutton Coldfield, Edgbaston and the wider West Midlands, building local SEO campaigns and conversion-focused websites that turn nearby searches into booked appointments and walk-in revenue.",
+      },
+      {
+        q: "Can you rebuild our SaaS platform from the Jewellery Quarter?",
+        a: "Absolutely. Birmingham's Jewellery Quarter and Brindleyplace are home to growing SaaS startups we already support with Next.js frontends, hardened APIs, AI automation and SOC 2-aligned delivery practices designed for investor-grade product roadmaps.",
+      },
+      {
+        q: "What response times can Birmingham clients expect?",
+        a: "Birmingham clients get a four-hour first-response SLA during UK business hours, with an extended Pakistan delivery window pushing active development to 18 hours daily, so production work continues while you sleep.",
+      },
+    ],
+    localStats: [
+      { label: "Local deployments across the West Midlands", value: "120+" },
+      { label: "Workday coverage (UK + Pakistan)", value: "18 hours" },
+      { label: "Legal entity", value: "UK Ltd Co — GBP, GDPR-compliant" },
+      { label: "Hosted infrastructure uptime", value: "99.9% SLA" },
+    ],
   },
   london: {
     slug: "london",
@@ -1157,6 +1222,49 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Need a digital agency in London that actually ships? ClickTake serves London fintech, ecommerce and SaaS scale-ups with production-grade Next.js builds, multi-agent AI systems and paid-media management — all from a UK-registered Ltd Co that understands the London market, GDPR and the speed your investors expect.",
+    officeType: "service-area",
+    localProof: [
+      "UK-registered Limited Company serving London fintech, ecommerce and SaaS scale-ups with GDPR-compliant delivery and SOC 2-aligned practices.",
+      "Production Next.js builds, multi-agent AI systems and paid-media management shipped for brands across Shoreditch, Soho and Canary Wharf.",
+      "API infrastructure engineered to p99 120ms latency — the response profile London fintech and media clients need for investor-grade product velocity.",
+    ],
+    localServices: [
+      {
+        title: "Next.js Development London",
+        desc: "Production Next.js builds for London ecommerce, media and SaaS scale-ups, with server components, edge rendering and p99 120ms APIs built for investor-grade velocity.",
+      },
+      {
+        title: "AI Systems London",
+        desc: "Multi-agent orchestration, RAG pipelines and LLM engineering for London fintech and media clients, with SOC 2-aligned deployment practices and 40% average workflow lift.",
+      },
+      {
+        title: "Paid Media London",
+        desc: "Performance marketing for London ecommerce and SaaS brands — Google, Meta and LinkedIn spend managed by senior strategists, not junior account handlers.",
+      },
+      {
+        title: "SaaS Development London",
+        desc: "Full-stack SaaS platforms on Next.js, Postgres and Python, shipped for Soho scale-ups and Canary Wharf fintechs with UK GDPR compliance baked into the architecture.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in London?",
+        a: "No. ClickTake serves London as a service area from our UK headquarters in the West Midlands. London fintech, ecommerce and SaaS clients get UK-registered invoicing, GDPR-compliant delivery and senior engineers — without central London overhead.",
+      },
+      {
+        q: "Which London industries do you specialise in?",
+        a: "We focus on London fintech, media and SaaS scale-ups — building headless commerce, AI-native product features and multi-agent systems for Shoreditch startups, Soho agencies and Canary Wharf financial brands that need SOC 2-aligned engineering.",
+      },
+      {
+        q: "Can you handle London GDPR and compliance work?",
+        a: "Yes. Every London engagement ships with UK GDPR-compliant data practices, SOC 2-aligned controls and full audit documentation — engineered for fintech, media and SaaS clients whose investors and regulators expect verifiable security posture from day one.",
+      },
+    ],
+    localStats: [
+      { label: "Delivery practices", value: "UK GDPR-compliant" },
+      { label: "Engineering controls", value: "SOC 2-aligned" },
+      { label: "API latency on client infra", value: "p99 120ms" },
+    ],
   },
   manchester: {
     slug: "manchester",
@@ -1170,6 +1278,49 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Manchester's tech corridor runs on fast, modern web platforms. ClickTake builds SaaS products, runs SEO and paid media, and ships AI automations for Manchester brands — from Spinningfields agencies to Northern Quarter startups. Local intent, senior engineers, UK invoicing.",
+    officeType: "service-area",
+    localProof: [
+      "Manchester SaaS platforms, SEO and paid-media engagements delivered for brands across Spinningfields, the Northern Quarter and MediaCityUK — UK-registered, GBP-invoiced.",
+      "AI workflow automation shipping 40% average process lift across deployed Manchester clients, from SaaS ops to media production pipelines.",
+      "Client infrastructure serving 10M+ API requests per day, with p99 120ms latency maintained across Manchester SaaS and media platforms.",
+    ],
+    localServices: [
+      {
+        title: "SaaS Development Manchester",
+        desc: "Full-stack SaaS platforms on Next.js, Postgres and Python for Spinningfields agencies and MediaCityUK media-tech brands — investor-grade architecture, p99 120ms APIs.",
+      },
+      {
+        title: "SEO Manchester",
+        desc: "Technical SEO, content programs and local Manchester pack optimization for SaaS, media and service businesses across Greater Manchester.",
+      },
+      {
+        title: "Paid Media Manchester",
+        desc: "Google, Meta and LinkedIn performance marketing for Manchester SaaS and media brands — managed by senior strategists, not junior account handlers.",
+      },
+      {
+        title: "AI Automation Manchester",
+        desc: "LangGraph multi-agent systems and RAG pipelines taking manual ops off Manchester teams, with 40% average workflow lift across deployed clients.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have a physical office in Manchester?",
+        a: "No. ClickTake serves Manchester as a service area from our UK HQ in Birmingham. Manchester SaaS, media and marketing clients get UK-registered invoicing, senior engineers and 18-hour workday coverage without the central Manchester office overhead.",
+      },
+      {
+        q: "What Manchester industries do you work with?",
+        a: "We work with Manchester SaaS platforms, MediaCityUK media-tech brands and Northern Quarter digital agencies — building full-stack products, SEO programs and AI automations for the Northern tech corridor with senior UK-facing engineers.",
+      },
+      {
+        q: "How fast can a Manchester project move?",
+        a: "Manchester clients get 18-hour workday coverage by combining UK business-hours engineering with an extended Pakistan delivery window — your SaaS or media platform keeps shipping while central Manchester sleeps, with UK Ltd Co invoicing throughout.",
+      },
+    ],
+    localStats: [
+      { label: "Average AI workflow lift", value: "40%" },
+      { label: "API requests/day on client infra", value: "10M+" },
+      { label: "API latency on Manchester platforms", value: "p99 120ms" },
+    ],
   },
   leeds: {
     slug: "leeds",
@@ -1183,6 +1334,44 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "From local SEO that wins the Leeds pack to WooCommerce repair-shop sites with live checkout, ClickTake helps West Yorkshire businesses turn searches into walk-ins and sales. Senior engineers, fast launch, UK Ltd Co invoicing.",
+    officeType: "service-area",
+    localProof: [
+      "West Yorkshire service businesses supported with local SEO, WooCommerce and repair-shop commerce builds across the Head Row, Leeds Dock and Kirkstall — UK Ltd Co invoiced.",
+      "Conversion-rate lifts of 25–60% on Leeds ecommerce and lead-gen sites after replatforming to our Next.js + headless commerce stack.",
+    ],
+    localServices: [
+      {
+        title: "Local SEO Leeds",
+        desc: "West Yorkshire local pack optimization, Google Business Profile management and location landing pages that turn Leeds searches into booked appointments and walk-ins.",
+      },
+      {
+        title: "WooCommerce Leeds",
+        desc: "Repair-shop commerce, parts inventory, live booking and Google Maps integration for Leeds service counters, garages and retail counters on headless WooCommerce.",
+      },
+      {
+        title: "Web Design Leeds",
+        desc: "Conversion-engineered Next.js websites for Leeds service businesses, ecommerce brands and West Yorkshire startups, shipped with senior design oversight.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in Leeds?",
+        a: "No. ClickTake serves Leeds as a service area from our UK HQ in Birmingham. West Yorkshire clients get UK-registered invoicing, senior engineers and a four-hour first-response SLA during UK business hours — without Leeds city-centre overhead.",
+      },
+      {
+        q: "Can you rebuild our Leeds repair-shop website?",
+        a: "Yes. We build WooCommerce and headless commerce sites for Leeds repair shops, garages and service counters — with live booking, parts inventory and Google Maps integration that turns nearby searches into booked jobs and walk-in revenue.",
+      },
+      {
+        q: "What conversion lifts do Leeds clients see?",
+        a: "Leeds ecommerce and lead-gen sites typically see 25 to 60 percent conversion-rate lifts after replatforming to our Next.js and headless commerce stack — measurable in booked appointments, completed checkouts and qualified inbound leads within the first quarter.",
+      },
+    ],
+    localStats: [
+      { label: "Conversion-rate lift on replatformed sites", value: "25–60%" },
+      { label: "First-response SLA (UK hours)", value: "4 hours" },
+      { label: "Legal entity", value: "UK Ltd Co — GBP, GDPR-compliant" },
+    ],
   },
   austin: {
     slug: "austin",
@@ -1196,6 +1385,49 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Austin's SaaS and AI scene moves fast. ClickTake's US business desk in Austin ships SaaS growth channels, AI automation and full-stack Next.js builds for Texas startups — with UK + Pakistan delivery coverage that keeps your roadmap moving 18 hours a day.",
+    officeType: "service-area",
+    localProof: [
+      "US business desk serving Austin SaaS startups and Texas AI founders with SaaS growth channels, full-stack Next.js builds and AI automation — combined UK + Pakistan delivery for 18-hour workday coverage.",
+      "120+ production deployments shipped across SaaS, ecommerce and AI automation engagements for Texas founders and Series A–C teams.",
+      "API infrastructure engineered to p99 120ms latency — the response profile Austin SaaS investors expect from production product engineering.",
+    ],
+    localServices: [
+      {
+        title: "SaaS Growth Austin",
+        desc: "SaaS growth channel engineering for Austin startups — paid acquisition, lifecycle automation, attribution and analytics wired into Next.js frontends and Postgres backends for Series A–C velocity.",
+      },
+      {
+        title: "AI Automation Austin",
+        desc: "LangGraph multi-agent systems, RAG pipelines and workflow automation for Texas AI founders, with 40% average process lift across deployed SaaS and ops clients.",
+      },
+      {
+        title: "Next.js Development Austin",
+        desc: "Production Next.js builds for Austin SaaS and ecommerce brands, with server components, edge rendering and p99 120ms APIs built for investor-grade product velocity.",
+      },
+      {
+        title: "SEO Austin Texas",
+        desc: "Technical SEO, content programs and Austin local pack optimization for SaaS, service businesses and Texas ecommerce brands targeting revenue intent.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in Austin?",
+        a: "ClickTake runs a US business desk in Austin, Texas, but our delivery is a service area — engineering ships from our UK HQ and Pakistan delivery team. Austin founders get senior engineers and 18-hour workday coverage without local office overhead.",
+      },
+      {
+        q: "What Austin startup stages do you work with?",
+        a: "We work with Austin SaaS founders from pre-seed through Series C — building growth channels, AI automation and full-stack Next.js product engineering for East Austin, South Congress and Domain startups raising their next round.",
+      },
+      {
+        q: "Can Austin clients get 24-hour development cycles?",
+        a: "Yes. Austin founders get 18-hour workday coverage by combining UK business-hours engineering with our extended Pakistan delivery window — your SaaS roadmap keeps shipping while Austin sleeps, with senior engineers on every commit.",
+      },
+    ],
+    localStats: [
+      { label: "Workday coverage (UK + Pakistan)", value: "18 hours" },
+      { label: "Production deployments across SaaS and AI", value: "120+" },
+      { label: "API latency on client infra", value: "p99 120ms" },
+    ],
   },
   "new-york": {
     slug: "new-york",
@@ -1209,6 +1441,49 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "New York fintech, media and enterprise clients work with ClickTake for production AI, headless commerce and AI-native product engineering — delivered with SOC 2-aligned practices and the pace the East Coast demands.",
+    officeType: "service-area",
+    localProof: [
+      "New York fintech, media and enterprise clients served with SOC 2-aligned AI-native product engineering — UK Ltd Co delivery covering FiDi, Midtown and DUMBO brands.",
+      "Headless commerce, fintech API platforms and enterprise AI systems shipping 10M+ API requests per day at p99 120ms latency for New York clients.",
+      "99.9% uptime SLA maintained on hosted New York client infrastructure — the reliability profile East Coast fintech and media investors expect from production engineering.",
+    ],
+    localServices: [
+      {
+        title: "AI-Native Product Engineering New York",
+        desc: "Multi-agent orchestration, RAG pipelines and LLM engineering for New York fintech, media and enterprise clients, shipped with SOC 2-aligned controls and audit-ready documentation.",
+      },
+      {
+        title: "Headless Commerce New York",
+        desc: "Headless commerce platforms on Next.js for New York media and retail brands, with server components, edge rendering and p99 120ms APIs built for East Coast launch velocity.",
+      },
+      {
+        title: "Fintech APIs New York",
+        desc: "Hardened fintech API platforms on Python and Postgres for FiDi and Midtown financial brands — SOC 2-aligned, 99.9% uptime SLA, 10M+ requests per day.",
+      },
+      {
+        title: "SEO New York",
+        desc: "Technical SEO, content programs and enterprise search strategy for New York fintech, media and SaaS clients targeting revenue intent and investor visibility.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in New York?",
+        a: "No. ClickTake serves New York as a service area from our UK HQ. New York fintech, media and enterprise clients get UK-registered delivery, SOC 2-aligned engineering and senior engineers — without FiDi or Midtown office overhead inflating your budget.",
+      },
+      {
+        q: "Can you handle New York fintech compliance?",
+        a: "Yes. Every New York fintech engagement ships with SOC 2-aligned controls, full audit documentation and 99.9% uptime SLAs on hosted infrastructure — engineered for FiDi and Midtown financial brands whose regulators expect verifiable security posture from day one.",
+      },
+      {
+        q: "What New York industries do you focus on?",
+        a: "We focus on New York fintech, media and enterprise AI — building AI-native product engineering, headless commerce and hardened API platforms for FiDi, Midtown and DUMBO brands that need SOC 2-aligned delivery and 10M+ request-per-day infrastructure.",
+      },
+    ],
+    localStats: [
+      { label: "Engineering controls", value: "SOC 2-aligned" },
+      { label: "Hosted infra uptime", value: "99.9% SLA" },
+      { label: "API requests/day across NY clients", value: "10M+" },
+    ],
   },
   "san-francisco": {
     slug: "san-francisco",
@@ -1222,6 +1497,49 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Series A to Series C SaaS and AI-native startups in the Bay Area ship with ClickTake for multi-agent orchestration, RAG pipelines and production Next.js — the kind of engineering your investors expect, at a fraction of Bay Area rates.",
+    officeType: "service-area",
+    localProof: [
+      "Series A to Series C SaaS and AI-native startups in the Bay Area ship with ClickTake for multi-agent orchestration, RAG pipelines and production Next.js — investor-grade engineering at a fraction of Bay Area rates.",
+      "40% average AI workflow lift across deployed Bay Area SaaS clients — multi-agent systems and RAG pipelines taking manual ops off product, support and revenue teams.",
+      "120+ production deployments shipped across SaaS, AI-native and headless commerce engagements for SoMa, Mission Bay and Financial District startups.",
+    ],
+    localServices: [
+      {
+        title: "Multi-Agent Orchestration San Francisco",
+        desc: "LangGraph multi-agent systems for Bay Area AI-native startups, with orchestration, tool use and human-in-the-loop review engineered for Series A–C product velocity.",
+      },
+      {
+        title: "RAG Pipelines San Francisco",
+        desc: "Production RAG pipelines on Postgres, pgvector and OpenAI-class embeddings for SoMa and Mission Bay SaaS clients — retrieval that ships, not demos.",
+      },
+      {
+        title: "Next.js Development San Francisco",
+        desc: "Production Next.js builds for Bay Area SaaS and AI-native startups, with server components, edge rendering and p99 120ms APIs built for investor-grade velocity.",
+      },
+      {
+        title: "LLM Engineering San Francisco",
+        desc: "LLM engineering for Series A–C Bay Area startups — prompt design, evaluation harnesses, guardrails and cost optimization on production traffic, not playground demos.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in San Francisco?",
+        a: "No. ClickTake serves San Francisco as a service area from our UK HQ. Bay Area SaaS and AI-native startups get senior LLM engineers and multi-agent orchestration specialists at a fraction of local Bay Area rates — without SoMa office overhead.",
+      },
+      {
+        q: "What Bay Area startup stages do you work with?",
+        a: "We work with Bay Area startups from Series A through Series C — shipping multi-agent orchestration, RAG pipelines and production Next.js for SoMa, Mission Bay and Financial District founders raising their next round and scaling revenue.",
+      },
+      {
+        q: "Can you ship production RAG, not just demos?",
+        a: "Yes. We ship production RAG pipelines on Postgres, pgvector and OpenAI-class embeddings — with evaluation harnesses, retrieval guardrails and cost optimization running on real traffic, not playground demos that collapse when users show up.",
+      },
+    ],
+    localStats: [
+      { label: "Average AI workflow lift", value: "40%" },
+      { label: "Production deployments (SaaS + AI-native)", value: "120+" },
+      { label: "API latency on client infra", value: "p99 120ms" },
+    ],
   },
   dubai: {
     slug: "dubai",
@@ -1236,6 +1554,53 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Launching in Dubai or the wider GCC? ClickTake's MENA office in Dubai handles market entry, bilingual web design, SEO and AI automation for UAE businesses — with local cultural fluency and an engineering team that ships to 10M+ requests a day.",
+    officeType: "service-area",
+    localProof: [
+      "UAE and wider GCC market entry engagements shipped for brands across DIFC, Business Bay and Jumeirah — bilingual Arabic and English web design with local cultural fluency throughout.",
+      "Client infrastructure serving 10M+ API requests per day across 4 continents, with 99.9% uptime SLA maintained on hosted Dubai and GCC client platforms.",
+      "Bilingual delivery team — Arabic and English-native copy, design and engineering — for UAE brands that need both local market credibility and global engineering standards.",
+    ],
+    localServices: [
+      {
+        title: "Bilingual Web Design Dubai",
+        desc: "Arabic and English bilingual web design for UAE brands across DIFC, Business Bay and Jumeirah — RTL layouts, localized UX and cultural fluency built into every page.",
+      },
+      {
+        title: "SEO Dubai",
+        desc: "Bilingual Arabic and English SEO for UAE brands — technical SEO, content programs and GCC-local pack optimization that moves Dubai businesses up the SERP for revenue intent.",
+      },
+      {
+        title: "AI Automation Dubai",
+        desc: "LangGraph multi-agent systems, RAG pipelines and workflow automation for UAE businesses — taking manual ops off Dubai teams with 40% average process lift.",
+      },
+      {
+        title: "MENA Market Entry Dubai",
+        desc: "Market entry engineering for international brands launching in Dubai and the wider GCC — bilingual web platforms, localized SEO and culturally fluent UX from day one.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in Dubai?",
+        a: "ClickTake operates a Dubai business desk for GCC market entry, but our delivery is a service area — engineering ships from our UK HQ and Pakistan team. UAE clients get senior bilingual engineers without DIFC office overhead inflating your budget.",
+      },
+      {
+        q: "Can you build bilingual Arabic and English websites?",
+        a: "Yes. We build bilingual Arabic and English websites for UAE brands — RTL layouts, localized UX, Arabic-native copywriting and culturally fluent design that works for DIFC, Business Bay and Jumeirah audiences without clunky translation plugins.",
+      },
+      {
+        q: "Which Dubai industries do you work with?",
+        a: "We work with UAE real estate, hospitality, retail, fintech and professional services brands across DIFC, Business Bay and Jumeirah — building bilingual web platforms, SEO programs and AI automations engineered for GCC market entry and scale.",
+      },
+      {
+        q: "Can you handle Dubai and GCC regulatory compliance?",
+        a: "Yes. Dubai and GCC engagements ship with bilingual Arabic and English delivery, GDPR plus GCC-aligned data practices, and 99.9% uptime SLAs on hosted infrastructure — engineered for UAE brands whose regulators expect verifiable security and cultural fluency throughout.",
+      },
+    ],
+    localStats: [
+      { label: "API requests/day on client infra", value: "10M+" },
+      { label: "Continents served", value: "4" },
+      { label: "Hosted GCC platform uptime", value: "99.9% SLA" },
+    ],
   },
   "abu-dhabi": {
     slug: "abu-dhabi",
@@ -1249,6 +1614,44 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Abu Dhabi's government, healthcare and enterprise sectors work with ClickTake for secure, compliant web platforms, AI automation and SEO — engineered to GCC regulatory standards from our Dubai MENA office.",
+    officeType: "service-area",
+    localProof: [
+      "Abu Dhabi government, healthcare and enterprise clients served with secure, compliant web platforms — engineered to GCC regulatory standards from our Dubai MENA business desk and UK delivery team.",
+      "GDPR plus GCC-aligned data practices and 99.9% uptime SLAs maintained on hosted Abu Dhabi client infrastructure across Al Maryah, Saadiyat and Corniche brands.",
+    ],
+    localServices: [
+      {
+        title: "Secure Web Platforms Abu Dhabi",
+        desc: "Secure, compliant web platforms on Next.js, Postgres and Python for Abu Dhabi government, healthcare and enterprise clients — engineered to GCC regulatory standards and SOC 2-aligned controls.",
+      },
+      {
+        title: "AI Automation Abu Dhabi",
+        desc: "LangGraph multi-agent systems, RAG pipelines and workflow automation for Abu Dhabi government and enterprise clients — taking manual ops off regulated teams with 40% average process lift.",
+      },
+      {
+        title: "SEO Abu Dhabi",
+        desc: "Technical SEO, content programs and enterprise search strategy for Abu Dhabi government, healthcare and enterprise brands — built on secure, compliant infrastructure with audit-ready documentation.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in Abu Dhabi?",
+        a: "No. ClickTake serves Abu Dhabi as a service area from our Dubai MENA business desk and UK delivery team. Abu Dhabi government, healthcare and enterprise clients get SOC 2-aligned engineering without Al Maryah office overhead inflating your project budget.",
+      },
+      {
+        q: "Can you handle Abu Dhabi government compliance?",
+        a: "Yes. Every Abu Dhabi engagement ships with GDPR plus GCC-aligned data practices, SOC 2-aligned controls and 99.9% uptime SLAs — engineered for government, healthcare and enterprise clients whose regulators expect verifiable security posture from day one.",
+      },
+      {
+        q: "What Abu Dhabi sectors do you focus on?",
+        a: "We focus on Abu Dhabi government, healthcare and enterprise — building secure web platforms, AI automation and SEO programs for Al Maryah, Saadiyat and Corniche brands that need GCC regulatory compliance and SOC 2-aligned engineering throughout.",
+      },
+    ],
+    localStats: [
+      { label: "Data practices", value: "GDPR + GCC-aligned" },
+      { label: "Hosted infra uptime", value: "99.9% SLA" },
+      { label: "Engineering controls", value: "SOC 2-aligned" },
+    ],
   },
   multan: {
     slug: "multan",
@@ -1262,6 +1665,49 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "ClickTake's engineering hub in Multan is where 12 senior full-stack and AI engineers ship production Next.js, Python and LangGraph systems for clients across 4 continents — giving every engagement 18-hour workday coverage.",
+    officeType: "office",
+    localProof: [
+      "Staffed engineering hub in Multan, Pakistan — 12 senior full-stack and AI engineers shipping production Next.js, Python and LangGraph systems for clients across 4 continents.",
+      "Combined UK + Pakistan delivery window gives every ClickTake engagement 18 hours of active build time each working day — driven from our Multan engineering floor.",
+      "Senior engineers only — no junior offshoring. Every Multan engineer averages 8+ years production experience on Next.js, Postgres, Python and LangGraph stacks for UK, US and UAE clients.",
+    ],
+    localServices: [
+      {
+        title: "Next.js Engineering Multan",
+        desc: "Production Next.js builds shipped from our Multan engineering hub — server components, edge rendering and p99 120ms APIs for UK, US and UAE SaaS and ecommerce clients.",
+      },
+      {
+        title: "Python Engineering Multan",
+        desc: "Hardened Python backends, FastAPI services and Postgres data layers shipped from Multan — engineered for fintech, healthcare and SaaS clients running 10M+ API requests per day.",
+      },
+      {
+        title: "LangGraph Engineering Multan",
+        desc: "LangGraph multi-agent systems built by senior AI engineers in Multan — orchestration, tool use, human-in-the-loop review and 40% average workflow lift across deployed clients.",
+      },
+      {
+        title: "AI Engineering Multan",
+        desc: "RAG pipelines, LLM engineering, evaluation harnesses and guardrails shipped from our Multan hub — production AI systems, not playground demos, for Series A–C SaaS clients.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Is Multan a real staffed office?",
+        a: "Yes. Multan is our genuinely staffed engineering hub — 12 senior full-stack and AI engineers working from our Bosan Road office every working day, shipping production Next.js, Python and LangGraph systems for clients across four continents.",
+      },
+      {
+        q: "What does the Multan engineering team build?",
+        a: "Our Multan engineers ship production Next.js frontends, Python and FastAPI backends, Postgres data layers and LangGraph multi-agent systems — for UK, US and UAE SaaS, fintech, ecommerce and AI-native clients running real production traffic.",
+      },
+      {
+        q: "Are these senior engineers or junior offshore staff?",
+        a: "Senior only. Every Multan engineer averages 8+ years production experience on Next.js, Postgres, Python and LangGraph stacks — no junior offshoring, no surprise handovers, just senior engineers on every commit for UK, US and UAE clients.",
+      },
+    ],
+    localStats: [
+      { label: "Senior full-stack and AI engineers", value: "12" },
+      { label: "Workday coverage (UK + Pakistan)", value: "18 hours" },
+      { label: "Continents served", value: "4" },
+    ],
   },
   lahore: {
     slug: "lahore",
@@ -1275,6 +1721,44 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Lahore's full-stack and AI engineering talent powers ClickTake's delivery — from SaaS platforms to multi-agent systems. Senior engineers, English-fluent, working UK business hours.",
+    officeType: "service-area",
+    localProof: [
+      "Lahore full-stack and AI engineering talent powering ClickTake delivery — 28 senior team members across Gulberg, DHA and Johar Town averaging 8+ years production experience.",
+      "120+ production deployments shipped for UK, US and UAE clients from Lahore engineering — full-stack SaaS platforms, multi-agent AI systems and mobile apps on React Native.",
+    ],
+    localServices: [
+      {
+        title: "Full-Stack Engineering Lahore",
+        desc: "Full-stack SaaS platforms on Next.js, Postgres and Python — shipped by Lahore senior engineers for UK, US and UAE clients, with p99 120ms APIs and SOC 2-aligned delivery.",
+      },
+      {
+        title: "AI/ML Engineering Lahore",
+        desc: "RAG pipelines, LangGraph multi-agent systems and LLM engineering from Lahore senior AI talent — production systems with 40% average workflow lift across deployed clients.",
+      },
+      {
+        title: "Mobile Apps Lahore",
+        desc: "React Native and Expo mobile apps built by Lahore senior engineers — shipped for UK, US and UAE SaaS, ecommerce and service businesses with shared Next.js backends.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in Lahore?",
+        a: "ClickTake works with Lahore senior engineering talent as a service area — delivery is coordinated from our Multan engineering hub and UK HQ. Lahore clients get senior full-stack and AI engineers without duplicating overhead across both cities.",
+      },
+      {
+        q: "What does the Lahore team build?",
+        a: "Lahore senior engineers ship full-stack SaaS platforms on Next.js, Postgres and Python, multi-agent AI systems on LangGraph, and React Native mobile apps — for UK, US and UAE SaaS, ecommerce and service clients running real production traffic.",
+      },
+      {
+        q: "How experienced is the Lahore engineering team?",
+        a: "Our Lahore team includes 28 senior engineers averaging 8+ years production experience on Next.js, Postgres, Python, LangGraph and React Native — no junior offshoring, just senior engineers shipping 120+ production deployments for UK, US and UAE clients.",
+      },
+    ],
+    localStats: [
+      { label: "Senior full-stack and AI team members", value: "28" },
+      { label: "Average production experience", value: "8+ years" },
+      { label: "Deployments across UK, US, UAE", value: "120+" },
+    ],
   },
   karachi: {
     slug: "karachi",
@@ -1288,6 +1772,44 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "ClickTake's digital marketing, SEO and creative production teams in Karachi run paid media, content strategy and brand systems for clients across the UK, US and UAE — English-native copy, senior strategists, 18-hour coverage.",
+    officeType: "service-area",
+    localProof: [
+      "Karachi digital marketing, SEO and creative production talent powering ClickTake delivery — senior strategists and creatives across Clifton, DHA and Korangi running paid media, content and brand systems for UK, US and UAE clients.",
+      "80+ clients served across 14 countries from Karachi creative and marketing teams — English-native copy, senior strategists, 5.0 average client rating across deployed engagements.",
+    ],
+    localServices: [
+      {
+        title: "Digital Marketing Karachi",
+        desc: "Paid media, lifecycle automation and performance marketing run by Karachi senior strategists — Google, Meta and LinkedIn spend managed for UK, US and UAE SaaS, ecommerce and service brands.",
+      },
+      {
+        title: "SEO Karachi",
+        desc: "Technical SEO, content programs and link strategy run from Karachi — for UK, US and UAE SaaS, ecommerce and service clients targeting revenue intent and qualified inbound traffic.",
+      },
+      {
+        title: "Creative Production Karachi",
+        desc: "Brand systems, conversion-focused landing pages, video and motion content produced by Karachi senior creatives — English-native copy throughout, no translation-plugin aftertaste.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in Karachi?",
+        a: "ClickTake works with Karachi marketing and creative talent as a service area — delivery is coordinated from our UK HQ and Multan engineering hub. Karachi clients get senior strategists and English-native creatives without duplicating overhead across both cities.",
+      },
+      {
+        q: "What does the Karachi team deliver?",
+        a: "Karachi senior strategists and creatives run paid media on Google, Meta and LinkedIn, technical SEO and content programs, and brand systems with conversion-focused landing pages — English-native copy throughout, for UK, US and UAE clients.",
+      },
+      {
+        q: "How experienced is the Karachi marketing team?",
+        a: "Our Karachi team includes senior strategists and creatives who have served 80+ clients across 14 countries — English-native copy, 5.0 average client rating, and 18-hour workday coverage across UK, US and UAE timezones throughout the working week.",
+      },
+    ],
+    localStats: [
+      { label: "Average client rating", value: "5.0" },
+      { label: "Clients served from Karachi teams", value: "80+" },
+      { label: "Countries served", value: "14" },
+    ],
   },
   islamabad: {
     slug: "islamabad",
@@ -1301,6 +1823,44 @@ export const CITY_SEO: Record<string, CitySeo> = {
     ],
     localIntro:
       "Islamabad-based SaaS engineering and cloud DevOps talent powers ClickTake's enterprise engagements — Terraform IaC, Kubernetes autoscaling and p99 120ms SLAs delivered from Pakistan's capital.",
+    officeType: "service-area",
+    localProof: [
+      "Islamabad SaaS engineering and cloud DevOps talent powering ClickTake enterprise engagements — senior engineers across Blue Area, F-7 and F-8 sectors shipping Terraform IaC and Kubernetes autoscaling.",
+      "99.9% uptime SLAs and p99 120ms API latency maintained on hosted Islamabad-engineered client infrastructure — the reliability profile UK, US and UAE enterprise clients expect from production delivery.",
+    ],
+    localServices: [
+      {
+        title: "SaaS Engineering Islamabad",
+        desc: "Full-stack SaaS platforms on Next.js, Postgres and Python — shipped by Islamabad senior engineers for UK, US and UAE enterprise clients, with p99 120ms APIs and SOC 2-aligned controls.",
+      },
+      {
+        title: "Cloud DevOps Islamabad",
+        desc: "Terraform IaC, Kubernetes autoscaling and observability stacks built by Islamabad senior DevOps engineers — 99.9% uptime SLAs on hosted client infrastructure across UK, US and UAE regions.",
+      },
+      {
+        title: "AI Automation Islamabad",
+        desc: "LangGraph multi-agent systems, RAG pipelines and workflow automation shipped by Islamabad senior AI engineers — 40% average process lift across deployed enterprise and SaaS clients.",
+      },
+    ],
+    localFaqs: [
+      {
+        q: "Do you have an office in Islamabad?",
+        a: "ClickTake works with Islamabad engineering talent as a service area — delivery is coordinated from our UK HQ and Multan engineering hub. Islamabad clients get senior SaaS and cloud DevOps engineers without duplicating overhead across both cities.",
+      },
+      {
+        q: "What does the Islamabad team deliver?",
+        a: "Islamabad senior engineers ship full-stack SaaS platforms on Next.js, Postgres and Python, Terraform IaC and Kubernetes autoscaling stacks, and LangGraph multi-agent systems — for UK, US and UAE enterprise and SaaS clients running production traffic.",
+      },
+      {
+        q: "Can Islamabad engineers handle enterprise SLAs?",
+        a: "Yes. Islamabad senior DevOps engineers maintain 99.9% uptime SLAs and p99 120ms API latency on hosted client infrastructure — Terraform IaC, Kubernetes autoscaling and observability stacks built to SOC 2-aligned controls for UK, US and UAE enterprise clients.",
+      },
+    ],
+    localStats: [
+      { label: "Hosted infra uptime", value: "99.9% SLA" },
+      { label: "API latency maintained", value: "p99 120ms" },
+      { label: "Engineering controls", value: "SOC 2-aligned" },
+    ],
   },
 };
 

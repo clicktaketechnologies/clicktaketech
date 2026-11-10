@@ -61,8 +61,10 @@ function pathToView(path: string): { view: NavView; serviceSlug: string; jobSlug
   if (content) return { view: "service-detail", serviceSlug: p, jobSlug: "" };
   // Blog post slugs → show blog post view
   if (BLOG_POSTS.some(b => b.slug === p)) return { view: "blog-post", serviceSlug: "", jobSlug: "" };
-  // City slugs → show cities view
-  if (CITIES.some(c => c.slug === p)) return { view: "cities", serviceSlug: "", jobSlug: "" };
+  // City slugs → show cities view WITH the city slug so CitiesView can
+  // render a city-specific landing page (fixes the duplicate-content audit
+  // finding where all 13 city URLs rendered the identical all-cities grid).
+  if (CITIES.some(c => c.slug === p)) return { view: "cities", serviceSlug: p, jobSlug: "" };
   return { view: "home", serviceSlug: "", jobSlug: "" };
 }
 
@@ -193,7 +195,7 @@ export default function SpaApp() {
             {view === "about" && <AboutView onNavigate={navigate} />}
             {view === "team" && <TeamView onNavigate={navigate} />}
             {view === "careers" && (<CareersView onNavigate={navigate} onApply={applyJob} />)}
-            {view === "cities" && <CitiesView onNavigate={navigate} />}
+            {view === "cities" && <CitiesView onNavigate={navigate} citySlug={serviceSlug} />}
             {view === "platforms" && <PlatformsView onNavigate={navigate} />}
             {view === "connect" && <ConnectView onNavigate={navigate} />}
             {view === "contact" && <ContactView />}

@@ -33,31 +33,31 @@ const PAGE_META: Record<string, { title: string; description: string }> = {
   },
   "case-studies": {
     title: "Case Studies — Real Engagements, Real Metrics | ClickTake",
-    description: "Real client engagements with real numbers — 120+ deployments, 10M+ requests/day, 99.9% uptime, 25-60% CVR lift. See how ClickTake ships software that works and AI that earns its keep.",
+    description: "Real client engagements with real numbers — 120+ deployments, 10M+ requests/day, 99.9% uptime, 25-60% CVR lift. See how ClickTake ships.",
   },
   portfolio: {
     title: "Portfolio — 12 Live Client Sites | ClickTake Technologies",
-    description: "Browse 12+ live client sites built by ClickTake — SaaS platforms, ecommerce stores, repair-shop commerce, education portals, and AI-powered dashboards shipped to production.",
+    description: "Browse 12+ live client sites built by ClickTake — SaaS platforms, ecommerce stores, repair-shop commerce, education portals, and AI dashboards.",
   },
   blog: {
-    title: "Blog — SEO · Web Dev · AI · Marketing | ClickTake Technologies",
-    description: "Field notes from the ClickTake engineering team — technical SEO guides, Next.js architecture, AI agent development, LLM fine-tuning, PPC strategy, and digital marketing playbooks.",
+    title: "Blog — SEO · Web Dev · AI · Marketing | ClickTake",
+    description: "Field notes from the ClickTake engineering team — technical SEO guides, Next.js architecture, AI agent development, PPC strategy, and marketing playbooks.",
   },
   pricing: {
-    title: "Pricing — Starter · Growth · Scale · Custom | ClickTake Technologies",
-    description: "Transparent pricing for ClickTake services — Starter from £1,500/mo, Growth from £4,500/mo, Scale from £9,500/mo, Custom for enterprise. No hidden fees, no bloated retainers.",
+    title: "Pricing — Starter · Growth · Scale | ClickTake",
+    description: "Transparent pricing — Starter from £1,500/mo, Growth from £4,500/mo, Scale from £9,500/mo, Custom for enterprise. No hidden fees, no bloated retainers.",
   },
   about: {
     title: "About — AI-Native Digital Agency Since 2019 | ClickTake",
-    description: "ClickTake Technologies is an AI-native software engineering firm founded in 2019. 28 people across 4 offices (Birmingham, London, Austin, Dubai, Multan). 120+ deployments. SOC 2, GDPR, 99.9% SLA.",
+    description: "AI-native software engineering firm founded in 2019. 28 people, 120+ deployments, SOC 2 ready, GDPR compliant, 99.9% SLA. UK HQ in Birmingham.",
   },
   team: {
     title: "Our Team — 28 People Across 4 Offices | ClickTake",
-    description: "Meet the senior engineers, AI specialists, designers, and marketers behind ClickTake. 8+ years average experience. 18-hour workday coverage across UK, USA, UAE, and Pakistan.",
+    description: "Senior engineers, AI specialists, designers, and marketers at ClickTake. 8+ years avg experience. 18-hour coverage across UK, USA, UAE, Pakistan.",
   },
   careers: {
     title: "Careers — Join ClickTake Technologies",
-    description: "Open positions at ClickTake — Senior Next.js Engineer, AI/ML Engineer, SEO Specialist, Graphic Designer, Frontend Engineer Intern. Remote + on-site across 4 offices.",
+    description: "Open positions — Senior Next.js Engineer, AI/ML Engineer, SEO Specialist, Graphic Designer, Frontend Intern. Remote + on-site across 4 offices.",
   },
   cities: {
     title: "Cities We Serve — 13 Cities, 4 Countries | ClickTake",
@@ -69,7 +69,7 @@ const PAGE_META: Record<string, { title: string; description: string }> = {
   },
   contact: {
     title: "Contact — Free 30-min Consult | ClickTake Technologies",
-    description: "Book a free 30-minute scoping call with a senior ClickTake engineer. Tell us what you're building — we'll tell you if we can ship it, how long, and how much. No sales calls.",
+    description: "Book a free 30-minute scoping call with a senior engineer. Tell us what you are building — we will tell you if we can ship it, timeline, and cost.",
   },
   "legal-privacy": {
     title: "Privacy Policy | ClickTake Technologies",
@@ -84,8 +84,8 @@ const PAGE_META: Record<string, { title: string; description: string }> = {
     description: "ClickTake Technologies cookie policy — what cookies we use, why, and how to manage your preferences.",
   },
   platforms: {
-    title: "Our Platforms — Products & Solutions | ClickTake Technologies",
-    description: "Explore ClickTake Technologies' product suite: AcademyPro (LMS), Employee Management System, ClickOpticx ISP Suite, and Host Lama web hosting. 4 platforms built and maintained in-house.",
+    title: "Our Platforms — Products & Solutions | ClickTake",
+    description: "Explore our product suite: AcademyPro (LMS), Employee Management System, ClickOpticx ISP Suite, and Host Lama hosting. 4 platforms built in-house.",
   },
   admin: {
     // Admin is private (auth-gated). The title is unique so it doesn't
@@ -145,7 +145,7 @@ export async function generateMetadata({
       const post = BLOG_POSTS.find((p) => p.slug === slug);
       if (post) {
         title = post.title;
-        description = post.excerpt.slice(0, 160); // Google truncates ~155
+        description = post.excerpt.slice(0, 155); // Google truncates ~155 desktop
       } else {
         title = "Blog | ClickTake Technologies";
         description = "Field notes from the ClickTake engineering team.";

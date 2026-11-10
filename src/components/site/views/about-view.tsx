@@ -86,7 +86,11 @@ export function AboutView({ onNavigate }: AboutViewProps) {
 
       {/* Values */}
       <Section className="pt-4">
-        <div className="grid gap-5 md:grid-cols-3">
+        <SectionHeading
+          title={<>What we value</>}
+          description="The principles that guide every engagement — from first call to production handoff."
+        />
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
           {COMPANY_VALUES.map((v, i) => (
             <Reveal key={v.title} delay={i * 0.06}>
               <div className="h-full rounded-2xl border border-border/50 bg-card/40 p-6">
