@@ -17,8 +17,19 @@ export async function GET(req: NextRequest) {
 
   if (slug) {
     try {
-      const post = await db.blogPost.findUnique({ where: { slug } });
-      if (post) return NextResponse.json({ ok: true, post, source: "db" });
+      const r = await db.blogPost.findUnique({ where: { slug } });
+      if (r) {
+        const post = {
+          slug: r.slug,
+          title: r.title,
+          category: r.category,
+          excerpt: r.excerpt,
+          body: r.body || undefined,
+          date: r.publishedAt instanceof Date ? r.publishedAt.toISOString() : String(r.publishedAt),
+          readTime: r.readTime,
+        };
+        return NextResponse.json({ ok: true, post, source: "db" });
+      }
     } catch { /* DB unreachable */ }
     const staticPost = BLOG_POSTS.find((p) => p.slug === slug);
     if (staticPost) return NextResponse.json({ ok: true, post: staticPost, source: "static" });
@@ -28,10 +39,20 @@ export async function GET(req: NextRequest) {
   // List — merge DB + static (DB takes priority by slug)
   let dbPosts: typeof BLOG_POSTS = [];
   try {
-    dbPosts = await db.blogPost.findMany({
+    const rows = await db.blogPost.findMany({
       where: { status: "published" },
       orderBy: { publishedAt: "desc" },
-    }) as typeof BLOG_POSTS;
+    });
+    // Map DB rows to the BlogPost shape (DB has extra fields like id, dates)
+    dbPosts = rows.map((r) => ({
+      slug: r.slug,
+      title: r.title,
+      category: r.category,
+      excerpt: r.excerpt,
+      body: r.body || undefined,
+      date: r.publishedAt instanceof Date ? r.publishedAt.toISOString() : String(r.publishedAt),
+      readTime: r.readTime,
+    })) as typeof BLOG_POSTS;
   } catch { /* DB unreachable */ }
 
   const dbSlugs = new Set(dbPosts.map((p) => p.slug));
