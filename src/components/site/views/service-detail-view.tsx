@@ -1,9 +1,12 @@
 "use client";
 
-import { ArrowRight, ChevronRight, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowRight, ChevronRight, Sparkles, MapPin, Shield } from "lucide-react";
 import {
   SERVICE_CATEGORIES,
   CASE_STUDIES,
+  CITIES,
+  CITY_SEO,
   type NavView,
 } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
@@ -58,6 +61,7 @@ export function ServiceDetailView({
   onNavigate,
   onNavigateService,
 }: ServiceDetailViewProps) {
+  const router = useRouter();
   const found = findService(slug);
   const content = getServiceContent(slug);
 
@@ -379,6 +383,54 @@ export function ServiceDetailView({
         </div>
       </Section>
 
+      {/* UK delivery — commercial intent + city cross-links (audit Priority 1) */}
+      {/* Improves UK commercial rankings by adding location-specific internal
+          links from each service page to the UK city pages that target
+          "WordPress web design Manchester", "responsive web design London", etc. */}
+      <Section className="border-t border-border/40">
+        <SectionHeading
+          eyebrow="UK Delivery"
+          title={
+            <>
+              Serving clients across the <span className="text-gradient-blue">United Kingdom.</span>
+            </>
+          }
+          description="UK-registered Ltd Co. GDPR compliant. UK business-hours coverage with 18-hour delivery. Available in every UK city we serve."
+        />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {CITIES.filter((c) => c.country === "United Kingdom").map((city, i) => (
+            <Reveal key={city.slug} delay={i * 0.05}>
+              <button
+                onClick={() => router.push(`/${city.slug}`)}
+                className="group flex w-full items-start gap-3 rounded-xl border border-border/50 bg-card/40 p-4 text-left transition-all hover:-translate-y-0.5 hover:border-blue-500/40"
+                data-track="service-to-city-link"
+                data-track-city={city.slug}
+                data-track-service={slug}
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+                  <MapPin className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-semibold text-foreground">{city.name}</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">
+                    {CITY_SEO[city.slug]?.officeType === "hq" ? "UK Headquarters" : "Service area"}
+                  </div>
+                  <div className="mt-1.5 text-[11px] font-medium text-blue-400 opacity-0 transition-opacity group-hover:opacity-100">
+                    {service.title} in {city.name} →
+                  </div>
+                </div>
+              </button>
+            </Reveal>
+          ))}
+        </div>
+        <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-border/40 bg-card/20 p-4">
+          <Shield className="h-4 w-4 text-green-400" />
+          <span className="text-xs text-muted-foreground">
+            UK Companies House registered · GDPR + UK DPA compliant · SOC 2 Type II ready · 99.9% uptime SLA · Response within 4 business hours
+          </span>
+        </div>
+      </Section>
+
       {/* CTA */}
       <Section className="border-t border-border/40">
         <Reveal>
@@ -398,6 +450,9 @@ export function ServiceDetailView({
               <button
                 onClick={() => onNavigate("contact")}
                 className="group inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-6 py-3 text-sm font-semibold text-white shadow-[0_0_24px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_28px_-2px] hover:shadow-pink-500/60"
+                data-track="cta-commercial-service"
+                data-track-source="service-detail-cta"
+                data-track-service={slug}
               >
                 Start your project
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

@@ -174,6 +174,8 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
               href="/contact"
               onClick={(e) => { e.preventDefault(); handleNav("contact"); }}
               className="group hidden items-center gap-1.5 rounded-xl bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-[0_0_18px_-4px] shadow-blue-500/50 transition-all hover:shadow-[0_0_24px_-2px] hover:shadow-pink-500/60 sm:inline-flex"
+              data-track="cta-commercial-nav"
+              data-track-source="navbar-desktop"
             >
               Start Your Project
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -391,7 +393,7 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                 </div>
               ))}
 
-              <button onClick={() => handleNav("contact")} className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-gradient px-4 py-3 text-sm font-semibold text-white">
+              <button onClick={() => handleNav("contact")} className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl bg-brand-gradient px-4 py-3 text-sm font-semibold text-white" data-track="cta-commercial-mobile" data-track-source="navbar-mobile">
                 Start Your Project <ArrowRight className="h-4 w-4" />
               </button>
             </motion.div>

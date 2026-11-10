@@ -9,6 +9,7 @@ import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import { ChatBot } from "@/components/site/chatbot";
 import { WebMCPTools } from "@/components/site/webmcp-tools";
+import { FloatingWhatsApp } from "@/components/site/floating-whatsapp";
 import { HomeView } from "@/components/site/views/home-view";
 import { ServicesView } from "@/components/site/views/services-view";
 import { PricingView } from "@/components/site/views/pricing-view";
@@ -210,6 +211,9 @@ export default function SpaApp() {
       <Footer onNavigate={navigate} />
       <ChatBot />
       <WebMCPTools />
+      {/* Floating WhatsApp CTA — audit Priority 3: "Improve enquiry conversion".
+          Hidden on admin + job-apply (internal/recruitment pages, not commercial). */}
+      <FloatingWhatsApp currentView={view} />
       {/* Crawler-friendly internal links — visually hidden but crawlable.
           Uses content-visibility:auto so this doesn't affect render performance. */}
       <nav aria-hidden="true" style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0, contentVisibility: "auto", containIntrinsicSize: "1px" }}>

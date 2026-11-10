@@ -150,6 +150,9 @@ function JobCard({
             type="button"
             onClick={() => (onApply ? onApply(job.slug) : onNavigate("contact"))}
             className="inline-flex items-center gap-1.5 rounded-xl bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-[0_0_20px_-4px] hover:shadow-pink-500/60"
+            data-track="cta-recruitment-apply"
+            data-track-source="careers-card"
+            data-track-job={job.slug}
           >
             Apply now
             <ArrowRight className="h-4 w-4" />

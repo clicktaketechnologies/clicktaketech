@@ -14,6 +14,62 @@ type CitiesViewProps = {
   citySlug?: string;
 };
 
+// ═══════════════════════════════════════════════════════════════════════
+//  Helper: match a localService title to a real service slug
+// ═══════════════════════════════════════════════════════════════════════
+// Strips the city name from the title (e.g., "Web Design Birmingham" → "Web Design"),
+// then searches SERVICE_CATEGORIES for a service whose title contains the keyword.
+// Returns the slug of the best match, or undefined if no match found.
+function findServiceSlugByTitle(title: string, cityName: string): string | undefined {
+  // Strip city name + common suffixes to extract the service keyword
+  const keyword = title
+    .replace(new RegExp(cityName, "gi"), "")
+    .replace(new RegExp(cityName.split(",")[0], "gi"), "") // "Austin, TX" → "Austin"
+    .trim()
+    .toLowerCase();
+
+  if (!keyword) return undefined;
+
+  // Search all services for a title that contains the keyword (or vice versa)
+  for (const cat of SERVICE_CATEGORIES) {
+    for (const svc of cat.services) {
+      const svcTitle = svc.title.toLowerCase();
+      // Exact keyword match in service title
+      if (svcTitle.includes(keyword)) return svc.slug;
+      // Keyword contains the service title (e.g., "full-stack web development" contains "web development")
+      if (keyword.includes(svcTitle) && svcTitle.length > 8) return svc.slug;
+    }
+  }
+
+  // Fallback: keyword-to-slug map for common service terms
+  const KEYWORD_MAP: Record<string, string> = {
+    "web design": "web-design-services",
+    "wordpress": "wordpress-web-design-services",
+    "ecommerce": "ecommerce-web-design-services",
+    "seo": "seo-services",
+    "ppc": "ppc-paid-ads",
+    "ai automation": "ai-automation",
+    "ai chatbot": "ai-chatbots-assistants",
+    "llm": "custom-llm-solutions",
+    "saas": "saas-platform-engineering",
+    "full-stack": "full-stack-web-development",
+    "next.js": "full-stack-web-development",
+    "content strategy": "content-strategy-seo",
+    "cro": "conversion-rate-optimization",
+    "social media": "social-media-marketing",
+    "graphic design": "graphic-design",
+    "video": "b2b-video-production",
+    "small business": "small-business-web-design-services",
+    "responsive": "responsive-web-design-services",
+  };
+
+  for (const [kw, slug] of Object.entries(KEYWORD_MAP)) {
+    if (keyword.includes(kw)) return slug;
+  }
+
+  return undefined;
+}
+
 export function CitiesView({ onNavigate, citySlug }: CitiesViewProps) {
   // If a city slug is provided and matches a CITY_SEO entry, render the
   // city-specific landing page. Otherwise, render the all-cities grid.
@@ -27,6 +83,7 @@ export function CitiesView({ onNavigate, citySlug }: CitiesViewProps) {
 //  City-specific landing page — renders unique content per city
 // ═══════════════════════════════════════════════════════════════════════
 function CityDetailContent({ slug, onNavigate }: { slug: string; onNavigate: (v: NavView) => void }) {
+  const router = useRouter();
   const city = CITIES.find((c) => c.slug === slug)!;
   const seo = CITY_SEO[slug];
   const officeLabel =
@@ -100,7 +157,7 @@ function CityDetailContent({ slug, onNavigate }: { slug: string; onNavigate: (v:
         </div>
       </Section>
 
-      {/* City-specific services */}
+      {/* City-specific services — clickable, deep-link to matching service page */}
       <Section className="pt-0">
         <Reveal>
           <h2 className="text-2xl font-bold tracking-tight">Services we deliver in {city.name}</h2>
@@ -109,17 +166,49 @@ function CityDetailContent({ slug, onNavigate }: { slug: string; onNavigate: (v:
           </p>
         </Reveal>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {seo.localServices.map((svc, i) => (
-            <Reveal key={i} delay={i * 0.04}>
-              <div className="group h-full rounded-xl border border-border/50 bg-card/40 p-5 transition-all hover:-translate-y-0.5 hover:border-blue-500/40">
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-blue-400" />
-                  <h3 className="text-sm font-semibold text-foreground">{svc.title}</h3>
-                </div>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{svc.desc}</p>
-              </div>
-            </Reveal>
-          ))}
+          {seo.localServices.map((svc, i) => {
+            // Match the localService title to a real service slug by keyword.
+            // Strips the city name from the title, then searches SERVICE_CATEGORIES.
+            const matchSlug = findServiceSlugByTitle(svc.title, city.name);
+            return (
+              <Reveal key={i} delay={i * 0.04}>
+                {matchSlug ? (
+                  <button
+                    onClick={() => router.push(`/${matchSlug}`)}
+                    className="group h-full w-full rounded-xl border border-border/50 bg-card/40 p-5 text-left transition-all hover:-translate-y-0.5 hover:border-blue-500/40"
+                    data-track="city-to-service-link"
+                    data-track-city={slug}
+                    data-track-service={matchSlug}
+                  >
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-blue-400" />
+                      <h3 className="text-sm font-semibold text-foreground">{svc.title}</h3>
+                    </div>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{svc.desc}</p>
+                    <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-blue-400 opacity-0 transition-opacity group-hover:opacity-100">
+                      Learn more <ArrowRight className="h-3 w-3" />
+                    </span>
+                  </button>
+                ) : (
+                  <div className="h-full rounded-xl border border-border/50 bg-card/40 p-5">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-blue-400" />
+                      <h3 className="text-sm font-semibold text-foreground">{svc.title}</h3>
+                    </div>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{svc.desc}</p>
+                  </div>
+                )}
+              </Reveal>
+            );
+          })}
+        </div>
+        <div className="mt-6">
+          <button
+            onClick={() => onNavigate("services")}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 transition-colors hover:text-blue-300"
+          >
+            View all 24 services available in {city.name} <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </Section>
 
