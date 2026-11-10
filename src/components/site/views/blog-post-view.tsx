@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, ArrowLeft, Clock, Calendar, BookOpen, Tag } from "lucide-react";
-import { BLOG_POSTS, type NavView } from "@/lib/site-data";
+import { BLOG_POSTS, type NavView, type BlogPost } from "@/lib/site-data";
 import { Reveal, Section, CtaSection } from "@/components/site/section";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +13,23 @@ type BlogPostViewProps = {
 };
 
 export function BlogPostView({ slug, onNavigate, onNavigateBlogPost }: BlogPostViewProps) {
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  // Start with the static post (renders immediately for SSR/SEO).
+  // Then fetch from the DB on mount — if an admin-created/edited post
+  // exists, it overrides the static content.
+  const [post, setPost] = useState<BlogPost | undefined>(
+    BLOG_POSTS.find((p) => p.slug === slug)
+  );
+
+  useEffect(() => {
+    fetch(`/api/blog?slug=${encodeURIComponent(slug)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok && data.post) {
+          setPost(data.post as BlogPost);
+        }
+      })
+      .catch(() => { /* keep static post on network error */ });
+  }, [slug]);
 
   if (!post) {
     return (

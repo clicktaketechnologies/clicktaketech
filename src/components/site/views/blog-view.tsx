@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowRight, Clock, Calendar, Search, BookOpen } from "lucide-react";
-import { BLOG_POSTS, BLOG_CATEGORIES, type NavView } from "@/lib/site-data";
+import { BLOG_POSTS, BLOG_CATEGORIES, type NavView, type BlogPost } from "@/lib/site-data";
 import { Reveal, Section, LocalTrustStrip, CtaSection } from "@/components/site/section";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -15,8 +15,23 @@ type BlogViewProps = {
 export function BlogView({ onNavigate, onNavigateBlogPost }: BlogViewProps) {
   const [activeCat, setActiveCat] = useState("All");
   const [query, setQuery] = useState("");
+  // Merge DB posts (admin-created) with static posts (build-time).
+  // Static posts render immediately (SSR/SEO); DB posts are fetched on
+  // mount so admin-created posts appear on the public blog.
+  const [allPosts, setAllPosts] = useState<BlogPost[]>(BLOG_POSTS);
 
-  const filtered = BLOG_POSTS.filter((p) => {
+  useEffect(() => {
+    fetch("/api/blog")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok && Array.isArray(data.posts)) {
+          setAllPosts(data.posts);
+        }
+      })
+      .catch(() => { /* keep static posts on network error */ });
+  }, []);
+
+  const filtered = allPosts.filter((p) => {
     const matchCat = activeCat === "All" || p.category === activeCat;
     const matchQuery =
       query.trim() === "" ||
@@ -25,7 +40,7 @@ export function BlogView({ onNavigate, onNavigateBlogPost }: BlogViewProps) {
     return matchCat && matchQuery;
   });
 
-  const featured = BLOG_POSTS[0];
+  const featured = allPosts[0];
 
   return (
     <>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin, unauthorizedResponse } from "@/lib/admin-auth";
+import { logActivity } from "@/lib/admin-activity";
 import { safeQuery } from "@/lib/admin-safe-query";
 import { getSeedBlogPosts } from "@/lib/admin-seed-data";
 
@@ -34,25 +35,36 @@ export async function POST(req: NextRequest) {
   if (!slug || !title || !excerpt) {
     return NextResponse.json({ ok: false, error: "slug, title and excerpt are required." }, { status: 422 });
   }
-  const existing = await db.blogPost.findUnique({ where: { slug } });
-  if (existing) {
-    return NextResponse.json({ ok: false, error: "A post with that slug already exists." }, { status: 409 });
+  try {
+    const existing = await db.blogPost.findUnique({ where: { slug } });
+    if (existing) {
+      return NextResponse.json({ ok: false, error: "A post with that slug already exists." }, { status: 409 });
+    }
+    const post = await db.blogPost.create({
+      data: {
+        slug,
+        title,
+        category: category || "General",
+        excerpt,
+        body: postBody || null,
+        readTime: readTime || "5 min",
+        metaTitle: metaTitle || null,
+        metaDescription: metaDescription || null,
+        keywords: keywords || null,
+        status: status || "published",
+      },
+    });
+    try {
+      await logActivity({ action: "create", entity: "blog", entityId: post.id, summary: `Created blog post: ${title}` });
+    } catch { /* ignore activity log errors */ }
+    return NextResponse.json({ ok: true, post });
+  } catch (err) {
+    console.error("[blog] POST error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not create post. Please try again.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
   }
-  const post = await db.blogPost.create({
-    data: {
-      slug,
-      title,
-      category: category || "General",
-      excerpt,
-      body: postBody || null,
-      readTime: readTime || "5 min",
-      metaTitle: metaTitle || null,
-      metaDescription: metaDescription || null,
-      keywords: keywords || null,
-      status: status || "published",
-    },
-  });
-  return NextResponse.json({ ok: true, post });
 }
 
 export async function PATCH(req: NextRequest) {
@@ -60,26 +72,37 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body?.id) return NextResponse.json({ ok: false, error: "id is required" }, { status: 422 });
   const { id, slug, title, category, excerpt, body: postBody, readTime, metaTitle, metaDescription, keywords, status } = body as Record<string, string>;
-  if (slug) {
-    const conflict = await db.blogPost.findFirst({ where: { slug, NOT: { id } } });
-    if (conflict) return NextResponse.json({ ok: false, error: "Slug already in use." }, { status: 409 });
+  try {
+    if (slug) {
+      const conflict = await db.blogPost.findFirst({ where: { slug, NOT: { id } } });
+      if (conflict) return NextResponse.json({ ok: false, error: "Slug already in use." }, { status: 409 });
+    }
+    const post = await db.blogPost.update({
+      where: { id: String(id) },
+      data: {
+        ...(slug ? { slug } : {}),
+        ...(title ? { title } : {}),
+        ...(category ? { category } : {}),
+        ...(typeof excerpt === "string" ? { excerpt } : {}),
+        ...(typeof postBody === "string" ? { body: postBody || null } : {}),
+        ...(typeof readTime === "string" ? { readTime } : {}),
+        ...(typeof metaTitle === "string" ? { metaTitle: metaTitle || null } : {}),
+        ...(typeof metaDescription === "string" ? { metaDescription: metaDescription || null } : {}),
+        ...(typeof keywords === "string" ? { keywords: keywords || null } : {}),
+        ...(status ? { status } : {}),
+      },
+    });
+    try {
+      await logActivity({ action: "update", entity: "blog", entityId: post.id, summary: `Updated blog post: ${title || post.title}` });
+    } catch { /* ignore */ }
+    return NextResponse.json({ ok: true, post });
+  } catch (err) {
+    console.error("[blog] PATCH error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not update post.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
   }
-  const post = await db.blogPost.update({
-    where: { id: String(id) },
-    data: {
-      ...(slug ? { slug } : {}),
-      ...(title ? { title } : {}),
-      ...(category ? { category } : {}),
-      ...(typeof excerpt === "string" ? { excerpt } : {}),
-      ...(typeof postBody === "string" ? { body: postBody || null } : {}),
-      ...(typeof readTime === "string" ? { readTime } : {}),
-      ...(typeof metaTitle === "string" ? { metaTitle: metaTitle || null } : {}),
-      ...(typeof metaDescription === "string" ? { metaDescription: metaDescription || null } : {}),
-      ...(typeof keywords === "string" ? { keywords: keywords || null } : {}),
-      ...(status ? { status } : {}),
-    },
-  });
-  return NextResponse.json({ ok: true, post });
 }
 
 export async function DELETE(req: NextRequest) {
@@ -87,6 +110,17 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id is required" }, { status: 422 });
-  await db.blogPost.delete({ where: { id: String(id) } });
-  return NextResponse.json({ ok: true });
+  try {
+    await db.blogPost.delete({ where: { id: String(id) } });
+    try {
+      await logActivity({ action: "delete", entity: "blog", entityId: String(id), summary: "Deleted blog post" });
+    } catch { /* ignore */ }
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("[blog] DELETE error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not delete post.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
+  }
 }

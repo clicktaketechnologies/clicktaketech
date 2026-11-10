@@ -1038,11 +1038,16 @@ function PagesTab({ token }: { token: string }) {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const res = await adminFetch("/api/admin/pages");
-    const data = await res.json().catch(() => ({}));
-    setRows(data.pages ?? []);
-    setLoading(false);
-  }, [adminFetch]);
+    try {
+      const res = await adminFetch("/api/admin/pages");
+      const data = await res.json().catch(() => ({}));
+      setRows(data.pages ?? []);
+    } catch {
+      toast({ title: "Failed to load pages", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  }, [adminFetch, toast]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -1051,12 +1056,17 @@ function PagesTab({ token }: { token: string }) {
 
   const del = async (id: string) => {
     if (!confirm("Delete this page? This cannot be undone.")) return;
-    const res = await adminFetch(`/api/admin/pages?id=${id}`, { method: "DELETE" });
-    if (res.ok) {
-      toast({ title: "Page deleted" });
-      load();
-    } else {
-      toast({ title: "Delete failed", variant: "destructive" });
+    try {
+      const res = await adminFetch(`/api/admin/pages?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast({ title: "Page deleted" });
+        load();
+      } else {
+        const d = await res.json().catch(() => ({}));
+        toast({ title: d.error || "Delete failed", description: `HTTP ${res.status}`, variant: "destructive" });
+      }
+    } catch (err) {
+      toast({ title: "Delete failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
     }
   };
 
@@ -1139,29 +1149,38 @@ function PagesTab({ token }: { token: string }) {
           }}
           onSave={async (data) => {
             if (editing) {
-              const res = await adminFetch("/api/admin/pages", {
-                method: "PATCH",
-                body: JSON.stringify({ id: editing.id, ...data }),
-              });
-              if (res.ok) {
-                toast({ title: "Page updated" });
-                setEditing(null);
-                load();
-              } else {
-                toast({ title: "Update failed", variant: "destructive" });
+              try {
+                const res = await adminFetch("/api/admin/pages", {
+                  method: "PATCH",
+                  body: JSON.stringify({ id: editing.id, ...data }),
+                });
+                if (res.ok) {
+                  toast({ title: "Page updated" });
+                  setEditing(null);
+                  load();
+                } else {
+                  const d = await res.json().catch(() => ({}));
+                  toast({ title: d.error || "Update failed", description: `HTTP ${res.status}`, variant: "destructive" });
+                }
+              } catch (err) {
+                toast({ title: "Update failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
               }
             } else {
-              const res = await adminFetch("/api/admin/pages", {
-                method: "POST",
-                body: JSON.stringify(data),
-              });
-              if (res.ok) {
-                toast({ title: "Page created" });
-                setCreating(false);
-                load();
-              } else {
-                const d = await res.json().catch(() => ({}));
-                toast({ title: d.error || "Create failed", variant: "destructive" });
+              try {
+                const res = await adminFetch("/api/admin/pages", {
+                  method: "POST",
+                  body: JSON.stringify(data),
+                });
+                if (res.ok) {
+                  toast({ title: "Page created" });
+                  setCreating(false);
+                  load();
+                } else {
+                  const d = await res.json().catch(() => ({}));
+                  toast({ title: d.error || "Create failed", description: `HTTP ${res.status}`, variant: "destructive" });
+                }
+              } catch (err) {
+                toast({ title: "Create failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
               }
             }
           }}
@@ -1291,10 +1310,17 @@ function BlogTab({ token }: { token: string }) {
 
   const del = async (id: string) => {
     if (!confirm("Delete this blog post?")) return;
-    const res = await adminFetch(`/api/admin/blog?id=${id}`, { method: "DELETE" });
-    if (res.ok) {
-      toast({ title: "Post deleted" });
-      load();
+    try {
+      const res = await adminFetch(`/api/admin/blog?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast({ title: "Post deleted" });
+        load();
+      } else {
+        const d = await res.json().catch(() => ({}));
+        toast({ title: d.error || "Delete failed", description: `HTTP ${res.status}`, variant: "destructive" });
+      }
+    } catch (err) {
+      toast({ title: "Delete failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
     }
   };
 
@@ -1364,21 +1390,32 @@ function BlogTab({ token }: { token: string }) {
           }}
           onSave={async (data) => {
             if (editing) {
-              const res = await adminFetch("/api/admin/blog", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...data }) });
-              if (res.ok) {
-                toast({ title: "Post updated" });
-                setEditing(null);
-                load();
+              try {
+                const res = await adminFetch("/api/admin/blog", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...data }) });
+                if (res.ok) {
+                  toast({ title: "Post updated" });
+                  setEditing(null);
+                  load();
+                } else {
+                  const d = await res.json().catch(() => ({}));
+                  toast({ title: d.error || "Update failed", description: `HTTP ${res.status}`, variant: "destructive" });
+                }
+              } catch (err) {
+                toast({ title: "Update failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
               }
             } else {
-              const res = await adminFetch("/api/admin/blog", { method: "POST", body: JSON.stringify(data) });
-              if (res.ok) {
-                toast({ title: "Post created" });
-                setCreating(false);
-                load();
-              } else {
-                const d = await res.json().catch(() => ({}));
-                toast({ title: d.error || "Create failed", variant: "destructive" });
+              try {
+                const res = await adminFetch("/api/admin/blog", { method: "POST", body: JSON.stringify(data) });
+                if (res.ok) {
+                  toast({ title: "Post created" });
+                  setCreating(false);
+                  load();
+                } else {
+                  const d = await res.json().catch(() => ({}));
+                  toast({ title: d.error || "Create failed", description: `HTTP ${res.status}`, variant: "destructive" });
+                }
+              } catch (err) {
+                toast({ title: "Create failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
               }
             }
           }}
@@ -2316,14 +2353,21 @@ function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => voi
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [dbSource, setDbSource] = useState<"db" | "seed">("db"); // track if DB is reachable
 
   const load = useCallback(async () => {
     setLoading(true);
-    const res = await adminFetch("/api/admin/settings");
-    const data = await res.json().catch(() => ({}));
-    setRows(data.settings ?? []);
-    setLoading(false);
-  }, [adminFetch]);
+    try {
+      const res = await adminFetch("/api/admin/settings");
+      const data = await res.json().catch(() => ({}));
+      setRows(data.settings ?? []);
+      setDbSource(data.source === "seed" ? "seed" : "db");
+    } catch {
+      toast({ title: "Failed to load settings", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  }, [adminFetch, toast]);
 
   useEffect(() => {
     load();
@@ -2355,7 +2399,7 @@ function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => voi
         if (row) {
           await adminFetch("/api/admin/settings", {
             method: "PATCH",
-            body: JSON.stringify([{ key, value: data.asset.url }]),
+            body: JSON.stringify([{ key, value: data.asset.url, category: row.category }]),
           });
         }
         toast({ title: "Uploaded", description: `${file.name} saved as ${data.asset.url}` });
@@ -2371,18 +2415,53 @@ function SettingsTab({ token, onJump }: { token: string; onJump: (t: Tab) => voi
 
   const saveCategory = async (category: string) => {
     setSaving(true);
+    // Include `category` in each update so the backend can create new rows
+    // in the correct category (previously hardcoded to "general" → invisible).
     const updates = rows
       .filter((r) => r.category === category)
-      .map((r) => ({ key: r.key, value: val(r) }));
-    const res = await adminFetch("/api/admin/settings", { method: "PATCH", body: JSON.stringify(updates) });
-    if (res.ok) {
-      toast({ title: "Settings saved" });
-      setDrafts({});
-      load();
-    } else {
-      toast({ title: "Save failed", variant: "destructive" });
+      .map((r) => ({ key: r.key, value: val(r), category: r.category }));
+    try {
+      const res = await adminFetch("/api/admin/settings", { method: "PATCH", body: JSON.stringify(updates) });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok && !data.warning) {
+        // Full success — clear drafts and reload
+        toast({ title: "Settings saved", description: `${data.updated || updates.length} setting(s) persisted.` });
+        setDrafts({});
+        load();
+      } else if (res.ok && data.warning) {
+        // Partial success — some saved, some failed. Keep drafts so the
+        // user can retry the failed ones.
+        toast({
+          title: "Partial save",
+          description: data.warning,
+          variant: "destructive",
+        });
+        load(); // reload to show the saved values
+      } else if (res.status === 503) {
+        // DB unreachable — settings were NOT saved. Keep drafts intact.
+        toast({
+          title: "Database unavailable",
+          description: data.error || "Settings were NOT saved. Please try again later.",
+          variant: "destructive",
+        });
+        setDbSource("seed");
+      } else {
+        // Other error (422, 500, etc.)
+        toast({
+          title: "Save failed",
+          description: data.error || `HTTP ${res.status}`,
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Save failed",
+        description: err instanceof Error ? err.message : "Network error",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   // Define category display order + labels
