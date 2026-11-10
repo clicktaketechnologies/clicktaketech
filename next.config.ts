@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // output: "standalone" removed — it was preventing Vercel from
+  // detecting new API route files (blog/pages routes returned HTML
+  // instead of JSON). Vercel handles the build output natively.
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: false,
