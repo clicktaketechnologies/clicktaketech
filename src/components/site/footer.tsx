@@ -4,6 +4,7 @@ import { Mail, Phone, MessageCircle, MapPin, Heart, ExternalLink, ArrowRight } f
 import { SOCIAL_LINKS } from "@/lib/site-data";
 import { OFFICES, TECH_STACK, LEGAL_LINKS, type NavView } from "@/lib/site-data";
 import { Logo } from "@/components/site/logo";
+import { ThemeToggle } from "@/components/site/theme-toggle";
 
 type FooterProps = {
   onNavigate: (v: NavView) => void;
@@ -199,11 +200,18 @@ export function Footer({ onNavigate }: FooterProps) {
           ))}
         </div>
 
-        {/* Bottom bar with Legal links */}
+        {/* Bottom bar with Theme toggle + Legal links */}
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-6 sm:flex-row">
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ClickTake Technologies. All rights reserved.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} ClickTake Technologies. All rights reserved.
+            </p>
+            {/* Theme toggle — sun/moon icon switch for light/dark mode */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Theme:</span>
+              <ThemeToggle />
+            </div>
+          </div>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
             {LEGAL_LINKS.map((link) => (
               <a

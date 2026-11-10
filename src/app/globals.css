@@ -43,44 +43,68 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Brand-first dark theme: blue #136DFF + pink #FF53A9 */
+/* ════════════════════════════════════════════════════════════════════
+   LIGHT THEME (default — :root)
+   Brand: blue #136DFF + pink #FF53A9
+   Light background with dark text, white cards, subtle borders.
+   ════════════════════════════════════════════════════════════════════ */
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.16 0.015 265);
-  --foreground: oklch(0.97 0.008 265);
-  --card: oklch(0.205 0.018 265);
-  --card-foreground: oklch(0.97 0.008 265);
-  --popover: oklch(0.2 0.018 265);
-  --popover-foreground: oklch(0.97 0.008 265);
+  --background: oklch(0.99 0.001 265);
+  --foreground: oklch(0.15 0.01 265);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.01 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.01 265);
   /* Brand blue #136DFF */
-  --primary: oklch(0.57 0.235 264);
+  --primary: oklch(0.55 0.24 264);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.27 0.02 265);
-  --secondary-foreground: oklch(0.97 0.008 265);
-  --muted: oklch(0.25 0.016 265);
-  --muted-foreground: oklch(0.72 0.018 265);
+  --secondary: oklch(0.96 0.005 265);
+  --secondary-foreground: oklch(0.2 0.01 265);
+  --muted: oklch(0.96 0.005 265);
+  --muted-foreground: oklch(0.45 0.012 265);
   /* Brand pink #FF53A9 */
-  --accent: oklch(0.69 0.255 358);
-  --accent-foreground: oklch(0.16 0.015 265);
-  --destructive: oklch(0.65 0.21 25);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.57 0.235 264);
-  --chart-1: oklch(0.57 0.235 264);
-  --chart-2: oklch(0.69 0.255 358);
-  --chart-3: oklch(0.72 0.19 40);
-  --chart-4: oklch(0.68 0.15 300);
-  --chart-5: oklch(0.6 0.13 200);
-  --sidebar: oklch(0.19 0.015 265);
-  --sidebar-foreground: oklch(0.97 0.008 265);
-  --sidebar-primary: oklch(0.57 0.235 264);
+  --accent: oklch(0.65 0.26 358);
+  --accent-foreground: oklch(0.99 0 0);
+  --destructive: oklch(0.58 0.22 25);
+  --border: oklch(0.9 0.005 265);
+  --input: oklch(0.92 0.005 265);
+  --ring: oklch(0.55 0.24 264);
+  --chart-1: oklch(0.55 0.24 264);
+  --chart-2: oklch(0.65 0.26 358);
+  --chart-3: oklch(0.7 0.19 40);
+  --chart-4: oklch(0.6 0.15 300);
+  --chart-5: oklch(0.55 0.13 200);
+  --sidebar: oklch(0.97 0.003 265);
+  --sidebar-foreground: oklch(0.15 0.01 265);
+  --sidebar-primary: oklch(0.55 0.24 264);
   --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.27 0.02 265);
-  --sidebar-accent-foreground: oklch(0.97 0.008 265);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.57 0.235 264);
+  --sidebar-accent: oklch(0.95 0.005 265);
+  --sidebar-accent-foreground: oklch(0.2 0.01 265);
+  --sidebar-border: oklch(0.9 0.005 265);
+  --sidebar-ring: oklch(0.55 0.24 264);
+
+  /* Glass + grid utilities — light-mode variants (subtle dark lines on light bg) */
+  --glass-bg: oklch(1 0 0 / 0.72);
+  --glass-border: oklch(0 0 0 / 0.08);
+  --glass-strong-bg: oklch(1 0 0 / 0.92);
+  --glass-strong-border: oklch(0 0 0 / 0.1);
+  --grid-line: oklch(0 0 0 / 0.04);
+  --dot-color: oklch(0 0 0 / 0.06);
+  --shadow-color: oklch(0 0 0 / 0.12);
+  --selection-bg: oklch(0.55 0.24 264 / 20%);
+  --selection-fg: oklch(0.15 0.01 265);
+  --scrollbar-track: oklch(0.95 0.003 265);
+  --scrollbar-thumb: oklch(0.8 0.01 265);
+  --scrollbar-thumb-hover: oklch(0.65 0.02 264);
+  --scrollbar-border: oklch(0.95 0.003 265);
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   DARK THEME (.dark class on <html>)
+   Brand: blue #136DFF + pink #FF53A9
+   Deep dark background with light text, dark cards, subtle white borders.
+   ════════════════════════════════════════════════════════════════════ */
 .dark {
   --background: oklch(0.16 0.015 265);
   --foreground: oklch(0.97 0.008 265);
@@ -113,8 +137,26 @@
   --sidebar-accent-foreground: oklch(0.97 0.008 265);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.57 0.235 264);
+
+  /* Glass + grid utilities — dark-mode variants (subtle white lines on dark bg) */
+  --glass-bg: oklch(0.22 0.018 265 / 0.6);
+  --glass-border: oklch(1 0 0 / 0.08);
+  --glass-strong-bg: oklch(0.19 0.015 265 / 0.88);
+  --glass-strong-border: oklch(1 0 0 / 0.1);
+  --grid-line: oklch(1 0 0 / 0.04);
+  --dot-color: oklch(1 0 0 / 0.07);
+  --shadow-color: oklch(0 0 0 / 0.8);
+  --selection-bg: oklch(0.57 0.235 264 / 35%);
+  --selection-fg: oklch(0.99 0 0);
+  --scrollbar-track: oklch(0.16 0.015 265);
+  --scrollbar-thumb: oklch(0.34 0.05 265);
+  --scrollbar-thumb-hover: oklch(0.5 0.1 290);
+  --scrollbar-border: oklch(0.16 0.015 265);
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   Base layer
+   ════════════════════════════════════════════════════════════════════ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -126,14 +168,27 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Smooth theme transition — applies to all color changes */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  /* Also transition common elements that change color on theme switch */
+  *, *::before, *::after {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.15s ease;
+  }
+  /* But NOT for elements that animate on hover/interaction (would feel laggy) */
+  button, a, input, textarea, select {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease, transform 0.2s ease, box-shadow 0.2s ease;
   }
   ::selection {
-    background: oklch(0.57 0.235 264 / 35%);
-    color: oklch(0.99 0 0);
+    background: var(--selection-bg);
+    color: var(--selection-fg);
   }
 }
 
-/* Custom utilities — brand blue → pink gradients */
+/* ════════════════════════════════════════════════════════════════════
+   Custom utilities — brand blue → pink gradients
+   Uses CSS variables so they adapt to light/dark automatically.
+   ════════════════════════════════════════════════════════════════════ */
 @layer utilities {
   .text-gradient-brand {
     background: linear-gradient(110deg, oklch(0.62 0.22 264) 0%, oklch(0.66 0.24 310) 50%, oklch(0.72 0.25 358) 100%);
@@ -158,25 +213,25 @@
   }
   .bg-grid {
     background-image:
-      linear-gradient(to right, oklch(1 0 0 / 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(1 0 0 / 0.04) 1px, transparent 1px);
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
     background-size: 48px 48px;
   }
   .bg-dots {
-    background-image: radial-gradient(oklch(1 0 0 / 0.07) 1px, transparent 1px);
+    background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
     background-size: 22px 22px;
   }
   .glass {
-    background: oklch(0.22 0.018 265 / 0.6);
+    background: var(--glass-bg);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid oklch(1 0 0 / 0.08);
+    border: 1px solid var(--glass-border);
   }
   .glass-strong {
-    background: oklch(0.19 0.015 265 / 0.88);
+    background: var(--glass-strong-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid oklch(1 0 0 / 0.1);
+    border: 1px solid var(--glass-strong-border);
   }
   .glow-blue {
     box-shadow: 0 0 0 1px oklch(0.57 0.235 264 / 25%), 0 8px 40px -8px oklch(0.57 0.235 264 / 35%);
@@ -204,17 +259,18 @@
     mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
   }
   .shadow-deep {
-    box-shadow: 0 30px 80px -30px oklch(0 0 0 / 0.8);
+    box-shadow: 0 30px 80px -30px var(--shadow-color);
   }
   .bg-brand-gradient {
     background: linear-gradient(135deg, oklch(0.57 0.235 264) 0%, oklch(0.63 0.24 310) 50%, oklch(0.69 0.255 358) 100%);
   }
 }
 
-/* ===== Admin light mode overrides ===== */
-/* When .admin-light is applied to the admin root, swap the CSS variables
-   so the entire admin panel renders in light mode while the public site
-   stays dark. */
+/* ════════════════════════════════════════════════════════════════════
+   Admin light mode overrides — kept for backward compatibility.
+   The admin panel has its own internal light-mode toggle that applies
+   .admin-light to its root. This works alongside the global theme.
+   ════════════════════════════════════════════════════════════════════ */
 .admin-light {
   --background: oklch(0.98 0.005 265);
   --foreground: oklch(0.15 0.01 265);
@@ -243,21 +299,21 @@
   --sidebar-ring: oklch(0.57 0.235 264);
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar — uses CSS variables for theme-awareness */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: oklch(0.16 0.015 265);
+  background: var(--scrollbar-track);
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.34 0.05 265);
+  background: var(--scrollbar-thumb);
   border-radius: 999px;
-  border: 2px solid oklch(0.16 0.015 265);
+  border: 2px solid var(--scrollbar-border);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.5 0.1 290);
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* Marquee animation */
@@ -287,9 +343,6 @@
 }
 
 /* LCP optimization — defer rendering of below-the-fold content */
-/* Apply content-visibility:auto to sections after the hero so the
-   browser skips rendering them until scrolled into view. This
-   dramatically reduces initial render time (LCP). */
 .below-fold {
   content-visibility: auto;
   contain-intrinsic-size: 500px;
@@ -310,4 +363,12 @@
 /* Reduce layout shifts by reserving space for animated elements */
 .motion-div-container {
   contain: layout style paint;
+}
+
+/* Theme toggle — prevent flash of wrong theme (FOUC) by hiding
+   content until next-themes has set the class. The <html> element
+   starts with no .dark class (light by default); if next-themes
+   determines dark is needed, it adds .dark before paint. */
+html:not(.dark):not(.light) {
+  /* Temporary state during hydration — use light defaults from :root */
 }

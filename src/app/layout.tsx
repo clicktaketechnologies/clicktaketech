@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { SeoStructuredData } from "@/components/site/seo-structured-data";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -112,7 +113,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#136DFF",
-  colorScheme: "dark",
+  colorScheme: "light dark",
   width: "device-width",
   initialScale: 1,
 };
@@ -123,13 +124,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <SeoStructuredData />
         <link rel="llms.txt" href="/llms.txt" type="text/plain" />
         {/* LCP optimization: dns-prefetch + preconnect to speed up resource loading */}
         <link rel="dns-prefetch" href="//api.cloudinary.com" />
         <link rel="preconnect" href="//api.cloudinary.com" crossOrigin="anonymous" />
+        {/* Theme script — runs before paint to prevent FOUC (flash of unstyled content).
+            Sets the .dark class on <html> if the user's saved preference is dark. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       {/* suppressHydrationWarning on body — browser extensions
           (Grammarly, LastPass, 1Password, etc.) inject attributes like
@@ -140,8 +157,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
         suppressHydrationWarning
       >
-        {children}
-        <Toaster />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
