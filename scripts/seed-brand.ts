@@ -22,9 +22,6 @@ async function main() {
   for (const v of THEME_VARS) {
     await db.themeVariable.upsert({ where: { key: v.key }, update: {}, create: v });
   }
-  for (const t of TYPO_PRESETS) {
-    await db.typographyPreset.upsert({ where: { name: t.name }, update: {}, create: t });
-  }
-  console.log(`✓ seeded ${THEME_VARS.length} theme vars + ${TYPO_PRESETS.length} typography presets`);
+  console.log(`✓ seeded ${THEME_VARS.length} theme vars`);
 }
 main().catch(e => { console.error(e); process.exit(1); }).finally(() => db.$disconnect());
