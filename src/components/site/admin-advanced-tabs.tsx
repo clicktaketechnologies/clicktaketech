@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   Plus, Pencil, Trash2, Check, X, Loader2, Play, Pause, Copy,
-  TrendingUp, Users, Mail, FlaskConical, Palette, Type, Cloud, ShieldAlert,
-  Eye,
+  TrendingUp, Users, Mail, FlaskConical, Palette, Cloud, ShieldAlert,
+  Eye, Package,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -400,73 +400,6 @@ export function ThemeEngineTab({ token }: { token: string }) {
   );
 }
 
-// ============================ TYPOGRAPHY ENGINE ============================
-type TypoPreset = { id: string; name: string; fontFamily: string; headingScale: string; bodySize: string; lineHeight: string; active: boolean };
-
-export function TypographyTab({ token }: { token: string }) {
-  const adminFetch = useAdminFetch(token);
-  const { toast } = useToast();
-  const [presets, setPresets] = useState<TypoPreset[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    const res = await adminFetch("/api/admin/typography");
-    const data = await res.json().catch(() => ({}));
-    setPresets(data.presets ?? []);
-    setLoading(false);
-  }, [adminFetch]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    load();
-  }, [load]);
-
-  const activate = async (p: TypoPreset) => {
-    const res = await adminFetch("/api/admin/typography", { method: "PATCH", body: JSON.stringify({ id: p.id, active: true }) });
-    if (res.ok) { toast({ title: `${p.name} activated` }); load(); }
-  };
-
-  const del = async (id: string) => {
-    if (!confirm("Delete this preset?")) return;
-    const res = await adminFetch(`/api/admin/typography?id=${id}`, { method: "DELETE" });
-    if (res.ok) { toast({ title: "Deleted" }); load(); }
-  };
-
-  if (loading) return <div className="py-12 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" /></div>;
-
-  return (
-    <div>
-      <h2 className="text-lg font-bold">Typography Engine</h2>
-      <p className="text-xs text-muted-foreground">Activate a font preset to change headings, body text, and line-height across the site.</p>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {presets.map((p) => (
-          <div key={p.id} className={cn("rounded-2xl border p-5", p.active ? "border-blue-500/50 bg-blue-500/5 ring-1 ring-blue-500/30" : "border-border/50 bg-card/40")}>
-            <div className="flex items-center justify-between">
-              <Type className={cn("h-5 w-5", p.active ? "text-blue-400" : "text-muted-foreground")} />
-              {p.active && <span className="rounded-full bg-blue-500/15 px-2 py-0.5 text-[10px] font-bold text-blue-400">ACTIVE</span>}
-            </div>
-            <h3 className="mt-3 text-lg font-bold" style={{ fontFamily: p.fontFamily }}>{p.name}</h3>
-            <div className="mt-1 space-y-0.5 text-xs text-muted-foreground">
-              <div>Font: <span className="font-mono">{p.fontFamily.split(",")[0]}</span></div>
-              <div>Body: {p.bodySize} · Scale: {p.headingScale} · Line: {p.lineHeight}</div>
-            </div>
-            <div className="mt-3 rounded-lg bg-background/40 p-3">
-              <div style={{ fontFamily: p.fontFamily, fontSize: p.bodySize, lineHeight: p.lineHeight }}>
-                <div className="font-bold" style={{ fontSize: `calc(${p.bodySize} * ${p.headingScale})` }}>Heading Sample</div>
-                <p className="mt-1 text-muted-foreground">The quick brown fox jumps over the lazy dog.</p>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-2">
-              {!p.active && <Button onClick={() => activate(p)} size="sm" className="flex-1 bg-brand-gradient text-white">Activate</Button>}
-              {!p.active && <button onClick={() => del(p.id)} className="rounded-lg bg-red-500/10 p-2 text-red-400 hover:bg-red-500/20"><Trash2 className="h-4 w-4" /></button>}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 // ============================ STORAGE & PROVIDERS ============================
 export function StorageProvidersTab({ token }: { token: string }) {
@@ -916,6 +849,115 @@ export function ClientsTab({ token }: { token: string }) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================ PRODUCTS ============================
+type ProductRow = { id: string; name: string; logo: string; description: string; buttonText: string; url: string; order: number; active: boolean };
+
+export function ProductsTab({ token }: { token: string }) {
+  const adminFetch = useAdminFetch(token);
+  const { toast } = useToast();
+  const [rows, setRows] = useState<ProductRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<ProductRow | null>(null);
+  const [creating, setCreating] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await adminFetch("/api/admin/products");
+      const data = await res.json().catch(() => ({}));
+      setRows(data.products ?? []);
+    } catch {
+      toast({ title: "Failed to load products", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  }, [adminFetch, toast]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
+
+  const del = async (id: string) => {
+    if (!confirm("Delete this product?")) return;
+    try {
+      const res = await adminFetch(`/api/admin/products?id=${id}`, { method: "DELETE" });
+      if (res.ok) { toast({ title: "Product deleted" }); load(); }
+      else { const d = await res.json().catch(() => ({})); toast({ title: d.error || "Delete failed", variant: "destructive" }); }
+    } catch (err) {
+      toast({ title: "Delete failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" });
+    }
+  };
+
+  const emptyForm = { name: "", logo: "", description: "", buttonText: "Visit Site", url: "", order: "0", active: true };
+  const [form, setForm] = useState<Record<string, string | boolean>>(emptyForm);
+  const set = (k: string, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }));
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-bold">Products ({rows.length})</h2>
+        <Button onClick={() => { setForm(emptyForm); setCreating(true); }} className="bg-brand-gradient text-white">
+          <Plus className="mr-1 h-4 w-4" /> Add Product
+        </Button>
+      </div>
+      {loading ? (
+        <div className="py-12 text-center"><Loader2 className="mx-auto h-6 w-6 animate-spin text-blue-400" /></div>
+      ) : rows.length === 0 ? (
+        <div className="py-12 text-center text-muted-foreground">No products yet. Click "Add Product" to create one.</div>
+      ) : (
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {rows.map((p) => (
+            <div key={p.id} className="rounded-xl border border-border/50 bg-card/40 p-4">
+              <div className="flex items-center gap-3">
+                {p.logo ? <img src={p.logo} alt={p.name} className="h-10 w-10 rounded-lg object-cover" /> : <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-gradient text-white"><Package className="h-5 w-5" /></div>}
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold truncate">{p.name}</div>
+                  <div className="text-xs text-muted-foreground truncate">{p.url || "No URL"}</div>
+                </div>
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground line-clamp-2">{p.description}</p>
+              <div className="mt-3 flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => { setForm({ ...p, order: String(p.order) }); setEditing(p); }}>Edit</Button>
+                <Button size="sm" variant="destructive" onClick={() => del(p.id)}>Delete</Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {(editing || creating) && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 p-4" onClick={() => { setEditing(null); setCreating(false); }}>
+          <div className="w-full max-w-lg rounded-2xl border border-border/60 bg-card p-6 max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold">{editing ? "Edit Product" : "New Product"}</h3>
+            <div className="mt-4 space-y-3">
+              <div><Label className="text-sm">Name *</Label><Input value={String(form.name)} onChange={(e) => set("name", e.target.value)} className="mt-1 bg-background/50" /></div>
+              <div><Label className="text-sm">Logo URL</Label><Input value={String(form.logo)} onChange={(e) => set("logo", e.target.value)} placeholder="/platforms/logo.png or https://..." className="mt-1 bg-background/50" /></div>
+              <div><Label className="text-sm">Description</Label><Textarea value={String(form.description)} onChange={(e) => set("description", e.target.value)} rows={3} className="mt-1 bg-background/50" /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><Label className="text-sm">Button Text</Label><Input value={String(form.buttonText)} onChange={(e) => set("buttonText", e.target.value)} className="mt-1 bg-background/50" /></div>
+                <div><Label className="text-sm">URL</Label><Input value={String(form.url)} onChange={(e) => set("url", e.target.value)} placeholder="https://..." className="mt-1 bg-background/50" /></div>
+              </div>
+              <div className="flex justify-end gap-2 mt-4">
+                <Button variant="outline" onClick={() => { setEditing(null); setCreating(false); }}>Cancel</Button>
+                <Button className="bg-brand-gradient text-white" onClick={async () => {
+                  const data = { name: form.name, logo: form.logo, description: form.description, buttonText: form.buttonText, url: form.url, order: Number(form.order) || 0, active: form.active };
+                  try {
+                    const res = editing
+                      ? await adminFetch("/api/admin/products", { method: "PATCH", body: JSON.stringify({ id: editing.id, ...data }) })
+                      : await adminFetch("/api/admin/products", { method: "POST", body: JSON.stringify(data) });
+                    if (res.ok) { toast({ title: editing ? "Product updated" : "Product created" }); setEditing(null); setCreating(false); load(); }
+                    else { const d = await res.json().catch(() => ({})); toast({ title: d.error || "Save failed", variant: "destructive" }); }
+                  } catch (err) { toast({ title: "Save failed", description: err instanceof Error ? err.message : "Network error", variant: "destructive" }); }
+                }}>Save</Button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

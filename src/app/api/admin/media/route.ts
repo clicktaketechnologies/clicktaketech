@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, unlink } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { db } from "@/lib/db";
@@ -89,22 +89,31 @@ export async function POST(req: NextRequest) {
       await writeFile(dest, buffer);
       url = `/uploads/${fname}`;
     }
-    // Save to DB (best-effort — if DB is unreachable, still return the URL).
+    // Save to DB (best-effort — if DB is unreachable, surface a warning
+    // but still return the uploaded URL so the caller can use it).
     let asset: { id: string; name: string; url: string; mime: string; size: number; alt: string | null; folder: string; createdAt: Date } | null = null;
     try {
       asset = await db.mediaAsset.create({
         data: { name: f.name, url, mime: f.type, size: f.size, alt: alt || null, folder },
       });
-      await logActivity({
-        action: "create",
-        entity: "media",
-        entityId: asset.id,
-        summary: `Uploaded media "${f.name}" (${(f.size / 1024).toFixed(0)} KB)`,
+      try {
+        await logActivity({
+          action: "create",
+          entity: "media",
+          entityId: asset.id,
+          summary: `Uploaded media "${f.name}" (${(f.size / 1024).toFixed(0)} KB)`,
+        });
+      } catch { /* ignore activity log errors */ }
+    } catch (dbErr) {
+      console.error("[media] DB write failed after upload:", dbErr instanceof Error ? dbErr.message : dbErr);
+      return NextResponse.json({
+        ok: true,
+        warning: "Saved to storage but DB write failed",
+        url,
+        asset: { url, name: f.name },
       });
-    } catch {
-      /* DB unreachable — the URL is still valid and usable */
     }
-    return NextResponse.json({ ok: true, asset: asset || { url, name: f.name } });
+    return NextResponse.json({ ok: true, asset });
   } catch (err) {
     console.error("[media] upload error", err);
     const msg = err instanceof Error ? err.message : "Upload failed";
@@ -117,15 +126,25 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body?.id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const { id, alt, folder } = body as Record<string, string>;
-  const asset = await db.mediaAsset.update({
-    where: { id: String(id) },
-    data: {
-      ...(typeof alt === "string" ? { alt: alt || null } : {}),
-      ...(typeof folder === "string" ? { folder } : {}),
-    },
-  });
-  await logActivity({ action: "update", entity: "media", entityId: String(id), summary: `Updated media "${asset.name}"` });
-  return NextResponse.json({ ok: true, asset });
+  try {
+    const asset = await db.mediaAsset.update({
+      where: { id: String(id) },
+      data: {
+        ...(typeof alt === "string" ? { alt: alt || null } : {}),
+        ...(typeof folder === "string" ? { folder } : {}),
+      },
+    });
+    try {
+      await logActivity({ action: "update", entity: "media", entityId: String(id), summary: `Updated media "${asset.name}"` });
+    } catch { /* ignore activity log errors */ }
+    return NextResponse.json({ ok: true, asset });
+  } catch (err) {
+    console.error("[media] PATCH error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not update media asset.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
+  }
 }
 
 export async function DELETE(req: NextRequest) {
@@ -133,17 +152,27 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const asset = await db.mediaAsset.findUnique({ where: { id: String(id) } });
-  if (asset) {
-    // best-effort delete the file from disk
-    try {
-      const fp = path.join(process.cwd(), "public", asset.url);
-      if (existsSync(fp)) await writeFile(fp, ""); // truncate; full unlink avoided for safety
-    } catch {
-      /* ignore */
+  try {
+    const asset = await db.mediaAsset.findUnique({ where: { id: String(id) } });
+    if (asset) {
+      // best-effort delete the file from disk
+      try {
+        const fp = path.join(process.cwd(), "public", asset.url);
+        if (existsSync(fp)) await unlink(fp);
+      } catch {
+        /* ignore file-system errors */
+      }
+      await db.mediaAsset.delete({ where: { id: String(id) } });
+      try {
+        await logActivity({ action: "delete", entity: "media", entityId: String(id), summary: `Deleted media "${asset.name}"` });
+      } catch { /* ignore activity log errors */ }
     }
-    await db.mediaAsset.delete({ where: { id: String(id) } });
-    await logActivity({ action: "delete", entity: "media", entityId: String(id), summary: `Deleted media "${asset.name}"` });
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("[media] DELETE error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not delete media asset.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
   }
-  return NextResponse.json({ ok: true });
 }

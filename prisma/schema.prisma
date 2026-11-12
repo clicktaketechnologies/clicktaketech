@@ -252,15 +252,17 @@ model ThemeVariable {
   updatedAt DateTime @updatedAt
 }
 
-model TypographyPreset {
-  id         String   @id @default(cuid())
-  name       String   @unique
-  fontFamily String
-  headingScale String  // e.g. "1.25"
-  bodySize   String   // e.g. "16px"
-  lineHeight String   // e.g. "1.6"
-  active     Boolean  @default(false)
-  createdAt  DateTime @default(now())
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  logo        String   // URL to product logo
+  description String
+  buttonText  String   @default("Visit Site")
+  url         String   // external URL
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model SecurityLog {

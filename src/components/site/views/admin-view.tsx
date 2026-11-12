@@ -31,7 +31,7 @@ import {
   Save,
   Upload,
   Copy,
-  Type,
+  Package,
   Palette,
   FlaskConical,
   Cloud,
@@ -56,11 +56,11 @@ import {
   EmailCenterTab,
   ExperimentsTab,
   ThemeEngineTab,
-  TypographyTab,
   StorageProvidersTab,
   SecurityLogsTab,
   TeamCareersTab,
   ClientsTab,
+  ProductsTab,
 } from "@/components/site/admin-advanced-tabs";
 import {
   BlogImportPanel,
@@ -76,7 +76,7 @@ type Tab =
   | "pricing"
   | "media"
   | "team-careers"
-  | "typography"
+  | "products"
   | "theme"
   | "leads"
   | "queries"
@@ -101,8 +101,8 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard; group: "dash
   { id: "media", label: "Media Library", icon: ImageIcon, group: "cms" },
   { id: "team-careers", label: "Team & Careers", icon: Briefcase, group: "cms" },
   { id: "clients", label: "Client Logos", icon: ImageIcon, group: "cms" },
+  { id: "products", label: "Products", icon: Package, group: "cms" },
   // Branding
-  { id: "typography", label: "Typography Engine", icon: Type, group: "branding" },
   { id: "theme", label: "Theme Engine", icon: Palette, group: "branding" },
   // Leads & Applications
   { id: "leads", label: "Lead CRM", icon: TrendingUp, group: "leads" },
@@ -136,7 +136,7 @@ const TAB_PERMISSIONS: Record<Tab, string> = {
   media: "media:view",
   "team-careers": "team:view",
   clients: "media:view",
-  typography: "branding:view",
+  products: "media:view",
   theme: "branding:view",
   leads: "leads:view",
   queries: "queries:view",
@@ -454,8 +454,8 @@ export function AdminView({ onNavigate }: { onNavigate: (v: NavView) => void }) 
           {tab === "media" && <MediaTab token={token} />}
           {tab === "team-careers" && <TeamCareersTab token={token} />}
           {tab === "clients" && <ClientsTab token={token} />}
+          {tab === "products" && <ProductsTab token={token} />}
           {/* Branding */}
-          {tab === "typography" && <TypographyTab token={token} />}
           {tab === "theme" && <ThemeEngineTab token={token} />}
           {/* Leads */}
           {tab === "leads" && <LeadCrmTab token={token} />}

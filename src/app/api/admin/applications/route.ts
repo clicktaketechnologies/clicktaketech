@@ -25,12 +25,22 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body?.id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
   const { id, status } = body as Record<string, string>;
-  const app = await db.jobApplication.update({
-    where: { id: String(id) },
-    data: { ...(status ? { status } : {}) },
-  });
-  await logActivity({ action: "update", entity: "application", entityId: String(id), summary: `Set application ${app.fullName} → ${status}` });
-  return NextResponse.json({ ok: true, application: app });
+  try {
+    const app = await db.jobApplication.update({
+      where: { id: String(id) },
+      data: { ...(status ? { status } : {}) },
+    });
+    try {
+      await logActivity({ action: "update", entity: "application", entityId: String(id), summary: `Set application ${app.fullName} → ${status}` });
+    } catch { /* ignore activity log errors */ }
+    return NextResponse.json({ ok: true, application: app });
+  } catch (err) {
+    console.error("[applications] PATCH error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not update application.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
+  }
 }
 
 export async function DELETE(req: NextRequest) {
@@ -38,7 +48,17 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id required" }, { status: 422 });
-  const app = await db.jobApplication.delete({ where: { id: String(id) } });
-  await logActivity({ action: "delete", entity: "application", entityId: String(id), summary: `Deleted application ${app.fullName}` });
-  return NextResponse.json({ ok: true });
+  try {
+    const app = await db.jobApplication.delete({ where: { id: String(id) } });
+    try {
+      await logActivity({ action: "delete", entity: "application", entityId: String(id), summary: `Deleted application ${app.fullName}` });
+    } catch { /* ignore activity log errors */ }
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("[applications] DELETE error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not delete application.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
+  }
 }

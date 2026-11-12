@@ -25,7 +25,7 @@ export const maxDuration = 60;
  *      prisma binary to create ALL tables from prisma/schema.prisma.
  *   3. Seeds ALL data: admin user, pages, blog posts, pricing tiers, team
  *      members, jobs, client logos, site settings, theme variables,
- *      typography presets.
+ *      Products table.
  *   4. Returns a summary.
  * Idempotent (uses upserts) — safe to call multiple times.
  */
@@ -313,16 +313,6 @@ export async function POST(req: NextRequest) {
   }
   summary.themeVariables = themeCount;
   steps.push(`theme variables: ${themeCount} seeded`);
-
-  // Typography preset
-  try {
-    await db.typographyPreset.upsert({
-      where: { name: "Default" },
-      update: {},
-      create: { name: "Default", fontFamily: "Geist, system-ui, sans-serif", headingScale: "1.25", bodySize: "16px", lineHeight: "1.6", active: true },
-    });
-    steps.push("typography preset: 1 seeded");
-  } catch { /* skip */ }
 
   summary.steps = steps;
 

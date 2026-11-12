@@ -248,16 +248,18 @@ export async function createTables(): Promise<string[]> {
       )`,
     },
     {
-      name: "TypographyPreset",
-      sql: `CREATE TABLE IF NOT EXISTS "TypographyPreset" (
+      name: "Product",
+      sql: `CREATE TABLE IF NOT EXISTS "Product" (
         id TEXT PRIMARY KEY,
-        name TEXT NOT NULL UNIQUE,
-        "fontFamily" TEXT NOT NULL,
-        "headingScale" TEXT NOT NULL,
-        "bodySize" TEXT NOT NULL,
-        "lineHeight" TEXT NOT NULL,
-        active BOOLEAN NOT NULL DEFAULT false,
-        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+        name TEXT NOT NULL,
+        logo TEXT NOT NULL DEFAULT '',
+        description TEXT NOT NULL DEFAULT '',
+        "buttonText" TEXT NOT NULL DEFAULT 'Visit Site',
+        url TEXT NOT NULL DEFAULT '',
+        "order" INTEGER NOT NULL DEFAULT 0,
+        active BOOLEAN NOT NULL DEFAULT true,
+        "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
       )`,
     },
     {

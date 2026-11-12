@@ -26,11 +26,19 @@ export async function PATCH(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body?.id) return NextResponse.json({ ok: false, error: "id is required" }, { status: 422 });
   const { id, status } = body as Record<string, string>;
-  const q = await db.contactQuery.update({
-    where: { id: String(id) },
-    data: { ...(status ? { status } : {}) },
-  });
-  return NextResponse.json({ ok: true, query: q });
+  try {
+    const q = await db.contactQuery.update({
+      where: { id: String(id) },
+      data: { ...(status ? { status } : {}) },
+    });
+    return NextResponse.json({ ok: true, query: q });
+  } catch (err) {
+    console.error("[queries] PATCH error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not update query.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
+  }
 }
 
 export async function DELETE(req: NextRequest) {
@@ -38,6 +46,14 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ ok: false, error: "id is required" }, { status: 422 });
-  await db.contactQuery.delete({ where: { id: String(id) } });
-  return NextResponse.json({ ok: true });
+  try {
+    await db.contactQuery.delete({ where: { id: String(id) } });
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("[queries] DELETE error:", err);
+    return NextResponse.json(
+      { ok: false, error: "Database error — could not delete query.", detail: err instanceof Error ? err.message : String(err) },
+      { status: 503 }
+    );
+  }
 }
