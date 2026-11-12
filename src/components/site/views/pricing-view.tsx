@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import {
   Check,
   X,
@@ -11,7 +11,7 @@ import {
   Sparkles,
   ChevronDown,
 } from "lucide-react";
-import { PRICING_TIERS, type NavView } from "@/lib/site-data";
+import { PRICING_TIERS, type NavView, type PricingTier } from "@/lib/site-data";
 import {
   Reveal,
   Section,
@@ -215,6 +215,20 @@ function ComparisonCell({ cell }: { cell: Cell }) {
 export function PricingView({ onNavigate }: PricingViewProps) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  // Fetch pricing tiers from DB (admin edits) merged with static fallback.
+  // Static tiers render immediately for SSR/SEO; DB tiers override on mount.
+  const [allTiers, setAllTiers] = useState<PricingTier[]>(PRICING_TIERS);
+
+  useEffect(() => {
+    fetch("/api/pricing")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok && Array.isArray(data.tiers)) {
+          setAllTiers(data.tiers);
+        }
+      })
+      .catch(() => { /* keep static tiers on network error */ });
+  }, []);
 
   // Accessible form — client-side validation + handoff to the contact view,
   // where the founder can complete scoping-call booking. No data leaves the
@@ -336,7 +350,7 @@ export function PricingView({ onNavigate }: PricingViewProps) {
           align="center"
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {PRICING_TIERS.map((tier, i) => (
+          {allTiers.map((tier, i) => (
             <Reveal key={tier.name} delay={i * 0.05}>
               <div
                 className={cn(
@@ -428,7 +442,7 @@ export function PricingView({ onNavigate }: PricingViewProps) {
                     Feature
                   </span>
                 </div>
-                {PRICING_TIERS.map((tier) => (
+                {allTiers.map((tier) => (
                   <div
                     key={tier.name}
                     className={cn(
@@ -469,7 +483,7 @@ export function PricingView({ onNavigate }: PricingViewProps) {
                       key={ci}
                       className={cn(
                         "flex justify-center text-center",
-                        PRICING_TIERS[ci].popular &&
+                        allTiers[ci]?.popular &&
                           "rounded-md bg-[#136dff]/[0.04]"
                       )}
                     >
