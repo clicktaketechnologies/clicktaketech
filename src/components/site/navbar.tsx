@@ -64,7 +64,10 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
     setOpenMenu(id);
   };
   const closeMenuDelayed = () => {
-    closeTimer.current = setTimeout(() => setOpenMenu(null), 300);
+    // 500ms gives the cursor enough time to cross the gap between
+    // the navbar trigger and the dropdown panel (header padding + pt
+    // gap = ~20px). Previously 300ms was too short for slow mouse moves.
+    closeTimer.current = setTimeout(() => setOpenMenu(null), 500);
   };
 
   // Determine if a nav item is "active" (active view falls under a dropdown)
@@ -199,7 +202,10 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-x-4 top-full z-[200] hidden pt-2 lg:block"
+              // pt-8 creates a 32px invisible hover bridge that covers
+              // the gap between the navbar bottom and the panel content.
+              // This prevents the hover from being lost during mouse movement.
+              className="absolute inset-x-4 top-full z-[200] hidden pt-8 lg:block"
               onMouseEnter={() => openMenuId("mega")}
               onMouseLeave={closeMenuDelayed}
             >
@@ -262,7 +268,8 @@ export function Navbar({ active, onNavigate, onNavigateService }: NavbarProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute left-1/2 top-full z-[200] hidden -translate-x-1/2 min-w-[340px] pt-2 lg:block"
+                  // pt-6 creates an invisible hover bridge covering the gap.
+                  className="absolute left-1/2 top-full z-[200] hidden -translate-x-1/2 min-w-[340px] pt-6 lg:block"
                   onMouseEnter={() => openMenuId(item.id)}
                   onMouseLeave={closeMenuDelayed}
                 >

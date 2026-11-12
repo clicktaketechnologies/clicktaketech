@@ -62,7 +62,9 @@
   --secondary: oklch(0.96 0.005 265);
   --secondary-foreground: oklch(0.2 0.01 265);
   --muted: oklch(0.96 0.005 265);
-  --muted-foreground: oklch(0.45 0.012 265);
+  /* Darkened from 0.45 → 0.40 for WCAG AA compliance (4.5:1 contrast
+     on white background). The previous value was borderline for small text. */
+  --muted-foreground: oklch(0.40 0.012 265);
   /* Brand pink #FF53A9 */
   --accent: oklch(0.65 0.26 358);
   --accent-foreground: oklch(0.99 0 0);
@@ -153,6 +155,17 @@
   --scrollbar-thumb-hover: oklch(0.5 0.1 290);
   --scrollbar-border: oklch(0.16 0.015 265);
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   Light-mode contrast overrides — darken Tailwind's blue/pink utility
+   colors so they meet WCAG AA (4.5:1) on white backgrounds.
+   These only apply when :root doesn't have the .dark class.
+   ════════════════════════════════════════════════════════════════════ */
+:root:not(.dark) .text-blue-400 { color: oklch(0.48 0.22 264) !important; }
+:root:not(.dark) .text-blue-300 { color: oklch(0.48 0.22 264) !important; }
+:root:not(.dark) .text-pink-400 { color: oklch(0.55 0.24 358) !important; }
+:root:not(.dark) .text-pink-300 { color: oklch(0.55 0.24 358) !important; }
+:root:not(.dark) .text-green-400 { color: oklch(0.45 0.16 145) !important; }
 
 /* ════════════════════════════════════════════════════════════════════
    Base layer
