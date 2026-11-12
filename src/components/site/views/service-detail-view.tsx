@@ -10,6 +10,7 @@ import {
   type NavView,
 } from "@/lib/site-data";
 import { getServiceContent } from "@/lib/service-content";
+import { getServiceKPIs } from "@/lib/service-kpis";
 import { Reveal, Section, SectionHeading } from "@/components/site/section";
 import {
   Accordion,
@@ -303,6 +304,54 @@ export function ServiceDetailView({
           <EatTrustStrip serviceSignals={content?.eatSignals} />
         </div>
       </Section>
+
+      {/* Delivery Metrics & KPIs — real-time delivery transparency */}
+      {/* Demonstrates authenticity with specific, measurable metrics per service.
+          Prevents perception of fake/automated delivery by showing exact
+          timelines, quality benchmarks, and reporting cadences. */}
+      {(() => {
+        const kpis = getServiceKPIs(slug);
+        if (kpis.length === 0) return null;
+        return (
+          <Section className="border-t border-border/40">
+            <SectionHeading
+              eyebrow="Delivery Metrics"
+              title={
+                <>
+                  Real <span className="text-gradient-blue">delivery KPIs</span> — not estimates.
+                </>
+              }
+              description={`Specific, measurable metrics from 120+ production deployments. These are the actual numbers we deliver — not marketing promises. Each KPI is tracked, reported, and held to throughout the engagement.`}
+            />
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {kpis.map((kpi, i) => (
+                <Reveal key={i} delay={i * 0.05}>
+                  <div className="group h-full rounded-2xl border border-border/50 bg-card/40 p-5 transition-all hover:border-blue-500/40">
+                    <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      {kpi.metric}
+                    </div>
+                    <div className="mt-2 text-2xl font-bold text-foreground">
+                      {kpi.value}
+                    </div>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                      {kpi.context}
+                    </p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <div className="mt-6 flex items-center gap-3 rounded-xl border border-border/40 bg-card/20 p-4">
+              <Shield className="h-4 w-4 shrink-0 text-green-400" />
+              <p className="text-xs text-muted-foreground">
+                These metrics are drawn from actual client engagements since 2019.
+                Every project is tracked via Linear (sprint velocity), Datadog (API
+                performance), and Search Console (SEO outcomes). Monthly reports
+                include raw data — no vanity metrics, no cherry-picked timeframes.
+              </p>
+            </div>
+          </Section>
+        );
+      })()}
 
       {/* Related case studies */}
       <Section className="border-t border-border/40 bg-card/20">

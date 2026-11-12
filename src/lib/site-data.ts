@@ -109,6 +109,10 @@ export type ServiceContent = {
   eatSignals: { label: string; value: string }[];
   /** 4 service-specific "at a glance" facts for the detail-page sidebar — tailored per service, never generic. */
   atAGlance: { label: string; value: string }[];
+  /** Real-time delivery KPIs — specific, measurable metrics that demonstrate
+   *  authenticity and prevent perception of fake/automated delivery. Each KPI
+   *  has a metric name, a concrete value, and context explaining what it means. */
+  deliveryKPIs?: { metric: string; value: string; context: string }[];
 };
 
 // ===== Site-wide E-A-T (Expertise, Authoritativeness, Trustworthiness) signals =====
